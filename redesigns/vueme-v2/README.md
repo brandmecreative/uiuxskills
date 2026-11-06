@@ -54,3 +54,6 @@ Headings and body copy were run through viral-hooks (openers), dumbify (reading 
 - Rendered at 1440 and 390 px with no horizontal scroll and no console errors.
 - Functional script: price rules, flip, QR, live preview, email validation, date ranges, tooltip, table view.
 - taste-skill consistency checker: fixed contrast on the purple block, mobile hero overlaps and dead links. Remaining flags are taste-skill house-style rules (tilted cards, marquee, scroll reveals) or intentional sample content.
+
+## Elementor
+`elementor/vueme-home.json` is the home page as an Elementor template. Rebuild it after edits with `python3 tools/build-elementor.py`. It holds one full-width section with one HTML widget per page section: styles and fonts first, scripts last (keep that order). Styles are scoped under the section's `vueme-page` class so the theme and Elementor's global fonts and colours don't override them. Links to the prototype-only editors and dashboard are replaced with live vueme.in pages (`TPL_URL` at the top of the scripts widget sets where each template button goes; only Bento has its own product page so far).
