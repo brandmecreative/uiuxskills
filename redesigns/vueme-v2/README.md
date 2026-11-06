@@ -34,7 +34,8 @@ Refero's live research server was not connected, so the research used the refero
 ## Diwali offer and mobile
 - The offer lives in one place: `OFFER` at the top of `assets/vueme.js` (`active`, `name`, `pct`, `ends`). It discounts the digital card price on the landing page and in the digital editor; add-ons and renewal stay full price. Set `ends` to show a countdown, or `active: false` to switch it off everywhere.
 - Mobile: a "What do you need?" chooser in the hero, a plain "New to digital cards?" explainer, swipeable templates and gallery, and a sticky bottom bar (offer price, Start, WhatsApp) that appears after the hero.
-- The "How a digital card works" flow uses a sticky animated stage on desktop and a small animated scene inside each step on phones. All motion stops for reduced-motion users.
+- The "How a digital card works" flow uses a sticky animated stage on desktop. On phones it becomes four tabs (Create, Share, Save, Track) over one compact stage that plays through on its own and stops when a tab is tapped. All motion stops for reduced-motion users.
+- Phone-first layer (80% of visits): templates are a swipe row of real previews with their own Choose buttons; printed finishes swipe; editor cards, facts, analytics and footer are compacted. The landing page went from about 20 phone screens to 12.
 - Diwali artwork (lights, rangoli, diyas) is drawn in SVG; other images are Vueme's own creatives from vueme.in.
 
 ## Copy pass

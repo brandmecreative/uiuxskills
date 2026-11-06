@@ -349,6 +349,109 @@ section{position:relative}
   .s4 .draw{stroke-dashoffset:0}
   .dw-rangoli,.flame,.bulb,.spark{animation:none}
 }
+
+/* ================= PHONE-FIRST LAYER (80% of visits) ================= */
+.tpl-swipe{display:none}
+@media (max-width:900px){
+  /* compact flow: tabs + one stage */
+  .flow-grid{display:flex;flex-direction:column;margin-top:24px}
+  .flow-stage{display:block;position:relative;top:auto;order:1;width:100%;height:360px;border-radius:var(--r);background:#fff;border:1px solid var(--line);overflow:hidden;margin-top:14px}
+  .flow-stage .sc{width:440px;height:560px;left:50%;right:auto;top:6px;bottom:auto;transform-origin:50% 0;transform:translateX(-50%) scale(.62)}
+  .flow-stage .sc.is-on{transform:translateX(-50%) scale(.62)}
+  .flow-steps{order:0;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .fstep{display:contents}
+  .fstep .n{grid-row:1;display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:var(--pill);background:#fff;border:1px solid var(--line);font-size:12px;color:var(--ink-2);cursor:pointer;text-align:center;padding:0 4px}
+  .fstep .n{font-size:0}
+  .fstep .n::after{font-size:13px;font-family:var(--sans);font-weight:700}
+  .fstep[data-step="1"] .n::after{content:"Create"}.fstep[data-step="2"] .n::after{content:"Share"}.fstep[data-step="3"] .n::after{content:"Save"}.fstep[data-step="4"] .n::after{content:"Track"}
+  .fstep.active .n{background:var(--ink);border-color:var(--ink);color:#fff}
+  .fstep h3,.fstep p{display:none}
+  .fstep.active h3{display:block;grid-row:2;grid-column:1/-1;font-size:20px;margin:16px 0 4px;color:var(--ink)}
+  .fstep.active p{display:block;grid-row:3;grid-column:1/-1;font-size:15px}
+}
+@media (max-width:720px){
+  .sec{padding:56px 0}
+  .h-lg{font-size:30px}
+  .lede{font-size:16px}
+  /* hero */
+  .stage{height:330px}
+  .stage .phone{--w:170px}
+  .stage .pc-wrap{width:64%;bottom:0}
+  .stage .chip.c1{top:0}
+  /* diwali: compact art on top */
+  .diwali{padding:48px 0 56px}
+  .dw-grid{gap:20px}
+  .dw-art{order:-1;max-width:240px}
+  .dw-art .phone{--w:118px;top:8%}
+  .dw-badge{width:70px;height:70px;right:0;top:2%}.dw-badge b{font-size:22px}.dw-badge span{font-size:11px}
+  .diya{width:54px}
+  .dw-prices{margin-top:18px;gap:6px}
+  .dw-prices a{min-height:52px;padding:10px 14px}
+  .dw-prices small{display:none}
+  .dw-ctas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .dw-ctas .btn{min-height:50px;padding:0 12px;font-size:14px}
+  .dw-lights{height:50px}
+  /* what */
+  .what-grid{gap:20px}
+  .what-img{aspect-ratio:16/9}
+  .what-img img{object-position:50% 30%}
+  .facts{grid-template-columns:1fr 1fr;gap:16px 12px;margin-top:18px}
+  .facts li{grid-template-columns:1fr;gap:8px}
+  .facts .ic{width:40px;height:40px;border-radius:12px}
+  .facts b{font-size:15px}
+  .facts span{font-size:13px;line-height:1.45}
+  #what .hero-ctas{display:none}
+  /* digital: swipe row of real previews */
+  .cb{margin:0 8px;padding:44px 0}
+  #digital .tpl-tabs,#digital .phone-col,#tpl-cta,#digital .fine{display:none}
+  .tpl-swipe{display:grid;grid-auto-flow:column;grid-auto-columns:62%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:22px -16px 18px;padding:0 16px 6px;scrollbar-width:none}
+  .tpl-item{scroll-snap-align:start;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:var(--r);padding:12px;display:grid;gap:10px;justify-items:center}
+  .tpl-ph .phone{--w:150px;box-shadow:0 12px 24px -12px rgba(0,0,0,.5)}
+  .tpl-meta{display:flex;justify-content:space-between;width:100%;font-size:14px}
+  .tpl-meta s{opacity:.7;font-size:12px}
+  .tpl-meta span{color:var(--yellow);font-weight:800}
+  .tpl-go{width:100%;min-height:44px;border-radius:var(--pill);background:#fff;color:var(--ink);font-weight:700;font-size:14px;display:grid;place-items:center}
+  .feat-list{grid-template-columns:1fr 1fr;gap:10px;font-size:14px}
+  .feat-list li{font-size:14px}
+  .addons{grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+  .addon{padding:14px}.addon b{font-size:14px;flex-direction:column}.addon p{font-size:12.5px}
+  /* editors: text cards only */
+  .ed-cards{gap:12px;margin-top:24px}
+  .ed-shot,.ed-body ul{display:none}
+  .ed-body{padding:20px;gap:6px}
+  .ed-body h3{font-size:20px}
+  .ed-body p{font-size:14px}
+  .ed-body .btn{margin-top:10px;min-height:44px}
+  /* analytics */
+  #analytics{padding-bottom:56px!important}
+  .dash-prev{padding:14px}
+  .kpis{grid-template-columns:repeat(3,1fr)!important;gap:6px}
+  .kpis .kpi:last-child{grid-column:auto!important}
+  .kpi{padding:10px}.kpi b{font-size:20px}.kpi span{font-size:11px}
+  .spark svg{height:70px}
+  /* printed: swipe */
+  .fin-grid{display:grid;grid-auto-flow:column;grid-auto-columns:78%;grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:24px -16px 0;padding:0 16px 6px;scrollbar-width:none}
+  .fin{scroll-snap-align:start}
+  .fin img{aspect-ratio:16/10}
+  .fin-b{padding:16px}
+  .fin-b h3{font-size:20px}
+  .specs dd{font-size:14px}
+  #printed .reveal .btn-white{display:none}
+  /* nfc */
+  .nfc-img{aspect-ratio:16/10}
+  .price-big{font-size:40px}
+  /* faq */
+  .faq{gap:20px}
+  .faq summary{font-size:16px;padding:16px 0}
+  .faq .lede{display:none}
+  /* footer */
+  .site-foot{padding:48px 0 calc(24px + 76px)}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px 16px}
+  .foot-grid>div:first-child{grid-column:1/-1}
+  .foot-grid>div:last-child{grid-column:1/-1}
+  .wordmark-xl{font-size:96px;margin-top:32px}
+  .foot-bottom{margin-top:28px}
+}
 </style>
 </head>
 <body>
@@ -471,10 +574,10 @@ section{position:relative}
     </div>
     <div class="flow-grid">
       <ol class="flow-steps">
-        <li class="fstep" data-step="1"><span class="n">01 · Create</span><h3>Design it on your phone</h3><p>Pick a template, add your photo and details, and watch the card update as you type. Pay, and your link and QR code appear right away.</p><div class="fscene-inline" data-scene="1" aria-hidden="true"></div></li>
-        <li class="fstep" data-step="2"><span class="n">02 · Share</span><h3>Share it your way</h3><p>Send your link on WhatsApp, show your QR code, or tap your NFC card on their phone.</p><div class="fscene-inline" data-scene="2" aria-hidden="true"></div></li>
-        <li class="fstep" data-step="3"><span class="n">03 · Save</span><h3>They save you in one tap</h3><p>Your card opens in their browser. One tap on Save Contact and your number is in their phone.</p><div class="fscene-inline" data-scene="3" aria-hidden="true"></div></li>
-        <li class="fstep" data-step="4"><span class="n">04 · Track</span><h3>See what happened next</h3><p>With the Analytics add-on, see who viewed, scanned, tapped and saved your card.</p><div class="fscene-inline" data-scene="4" aria-hidden="true"></div></li>
+        <li class="fstep" data-step="1"><span class="n">01 · Create</span><h3>Design it on your phone</h3><p>Pick a template, add your photo and details, and watch the card update as you type. Pay, and your link and QR code appear right away.</p></li>
+        <li class="fstep" data-step="2"><span class="n">02 · Share</span><h3>Share it your way</h3><p>Send your link on WhatsApp, show your QR code, or tap your NFC card on their phone.</p></li>
+        <li class="fstep" data-step="3"><span class="n">03 · Save</span><h3>They save you in one tap</h3><p>Your card opens in their browser. One tap on Save Contact and your number is in their phone.</p></li>
+        <li class="fstep" data-step="4"><span class="n">04 · Track</span><h3>See what happened next</h3><p>With the Analytics add-on, see who viewed, scanned, tapped and saved your card.</p></li>
       </ol>
       <div class="flow-stage" id="flow-stage" aria-hidden="true"></div>
     </div>
@@ -490,6 +593,7 @@ section{position:relative}
         <h2 class="h-lg" style="margin-top:14px">One link. Your whole profile.</h2>
         <p class="lede" style="margin-top:18px">Add your photo and details, pick your colours and watch the card update as you type. Your link and QR code never change, so you can edit any time.</p>
         <div class="tpl-tabs" role="tablist" aria-label="Templates" id="tpl-tabs"></div>
+        <div class="tpl-swipe" id="tpl-swipe" aria-label="Templates, swipe sideways"></div>
         <ul class="feat-list">
           <li><span data-icon="check"></span>Photo, bio, phone, email</li>
           <li><span data-icon="check"></span>Socials &amp; WhatsApp</li>
@@ -697,6 +801,8 @@ section{position:relative}
   });
   showTpl('aria');
 
+  $('#tpl-swipe').innerHTML = V.TEMPLATES.map(t => { const acc = t.id === 'bauhaus' ? '#E5484D' : t.id === 'spotlight' ? '#FCC305' : '#6B3FD8';
+    return `<a class="tpl-item" href="editor-digital.html?template=${t.id}"><div class="tpl-ph">${V.phone(V.digitalCard({ template: t.id, accent: acc }), t.name + ' template')}</div><span class="tpl-meta"><b>${t.name}</b><span>${V.OFFER.active ? `<s>${V.inr(t.price)}</s> ` : ''}${V.inr(V.offerPrice(t.price))}</span></span><span class="tpl-go">Choose ${t.name}</span></a>`; }).join('');
   // --- mini editor shots
   $('#mini-digital').innerHTML = V.phone(V.digitalCard({ template: 'bento' }));
   $('#mini-print').innerHTML = V.printSide({ template: 'block', finish: 'gloss', color: '#1F6FEB' });
@@ -744,7 +850,6 @@ section{position:relative}
     return `<div class="sc s4"><div class="sc-card"><span class="lbl-sm">Card views · last 30 days</span><div class="big" data-count="1284">0</div><svg viewBox="0 0 300 90" preserveAspectRatio="none"><path class="draw" d="M0 80 L30 70 L60 74 L90 58 L120 62 L150 44 L180 50 L210 30 L240 36 L270 18 L300 22" fill="none" stroke="#6B3FD8" stroke-width="3" stroke-linejoin="round"/></svg><div class="rows"><div class="row">${V.icon('qr')}QR scan · Chennai</div><div class="row">${V.icon('whatsapp')}WhatsApp tap · Bengaluru</div><div class="row">${V.icon('save')}Contact saved · Kochi</div></div></div></div>`;
   };
   $('#flow-stage').innerHTML = [1, 2, 3, 4].map(scene).join('');
-  document.querySelectorAll('.fscene-inline').forEach(el => el.innerHTML = scene(+el.dataset.scene));
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   function play(sc) {
     if (!sc || sc.classList.contains('is-on')) return;
@@ -763,12 +868,18 @@ section{position:relative}
   const steps = [...document.querySelectorAll('.fstep')];
   const setStep = n => { steps.forEach(s => s.classList.toggle('active', +s.dataset.step === n)); stageScenes.forEach((s, i) => i + 1 === n ? play(s) : stop(s)); };
   if ('IntersectionObserver' in window) {
-    const stepIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setStep(+e.target.dataset.step); }), { rootMargin: "-45% 0px -45% 0px" });
+    const stepIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !matchMedia('(max-width: 900px)').matches) setStep(+e.target.dataset.step); }), { rootMargin: "-45% 0px -45% 0px" });
     steps.forEach(s => stepIO.observe(s));
   }
   setStep(1);
-  const inlineIO = new IntersectionObserver(es => es.forEach(e => { const sc = e.target.querySelector('.sc'); e.isIntersecting ? play(sc) : stop(sc); }), { threshold: .45 });
-  document.querySelectorAll('.fscene-inline').forEach(el => inlineIO.observe(el));
+  // phones: the step labels become tabs over one compact stage that plays through on its own
+  const small = matchMedia('(max-width: 900px)');
+  let fcur = 1, auto = null, inView = false;
+  steps.forEach(s => { const n = s.querySelector('.n'); n.setAttribute('role', 'button'); n.tabIndex = 0;
+    const go = () => { if (!small.matches) return; clearInterval(auto); auto = null; fcur = +s.dataset.step; setStep(fcur); };
+    n.addEventListener('click', go); n.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }); });
+  const startAuto = () => { if (auto || still || !small.matches) return; auto = setInterval(() => { fcur = fcur % 4 + 1; setStep(fcur); }, 4200); };
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (inView) startAuto(); else { clearInterval(auto); auto = null; } }, { threshold: .4 }).observe($('#flow-stage'));
 
   // --- mobile sticky bar: shows once the hero has scrolled away
   const mbar = $('#mbar');
