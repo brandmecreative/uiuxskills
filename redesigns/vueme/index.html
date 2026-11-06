@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vueme — Digital & Printed Business Cards</title>
+<meta name="description" content="Digital business cards with your own link, QR code and NFC from ₹499, and premium matte, gloss and synthetic printed cards from ₹625. Designed online with Vueme.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --purple:#6B3FD8; --purple-600:#5A2FC4; --purple-800:#3B1C8F;
+  --yellow:#FCC305; --yellow-100:#FFF4CC;
+  --lav:#F5F1FF; --lav-200:#E6DCFF;
+  --ink:#17112B; --ink-2:#4B4560; --line:#E7E3F0; --white:#fff;
+  --r-sm:10px; --r:18px; --r-lg:28px;
+  --shadow:0 1px 2px rgba(23,17,43,.06),0 8px 24px rgba(23,17,43,.08);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --wrap:1200px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink);background:var(--white);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:3px solid var(--purple);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3{line-height:1.12;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:clamp(28px,4vw,44px);font-weight:800}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple)}
+.lead{font-size:18px;color:var(--ink-2);max-width:56ch}
+section{padding:96px 0}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-weight:700;font-size:16px;transition:transform .2s var(--ease),background-color .2s,box-shadow .2s}
+.btn svg{width:18px;height:18px;transition:transform .2s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+.btn-primary{background:var(--purple);color:#fff;box-shadow:0 6px 18px rgba(107,63,216,.35)}
+.btn-primary:hover{background:var(--purple-600);transform:translateY(-1px)}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
+.btn-yellow:hover{background:#FFD23A;transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:#fff}
+
+/* announcement + header */
+.announce{background:var(--ink);color:#fff;font-size:14px;text-align:center;padding:10px 16px}
+.announce b{color:var(--yellow)}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:32px;height:72px}
+.logo img{height:26px;width:auto}
+.nav-links{display:flex;gap:28px;font-weight:600;font-size:15px}
+.nav-links a{padding:8px 0;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:var(--purple);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
+.nav-links a:hover::after,.nav-links a[aria-current]::after{transform:scaleX(1)}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:4px}
+.icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;position:relative;transition:background-color .2s}
+.icon-btn:hover{background:var(--lav)}
+.icon-btn svg{width:22px;height:22px}
+.badge{position:absolute;top:4px;right:4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--yellow);color:var(--ink);font-size:11px;font-weight:800;display:grid;place-items:center}
+.nav .btn{min-height:44px;padding:0 20px;font-size:15px;margin-left:8px}
+.menu-btn{display:none}
+
+/* hero */
+.hero{padding:56px 0 88px;background:radial-gradient(1200px 500px at 85% 0%,var(--lav-200),transparent 60%),linear-gradient(180deg,var(--lav),#fff)}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:700;letter-spacing:.04em}
+.chip svg{width:15px;height:15px;color:var(--purple)}
+.hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-.035em;margin-bottom:20px}
+.hero h1 mark{background:linear-gradient(transparent 58%,var(--yellow) 58%,var(--yellow) 92%,transparent 92%);color:inherit;padding:0 4px}
+.hero .lead{margin-bottom:32px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:24px;margin-top:36px;font-size:14px;color:var(--ink-2)}
+.hero-meta span{display:flex;gap:8px;align-items:center}
+.hero-meta svg{width:18px;height:18px;color:var(--purple)}
+
+.bento{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr 1fr;gap:16px;aspect-ratio:1/1.02}
+.tile{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--lav-200);box-shadow:var(--shadow)}
+.tile img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.tile:hover img{transform:scale(1.04)}
+.tile.big{grid-row:span 2}
+.tag{position:absolute;left:12px;bottom:12px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.94);font-size:13px;font-weight:700;display:flex;gap:6px;align-items:center}
+.tag b{color:var(--purple)}
+
+/* two paths */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.path{position:relative;border-radius:var(--r-lg);padding:40px;overflow:hidden;min-height:440px;display:flex;flex-direction:column}
+.path.digital{background:var(--purple);color:#fff}
+.path.print{background:var(--yellow);color:var(--ink)}
+.path .eyebrow{color:inherit;opacity:.85}
+.path h3{font-size:clamp(26px,3vw,36px);font-weight:800;margin:12px 0 12px;max-width:16ch}
+.path p{max-width:34ch;opacity:.9}
+.path ul{list-style:none;padding:0;margin:20px 0 28px;display:grid;gap:10px;font-weight:600}
+.path li{display:flex;gap:10px;align-items:center}
+.path li svg{width:20px;height:20px;flex:none}
+.path .price{font-size:14px;font-weight:600;margin-top:auto}
+.path .price strong{font-size:32px;font-weight:800;letter-spacing:-.02em;display:block}
+.path .btn{align-self:flex-start;margin-top:16px}
+.path img{position:absolute;right:-24px;bottom:-24px;width:46%;border-radius:20px;transform:rotate(-6deg);box-shadow:0 20px 40px rgba(0,0,0,.25)}
+.path.print img{transform:rotate(6deg)}
+
+/* steps */
+.steps-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:48px;flex-wrap:wrap}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s}
+.step{padding:32px;border:1px solid var(--line);border-radius:var(--r);background:#fff;transition:border-color .2s,transform .2s var(--ease)}
+.step:hover{border-color:var(--purple);transform:translateY(-3px)}
+.step-n{width:48px;height:48px;border-radius:14px;background:var(--lav);color:var(--purple);display:grid;place-items:center;font-weight:800;font-size:18px;margin-bottom:20px}
+.step h3{font-size:20px;margin-bottom:8px}
+.step p{color:var(--ink-2)}
+
+/* shop */
+.shop{background:var(--lav)}
+.shop-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:36px}
+.tabs{display:inline-flex;padding:6px;background:#fff;border-radius:999px;border:1px solid var(--line)}
+.tabs button{min-height:44px;padding:0 22px;border-radius:999px;font-weight:700;color:var(--ink-2);transition:background-color .2s,color .2s}
+.tabs button[aria-selected="true"]{background:var(--purple);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .25s var(--ease),box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 2px 4px rgba(23,17,43,.06),0 18px 40px rgba(23,17,43,.12)}
+.card-media{position:relative;aspect-ratio:7/8;background:var(--lav-200);overflow:hidden}
+.card-media img{width:100%;height:100%;object-fit:cover}
+.off{position:absolute;top:12px;left:12px;background:var(--yellow);color:var(--ink);font-weight:800;font-size:13px;padding:5px 10px;border-radius:8px}
+.card-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card-body h3{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.card-body .sub{font-size:14px;color:var(--ink-2)}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:14px}
+.card-foot .p{font-weight:800;font-size:18px}
+.card-foot .p small{font-weight:600;font-size:13px;color:var(--ink-2);margin-right:4px}
+.card-foot a{min-height:44px;display:inline-flex;align-items:center;gap:6px;padding:0 16px;border-radius:999px;background:var(--lav);color:var(--purple);font-weight:700;font-size:14px;transition:background-color .2s,color .2s}
+.card-foot a:hover{background:var(--purple);color:#fff}
+.shop-more{display:flex;justify-content:center;margin-top:40px}
+[hidden]{display:none!important}
+
+/* finishes */
+.finishes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.finish{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#fff}
+.finish img{aspect-ratio:4/3;width:100%;object-fit:cover}
+.finish div{padding:24px}
+.finish h3{font-size:20px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:baseline}
+.finish h3 span{font-size:14px;font-weight:600;color:var(--purple)}
+.finish p{color:var(--ink-2);font-size:15px}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;font-weight:700;font-size:18px;min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary svg{width:22px;height:22px;flex:none;transition:transform .25s var(--ease);color:var(--purple)}
+details[open] summary svg{transform:rotate(45deg)}
+details p{padding:0 0 22px;color:var(--ink-2);max-width:62ch}
+
+/* final cta */
+.final{padding:0 0 96px}
+.final-box{border-radius:var(--r-lg);background:var(--ink);color:#fff;padding:64px;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;position:relative;overflow:hidden}
+.final-box::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:var(--purple);filter:blur(80px);opacity:.55;right:-120px;top:-160px}
+.final-box > *{position:relative}
+.final-box h2{color:#fff;margin-bottom:12px}
+.final-box p{color:#CFC9E3}
+.news{display:flex;flex-direction:column;gap:10px}
+.news label{font-weight:700}
+.news-row{display:flex;gap:8px;background:#fff;border-radius:999px;padding:6px}
+.news input{flex:1;min-width:0;border:0;background:transparent;font:inherit;padding:0 16px;color:var(--ink);min-height:44px}
+.news input:focus{outline:none}
+.news-row:focus-within{outline:3px solid var(--yellow);outline-offset:2px}
+.news small{color:#A9A2C2}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:64px 0 32px;font-size:15px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px}
+.foot-grid h4{font-size:14px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px}
+.foot-grid ul{list-style:none;padding:0;display:grid;gap:10px;color:var(--ink-2)}
+.foot-grid a:hover{color:var(--purple)}
+.foot-about p{color:var(--ink-2);margin:16px 0 20px;max-width:34ch}
+.socials{display:flex;gap:8px}
+.socials a{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--lav);color:var(--purple);transition:background-color .2s,color .2s}
+.socials a:hover{background:var(--purple);color:#fff}
+.socials svg{width:20px;height:20px}
+.contact li{display:flex;gap:10px;align-items:flex-start}
+.contact svg{width:18px;height:18px;color:var(--purple);flex:none;margin-top:3px}
+.foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:48px;padding-top:24px;border-top:1px solid var(--line);color:var(--ink-2);font-size:14px}
+
+.wa{position:fixed;right:20px;bottom:20px;z-index:60;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;box-shadow:0 10px 24px rgba(0,0,0,.2);transition:transform .2s var(--ease)}
+.wa:hover{transform:scale(1.06)}
+.wa svg{width:30px;height:30px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+
+@media (max-width:1024px){
+  .nav-links{display:none}
+  .menu-btn{display:grid}
+  .nav .btn{display:none}
+  .hero-grid,.faq-grid,.final-box{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:720px){
+  section{padding:64px 0}
+  .hero{padding:32px 0 64px}
+  .paths,.steps,.finishes{grid-template-columns:1fr}
+  .path{padding:28px;min-height:auto}
+  .path img{position:static;width:70%;margin:24px 0 -48px auto;transform:rotate(-4deg)}
+  .path.print img{transform:rotate(4deg)}
+  .grid{grid-template-columns:1fr 1fr;gap:12px}
+  .card-body{padding:14px}
+  .card-body h3{font-size:15px}
+  .card-body .sub{display:none}
+  .card-foot{flex-direction:column;align-items:stretch;gap:10px}
+  .card-foot a{justify-content:center}
+  .final-box{padding:36px 24px}
+  .foot-grid{grid-template-columns:1fr}
+  .cta-row .btn{flex:1 1 100%}
+  .tabs{width:100%}
+  .tabs button{flex:1}
+  .news-row{flex-direction:column;border-radius:20px;padding:8px}
+  .news-row .btn{width:100%}
+}
+.mobile-nav{display:none;border-top:1px solid var(--line);padding:8px 20px 16px}
+.mobile-nav a{display:flex;min-height:48px;align-items:center;font-weight:600;border-bottom:1px solid var(--line)}
+.mobile-nav.open{display:block}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body class="no-js">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></symbol>
+  <symbol id="i-nfc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.3a6 6 0 0 1 0 7.4M9.5 5.5a10 10 0 0 1 0 13M13 3a14 14 0 0 1 0 18M16.5 1.5a17 17 0 0 1 0 21" transform="translate(2 0)"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 14H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.1L14.1 2C10.9 2 10.2 4.4 10.2 6v2.5H8V12h2.2v10H14V12h2.7l.4-3.5z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3z"/></symbol>
+</svg>
+
+<a class="sr-only" href="#main">Skip to content</a>
+
+<div class="announce">Digital cards from <b>₹499</b> · Printed cards from <b>₹625</b> · Design yours online in minutes</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="120" height="26"></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#digital" aria-current="page">Digital Cards</a>
+      <a href="#printed">Printed Cards</a>
+      <a href="#shop">Shop All</a>
+      <a href="#faq">Help</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Search"><svg><use href="#i-search"/></svg></button>
+      <a class="icon-btn" href="#" aria-label="My account"><svg><use href="#i-user"/></svg></a>
+      <a class="icon-btn" href="#" aria-label="Cart, 0 items"><svg><use href="#i-bag"/></svg><span class="badge" aria-hidden="true">0</span></a>
+      <a class="btn btn-primary" href="#digital">Create your card</a>
+      <button class="icon-btn menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mnav" aria-label="Mobile">
+    <a href="#digital">Digital Cards</a><a href="#printed">Printed Cards</a><a href="#shop">Shop All</a><a href="#faq">Help</a><a href="#">Track Order</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <div class="chips" aria-label="What you get">
+        <span class="chip"><svg><use href="#i-link"/></svg>Link</span>
+        <span class="chip"><svg><use href="#i-qr"/></svg>QR code</span>
+        <span class="chip"><svg><use href="#i-nfc"/></svg>NFC</span>
+        <span class="chip"><svg><use href="#i-print"/></svg>Print</span>
+      </div>
+      <h1>Business cards that <mark>keep working</mark> after you hand them over.</h1>
+      <p class="lead">Get a digital card with your own link and QR code, or order premium printed cards — all designed online with Vueme.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#digital">Create digital card · ₹499 <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="#printed">Shop printed cards</a>
+      </div>
+      <div class="hero-meta">
+        <span><svg><use href="#i-edit"/></svg>Designed online, no software</span>
+        <span><svg><use href="#i-qr"/></svg>One link for your whole profile</span>
+      </div>
+    </div>
+    <div class="bento reveal" aria-hidden="false">
+      <figure class="tile big">
+        <img src="https://vueme.in/wp-content/uploads/2026/10/Vibrant-Festival-NFC-Card-Mockup.webp" alt="Colourful Vueme NFC card with an illustrated festival design" width="900" height="1200" fetchpriority="high">
+        <figcaption class="tag"><svg width="16" height="16" style="color:var(--purple)"><use href="#i-nfc"/></svg>Tap to share · <b>NFC</b></figcaption>
+      </figure>
+      <figure class="tile">
+        <img src="https://vueme.in/wp-content/uploads/2026/10/minimal-digital-business-card-phone-mockup.webp" alt="Digital business card open on a phone, showing profile and contact buttons" width="910" height="1200" style="object-position:center 20%">
+        <figcaption class="tag">Digital · <b>₹499</b></figcaption>
+      </figure>
+      <figure class="tile">
+        <img src="https://vueme.in/wp-content/uploads/2026/10/Speak-Louder-Purple-Card-Mockup-1.webp" alt="Printed business cards with a QR code, front and back" width="900" height="1200">
+        <figcaption class="tag">Printed · <b>₹625</b></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- TWO PATHS -->
+<section aria-labelledby="paths-h">
+  <div class="wrap">
+    <div class="steps-head reveal">
+      <div>
+        <span class="eyebrow">Choose your card</span>
+        <h2 id="paths-h">Go digital, go print — or both.</h2>
+      </div>
+      <p class="lead">Most people pair them: a printed card for the handshake, a digital card for everything after.</p>
+    </div>
+    <div class="paths">
+      <article class="path digital reveal" id="digital">
+        <span class="eyebrow">Digital business cards</span>
+        <h3>One link. Your whole profile.</h3>
+        <p>Contact details, socials, location and your work — shared by link, QR code or a tap.</p>
+        <ul>
+          <li><svg><use href="#i-check"/></svg>Your own shareable link</li>
+          <li><svg><use href="#i-check"/></svg>QR code for print and screens</li>
+          <li><svg><use href="#i-check"/></svg>NFC card option</li>
+        </ul>
+        <div class="price">From<strong>₹499</strong></div>
+        <a class="btn btn-yellow" href="#shop" data-tab="digital">Create digital card <svg><use href="#i-arrow"/></svg></a>
+        <img src="https://vueme.in/wp-content/uploads/2026/10/modern-digital-business-card-phone-mockup.webp" alt="" width="900" height="1200" loading="lazy">
+      </article>
+      <article class="path print reveal" id="printed">
+        <span class="eyebrow">Premium printed cards</span>
+        <h3>Business cards that feel as good as they look.</h3>
+        <p>Matte, gloss or synthetic stock, single or double sided — with a QR code that links to your digital card.</p>
+        <ul>
+          <li><svg><use href="#i-check"/></svg>Matte, gloss &amp; synthetic finishes</li>
+          <li><svg><use href="#i-check"/></svg>Single side or front &amp; back</li>
+          <li><svg><use href="#i-check"/></svg>Add your QR code</li>
+        </ul>
+        <div class="price">From<strong>₹625</strong></div>
+        <a class="btn btn-primary" href="#shop" data-tab="printed">Shop printed cards <svg><use href="#i-arrow"/></svg></a>
+        <img src="https://vueme.in/wp-content/uploads/2026/10/Double-Sided-Gloss-Business-Cards-with-QR-Code-700x798.webp" alt="" width="700" height="798" loading="lazy">
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section aria-labelledby="how-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="steps-head reveal">
+      <div><span class="eyebrow">How it works</span><h2 id="how-h">Ready in three steps.</h2></div>
+    </div>
+    <ol class="steps" style="list-style:none;padding:0">
+      <li class="step reveal"><div class="step-n">1</div><h3>Pick a template</h3><p>Choose a digital design or a printed finish that fits your style.</p></li>
+      <li class="step reveal"><div class="step-n">2</div><h3>Design it online</h3><p>Add your name, contacts, socials and logo right in the browser.</p></li>
+      <li class="step reveal"><div class="step-n">3</div><h3>Share or print</h3><p>Send your link and QR code instantly, or get your printed cards delivered.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="shop" id="shop" aria-labelledby="shop-h">
+  <div class="wrap">
+    <div class="shop-head reveal">
+      <div><span class="eyebrow">Shop</span><h2 id="shop-h">Bestsellers</h2></div>
+      <div class="tabs" role="tablist" aria-label="Card type">
+        <button role="tab" id="t-printed" aria-selected="true" aria-controls="p-printed">Printed cards</button>
+        <button role="tab" id="t-digital" aria-selected="false" aria-controls="p-digital" tabindex="-1">Digital cards</button>
+      </div>
+    </div>
+
+    <div class="grid" id="p-printed" role="tabpanel" aria-labelledby="t-printed">
+      <article class="card"><div class="card-media"><span class="off">−13%</span><img src="https://vueme.in/wp-content/uploads/2026/10/Double-Sided-Gloss-Business-Cards-with-QR-Code-700x798.webp" alt="Gloss business cards, front and back" width="700" height="798" loading="lazy"></div>
+        <div class="card-body"><h3>Gloss Business Cards – Front and Back</h3><p class="sub">Vivid colour, shiny finish</p><div class="card-foot"><span class="p"><small>From</small>₹788</span><a href="#">Choose options</a></div></div></article>
+      <article class="card"><div class="card-media"><span class="off">−22%</span><img src="https://vueme.in/wp-content/uploads/2026/10/Single-Side-Gloss-Business-Cards-700x798.webp" alt="Gloss business cards, single side" width="700" height="798" loading="lazy"></div>
+        <div class="card-body"><h3>Gloss Business Cards – Single Side</h3><p class="sub">Vivid colour, shiny finish</p><div class="card-foot"><span class="p"><small>From</small>₹625</span><a href="#">Choose options</a></div></div></article>
+      <article class="card"><div class="card-media"><span class="off">−15%</span><img src="https://vueme.in/wp-content/uploads/2026/10/Double-Sided-Matte-Business-Cards-1-700x798.webp" alt="Matte business cards, front and back" width="700" height="798" loading="lazy"></div>
+        <div class="card-body"><h3>Matte Business Cards – Front and Back</h3><p class="sub">Soft, smooth, no glare</p><div class="card-foot"><span class="p"><small>From</small>₹849</span><a href="#">Choose options</a></div></div></article>
+      <article class="card"><div class="card-media"><span class="off">−20%</span><img src="https://vueme.in/wp-content/uploads/2026/10/Single-Side-Matte-Business-Cards-1-700x798.webp" alt="Matte business cards, single side" width="700" height="798" loading="lazy"></div>
+        <div class="card-body"><h3>Matte Business Cards – Single Side</h3><p class="sub">Soft, smooth, no glare</p><div class="card-foot"><span class="p"><small>From</small>₹675</span><a href="#">Choose options</a></div></div></article>
+      <article class="card"><div class="card-media"><span class="off">−7%</span><img src="https://vueme.in/wp-content/uploads/2026/10/1-700x798.png" alt="Synthetic business cards, front and back" width="700" height="798" loading="lazy"></div>
+        <div class="card-body"><h3>Synthetic Business Cards – Front and Back</h3><p class="sub">Tear- and water-resistant</p><div class="card-foot"><span class="p"><small>From</small>₹1,249</span><a href="#">Choose options</a></div></div></article>
+      <article class="card"><div class="card-media"><span class="off">−20%</span><img src="https://vueme.in/wp-content/uploads/2026/10/Single-Side-Synthetic-Business-Cards.webp" alt="Synthetic business cards, single side" width="700" height="798" loading="lazy"></div>
+        <div class="card-body"><h3>Synthetic Business Cards – Single Side</h3><p class="sub">Tear- and water-resistant</p><div class="card-foot"><span class="p"><small>From</small>₹800</span><a href="#">Choose options</a></div></div></article>
+    </div>
+
+    <div class="grid" id="p-digital" role="tabpanel" aria-labelledby="t-digital" hidden>
+      <article class="card"><div class="card-media"><img src="https://vueme.in/wp-content/uploads/2026/10/minimal-digital-business-card-phone-mockup.webp" alt="Aria minimal digital business card on a phone" width="910" height="1200" loading="lazy"></div>
+        <div class="card-body"><h3>Aria – Minimal Line-Style</h3><p class="sub">Clean and quiet</p><div class="card-foot"><span class="p">₹499</span><a href="#">Customise</a></div></div></article>
+      <article class="card"><div class="card-media"><img src="https://vueme.in/wp-content/uploads/2026/10/modern-digital-business-card-phone-mockup.webp" alt="Bento grid digital business card on a phone" width="900" height="1200" loading="lazy"></div>
+        <div class="card-body"><h3>Bento – Bento Grid</h3><p class="sub">Everything at a glance</p><div class="card-foot"><span class="p">₹799</span><a href="#">Customise</a></div></div></article>
+      <article class="card"><div class="card-media"><img src="https://vueme.in/wp-content/uploads/2026/10/neo-brutalist-business-card-phone-mockup.webp" alt="Block neo-brutalist digital business card on a phone" width="900" height="1200" loading="lazy"></div>
+        <div class="card-body"><h3>Block – Neo-Brutalist</h3><p class="sub">Loud and confident</p><div class="card-foot"><span class="p">₹999</span><a href="#">Customise</a></div></div></article>
+      <article class="card"><div class="card-media"><img src="https://vueme.in/wp-content/uploads/2026/10/elegant-digital-business-card-phone-mockup.webp" alt="Elegant digital business card on a phone" width="900" height="1200" loading="lazy"></div>
+        <div class="card-body"><h3>Bauhaus – Geometric Bold</h3><p class="sub">Shapes and colour</p><div class="card-foot"><span class="p">₹999</span><a href="#">Customise</a></div></div></article>
+      <article class="card"><div class="card-media"><img src="https://vueme.in/wp-content/uploads/2026/10/tech-digital-business-card-phone-mockup.webp" alt="Tech-style digital business card on a phone" width="900" height="1200" loading="lazy"></div>
+        <div class="card-body"><h3>Tech</h3><p class="sub">For builders and founders</p><div class="card-foot"><span class="p"><small>From</small>₹499</span><a href="#">Customise</a></div></div></article>
+      <article class="card"><div class="card-media"><img src="https://vueme.in/wp-content/uploads/2026/10/gradient-digital-business-card-phone-mockup.webp" alt="Gradient digital business card on a phone" width="900" height="1200" loading="lazy"></div>
+        <div class="card-body"><h3>Gradient</h3><p class="sub">Bright and playful</p><div class="card-foot"><span class="p"><small>From</small>₹499</span><a href="#">Customise</a></div></div></article>
+    </div>
+
+    <div class="shop-more"><a class="btn btn-ghost" href="#">View all cards <svg><use href="#i-arrow"/></svg></a></div>
+  </div>
+</section>
+
+<!-- FINISHES -->
+<section aria-labelledby="fin-h">
+  <div class="wrap">
+    <div class="reveal"><span class="eyebrow">Printed finishes</span><h2 id="fin-h">Pick the feel.</h2></div>
+    <div class="finishes">
+      <article class="finish reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/matte-visiting-card-closeup.webp" alt="Close-up of a matte visiting card" loading="lazy" width="900" height="675"><div><h3>Matte <span>from ₹675</span></h3><p>Smooth, no-glare and easy to write on. Understated and professional.</p></div></article>
+      <article class="finish reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/Gloss-Visiting-Card-Design-Front-and-Back.webp" alt="Gloss visiting card, front and back" loading="lazy" width="900" height="675"><div><h3>Gloss <span>from ₹625</span></h3><p>A shiny coat that makes colours and photos pop.</p></div></article>
+      <article class="finish reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/Synthetic-Visiting-Card-Design.webp" alt="Synthetic visiting card design" loading="lazy" width="900" height="675"><div><h3>Synthetic <span>from ₹800</span></h3><p>Plastic-based stock that stands up to water and wear.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" aria-labelledby="faq-h" style="background:var(--lav)">
+  <div class="wrap faq-grid">
+    <div class="reveal">
+      <span class="eyebrow">Help</span>
+      <h2 id="faq-h">Questions, answered.</h2>
+      <p class="lead" style="margin:16px 0 24px">Can't find what you need? We're here Mon – Sat, 10 AM – 6 PM.</p>
+      <a class="btn btn-ghost" href="mailto:support@vueme.in">Contact support</a>
+    </div>
+    <div class="reveal">
+      <details open><summary>What is a digital business card?<svg><use href="#i-plus"/></svg></summary><p>A web page with your contact details, social links and work, shared with one link. People open it in their browser by tapping your link, scanning your QR code or tapping an NFC card — no app needed.</p></details>
+      <details><summary>Can I add a QR code to my printed card?<svg><use href="#i-plus"/></svg></summary><p>Yes. Add a QR code that points to your digital card, so the printed card carries your full, always-up-to-date profile.</p></details>
+      <details><summary>Which printed finish should I choose?<svg><use href="#i-plus"/></svg></summary><p>Matte for a calm, premium feel; gloss for bright colours and photos; synthetic when cards need to survive water and heavy handling.</p></details>
+      <details><summary>How do I track my order?<svg><use href="#i-plus"/></svg></summary><p>Use the Track Order page with your order number, or reach us at support@vueme.in or +91 90420 18017.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" style="padding-top:96px">
+  <div class="wrap">
+    <div class="final-box reveal">
+      <div>
+        <h2>Your business card, reimagined.</h2>
+        <p>Start with a digital card in minutes, then add print whenever you're ready.</p>
+        <div class="cta-row" style="margin-top:24px"><a class="btn btn-yellow" href="#digital">Create digital card <svg><use href="#i-arrow"/></svg></a></div>
+      </div>
+      <form class="news" onsubmit="event.preventDefault();this.querySelector('small').textContent='Thanks — you\'re on the list.'">
+        <label for="email">Get new templates and offers first</label>
+        <div class="news-row"><input id="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn btn-yellow" style="min-height:44px">Subscribe</button></div>
+        <small aria-live="polite">No spam. Unsubscribe anytime.</small>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="120" height="26" style="height:26px;width:auto" loading="lazy">
+        <p>Digital and printed business cards, designed online with Vueme.</p>
+        <div class="socials"><a href="#" aria-label="Vueme on Facebook"><svg><use href="#i-fb"/></svg></a><a href="#" aria-label="Vueme on Instagram"><svg><use href="#i-ig"/></svg></a></div>
+      </div>
+      <div><h4>Shop</h4><ul><li><a href="#">Digital Business Cards</a></li><li><a href="#">All Printed Cards</a></li><li><a href="#">Matte Business Cards</a></li><li><a href="#">Gloss Business Cards</a></li><li><a href="#">Synthetic Business Cards</a></li></ul></div>
+      <div><h4>Support</h4><ul><li><a href="#">Contact Us</a></li><li><a href="#faq">FAQs</a></li><li><a href="#">Track Your Order</a></li><li><a href="#">My Account</a></li><li><a href="#">Refund &amp; Replacement</a></li></ul></div>
+      <div><h4>Get in touch</h4><ul class="contact">
+        <li><svg><use href="#i-mail"/></svg><a href="mailto:support@vueme.in">support@vueme.in</a></li>
+        <li><svg><use href="#i-phone"/></svg><a href="tel:+919042018017">+91 90420 18017</a></li>
+        <li><svg><use href="#i-clock"/></svg>Mon – Sat, 10 AM – 6 PM</li></ul></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Vueme. All rights reserved.</span><span><a href="#">Privacy Policy</a> · <a href="#">Terms &amp; Conditions</a> · Designed by brandme</span></div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/919042018017" aria-label="Chat with Vueme on WhatsApp"><svg><use href="#i-wa"/></svg></a>
+
+<script>
+document.body.classList.remove('no-js');
+// reveal on scroll
+const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'}):null;
+document.querySelectorAll('.reveal').forEach(el=>io?io.observe(el):el.classList.add('in'));
+// tabs
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function select(t){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on})}
+tabs.forEach((t,i)=>{t.addEventListener('click',()=>select(t));t.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];select(n);n.focus()}})});
+document.querySelectorAll('[data-tab]').forEach(a=>a.addEventListener('click',()=>select(document.getElementById('t-'+a.dataset.tab))));
+// mobile menu
+const mb=document.querySelector('.menu-btn'),mn=document.getElementById('mnav');
+mb.addEventListener('click',()=>{const o=mn.classList.toggle('open');mb.setAttribute('aria-expanded',o)});
+mn.addEventListener('click',e=>{if(e.target.tagName==='A'){mn.classList.remove('open');mb.setAttribute('aria-expanded',false)}});
+</script>
+</body>
+</html>
