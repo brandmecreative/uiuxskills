@@ -61,6 +61,8 @@ p{text-wrap:pretty}
 .btn-primary:hover{background:var(--purple-700)}
 .btn-ink{background:var(--ink);color:#fff}
 .btn-ink:hover{background:#2a2540}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
+.btn-yellow:hover{background:#FFD23A}
 .btn-white{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .btn-white:hover{background:var(--ink);color:#fff}
 .btn-ghost{color:var(--ink);background:transparent}
@@ -351,7 +353,7 @@ body{background:var(--soft)}
   .share{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:start}
 }
 @media (max-width:760px){
-  .crumb,.status,.ebar-end .btn-ghost{display:none}
+  .crumb,.status,.ebar-end .btn-ghost,#offer-tag{display:none!important}
   .editor{display:block}
   .side{position:static;max-height:none;border-right:0}
   .mtabs{display:flex;position:sticky;top:64px;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 16px}
@@ -376,7 +378,7 @@ body{background:var(--soft)}
     <span class="status" id="status" aria-live="polite"><span data-icon="check"></span>Draft saved</span>
     <div class="ebar-end">
       <a class="btn btn-ghost btn-sm" href="editor-print.html"><span data-icon="print"></span>Visiting card editor</a>
-      <button class="btn btn-primary btn-sm" id="publish">Pay &amp; publish · <span class="js-total">₹499</span></button>
+      <span class="tag" id="offer-tag" style="margin-right:4px" hidden>Diwali 50% off</span><button class="btn btn-primary btn-sm" id="publish">Pay &amp; publish · <span class="js-total">₹499</span></button>
     </div>
   </div>
 </header>
@@ -454,6 +456,7 @@ body{background:var(--soft)}
     <div><h2>Order summary</h2>
       <div class="sum" style="margin-top:12px" aria-live="polite">
         <div><span id="sum-tpl">Aria template</span><span id="sum-tpl-p">₹499</span></div>
+        <div id="sum-offer" hidden style="color:var(--mint-ink);font-weight:700"><span id="sum-offer-l">Diwali offer</span><span id="sum-offer-v"></span></div>
         <div id="sum-an" hidden><span>Analytics</span><span>₹199</span></div>
         <div id="sum-nfc" hidden><span>NFC card</span><span>₹399</span></div>
         <div class="tot"><span>Total today</span><span class="js-total">₹499</span></div>
@@ -2832,7 +2835,13 @@ var qrcode = function() {
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const initials = n => (String(n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('') || 'V').toUpperCase();
   const slug = n => String(n || 'your-name').toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-').slice(0, 32) || 'your-name';
-  const inr = n => '₹' + Number(n).toLocaleString('en-IN');
+  const inr = n => '₹' + Number(n).toLocaleString('en-IN', Number.isInteger(+n) ? {} : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // ---------- offer (edit here; set active:false to switch it off everywhere) ----------
+  // Applies to the digital card price only. Add-ons and renewal stay at their usual price.
+  // ends: ISO date-time string (e.g. '2026-11-15T23:59:00+05:30') shows a countdown; '' hides it.
+  const OFFER = { active: true, name: 'Diwali offer', pct: 50, ends: '' };
+  const offerPrice = p => OFFER.active ? Math.round(p * (100 - OFFER.pct)) / 100 : p;
   // readable text on an arbitrary accent
   function onColor(hex) {
     const h = hex.replace('#', ''); const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
@@ -3000,7 +3009,7 @@ var qrcode = function() {
 
   document.addEventListener('DOMContentLoaded', () => { hydrateIcons(); nav(); });
 
-  window.Vueme = { icon, hydrateIcons, esc, slug, inr, initials, onColor, qrSvg, digitalCard, phone, printSide, DEFAULT, TEMPLATES, PRINT_DEFAULT, PRINT_TEMPLATES, PRINT_PRICES, toast, copy, store };
+  window.Vueme = { OFFER, offerPrice, icon, hydrateIcons, esc, slug, inr, initials, onColor, qrSvg, digitalCard, phone, printSide, DEFAULT, TEMPLATES, PRINT_DEFAULT, PRINT_TEMPLATES, PRINT_PRICES, toast, copy, store };
 })();
 
 </script>
@@ -3014,7 +3023,7 @@ var qrcode = function() {
   if (qs.get('template') && V.TEMPLATES.some(t => t.id === qs.get('template'))) d.template = qs.get('template');
 
   // build template + swatch pickers
-  $('#tpl-pick').innerHTML = V.TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}"><div class="thumb" aria-hidden="true">${V.phone(V.digitalCard({ template: t.id }))}</div><b>${t.name}<span>${V.inr(t.price)}</span></b><small>${t.note}</small></label>`).join('');
+  $('#tpl-pick').innerHTML = V.TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}"><div class="thumb" aria-hidden="true">${V.phone(V.digitalCard({ template: t.id }))}</div><b>${t.name}<span>${V.OFFER.active ? `<s style="font-weight:500;color:var(--ink-3);margin-right:4px">${V.inr(t.price)}</s>` : ''}${V.inr(V.offerPrice(t.price))}</span></b><small>${t.note}</small></label>`).join('');
   $('#swatches').innerHTML = ACCENTS.map(([c, n]) => `<label class="swatch" style="background:${c}" title="${n}"><input type="radio" name="accent" value="${c}" aria-label="${n}"></label>`).join('');
 
   // fill form from state
@@ -3037,7 +3046,9 @@ var qrcode = function() {
     $('#photo-rm').hidden = !d.photo;
     $('#bio-count').textContent = (d.bio || '').length + ' / 160';
     // pricing
-    const total = tpl.price + (d.analytics ? 199 : 0) + (d.nfc ? 399 : 0);
+    const cardPrice = V.offerPrice(tpl.price), off = tpl.price - cardPrice;
+    const total = cardPrice + (d.analytics ? 199 : 0) + (d.nfc ? 399 : 0);
+    $('#sum-offer').hidden = !off; $('#sum-offer-l').textContent = `${V.OFFER.name} (${V.OFFER.pct}% off)`; $('#sum-offer-v').textContent = '−' + V.inr(off);
     $('#sum-tpl').textContent = tpl.name + ' template'; $('#sum-tpl-p').textContent = V.inr(tpl.price);
     $('#sum-an').hidden = !d.analytics; $('#sum-nfc').hidden = !d.nfc;
     document.querySelectorAll('.js-total').forEach(e => e.textContent = V.inr(total));
@@ -3079,6 +3090,7 @@ var qrcode = function() {
     document.querySelectorAll('.mtabs [data-view]').forEach(x => x.setAttribute('aria-pressed', x === b));
     window.scrollTo(0, 0);
   }));
+  if (V.OFFER.active) { const ot = $('#offer-tag'); ot.hidden = false; ot.textContent = `${V.OFFER.name.replace(' offer','')} ${V.OFFER.pct}% off`; }
   if (location.hash === '#addons') { $('#a-nfc').checked = true; d.nfc = true; }
   render();
 })();

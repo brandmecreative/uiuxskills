@@ -171,11 +171,189 @@ section{position:relative}
   .try-row{flex-direction:column;border-radius:20px}
   .try-row .btn{width:100%}
 }
+.cb-grid>*,.dw-grid>*,.what-grid>*,.hero-grid>*,.flow-grid>*{min-width:0}
+/* ---------- mobile chooser ---------- */
+.choose{display:none;margin-top:24px}
+.choose .label{font-size:13px;font-weight:700;margin-bottom:10px}
+.ch{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:14px;border-radius:var(--r);border:1.5px solid var(--line-2);background:#fff;margin-bottom:10px;min-height:72px}
+.ch:active{transform:scale(.99)}
+.ch .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center}
+.ch .ic .i{width:22px;height:22px}
+.ch-digital .ic{background:var(--purple);color:#fff}
+.ch-print .ic{background:var(--yellow);color:var(--ink)}
+.ch b{display:block;font-size:16px}
+.ch small{font-size:13px;color:var(--ink-2)}
+.ch .p{text-align:right;font-weight:800;font-size:15px;line-height:1.2}
+.ch .p s{display:block;font-size:12px;font-weight:600;color:var(--ink-3)}
+
+/* ---------- Diwali ---------- */
+.diwali{background:radial-gradient(700px 400px at 80% 30%,rgba(252,195,5,.22),transparent 60%),radial-gradient(600px 400px at 10% 90%,rgba(255,138,0,.18),transparent 60%),var(--purple-900);color:#fff;overflow:hidden;padding:96px 0 104px}
+.dw-lights{position:absolute;left:0;right:0;top:0;height:90px;pointer-events:none}
+.dw-lights svg{width:100%;height:100%}
+.bulb{animation:twinkle 2.4s ease-in-out infinite}
+.bulb:nth-child(3n){animation-delay:.8s}.bulb:nth-child(3n+1){animation-delay:1.6s}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.35}}
+.dw-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;position:relative}
+.diwali .eyebrow{color:var(--yellow)}
+.diwali h2{margin-top:14px}
+.diwali h2 em{font-style:normal;color:var(--yellow)}
+.diwali .lede{color:#fff;margin-top:16px}
+.dw-prices{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:8px;max-width:520px}
+.dw-prices a{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);min-height:56px;transition:background-color .18s}
+.dw-prices a:hover{background:rgba(255,255,255,.16)}
+.dw-prices b{font-size:16px}
+.dw-prices small{display:block;font-size:12.5px;color:#E7E1FA;font-weight:500}
+.dw-prices s{color:#CFC6EE;font-size:14px}
+.dw-prices .now{font-weight:800;font-size:18px;color:var(--yellow)}
+.dw-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.dw-ctas .btn-white{background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px #fff}
+.dw-ctas .btn-white:hover{background:#fff;color:var(--ink)}
+.dw-fine{font-size:13px;color:#E7E1FA;margin-top:14px;max-width:52ch}
+.dw-count{display:inline-flex;gap:8px;align-items:center;margin-top:18px;padding:8px 14px;border-radius:var(--pill);background:rgba(252,195,5,.16);color:var(--yellow);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.dw-art{position:relative;aspect-ratio:1/1;max-width:520px;width:100%;margin:0 auto}
+.dw-rangoli{position:absolute;inset:0;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dw-art .phone{--w:210px;position:absolute;left:50%;top:6%;transform:translateX(-50%) rotate(-4deg);z-index:2}
+.dw-badge{position:absolute;right:2%;top:10%;z-index:3;width:116px;height:116px;border-radius:50%;background:var(--yellow);color:var(--ink);display:grid;place-items:center;text-align:center;font-weight:800;line-height:1;transform:rotate(10deg);box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
+.dw-badge b{font-size:38px;letter-spacing:-.04em;display:block}
+.dw-badge span{font-size:13px}
+.diyas{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;z-index:3}
+.diya{width:96px}
+.flame{transform-origin:50% 100%;animation:flicker 1.6s ease-in-out infinite}
+.diya:nth-child(2) .flame{animation-delay:.4s}.diya:nth-child(3) .flame{animation-delay:.9s}
+@keyframes flicker{0%,100%{transform:scale(1,1) rotate(-2deg)}30%{transform:scale(.92,1.08) rotate(2deg)}60%{transform:scale(1.05,.95) rotate(-1deg)}}
+.spark{position:absolute;width:10px;height:10px;background:var(--yellow);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:twinkle 2s ease-in-out infinite;z-index:1}
+
+/* ---------- what is a digital card ---------- */
+.what-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+.what-img{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;background:var(--soft)}
+.what-img img{width:100%;height:100%;object-fit:cover}
+.facts{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:14px}
+.facts li{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:start}
+.facts .ic{width:48px;height:48px;border-radius:14px;background:var(--lilac);color:var(--purple);display:grid;place-items:center}
+.facts .ic .i{width:22px;height:22px}
+.facts b{display:block;font-size:17px}
+.facts span{color:var(--ink-2);font-size:15px}
+
+/* ---------- animated flow ---------- */
+.flow{background:var(--soft)}
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:40px;align-items:start}
+.flow-steps{list-style:none;padding:0;margin:0}
+.fstep{min-height:62vh;display:flex;flex-direction:column;justify-content:center;padding:24px 0 24px 28px;border-left:3px solid var(--line-2);transition:border-color .3s}
+.fstep .n{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink-3)}
+.fstep h3{font-size:clamp(26px,3vw,36px);margin:8px 0 10px;color:var(--ink-3);transition:color .3s}
+.fstep p{color:var(--ink-2);font-size:17px;max-width:42ch}
+.fstep.active{border-color:var(--purple)}
+.fstep.active h3{color:var(--ink)}
+.flow-stage{position:sticky;top:calc(50vh - 280px);height:560px}
+.fscene-inline{display:none}
+.sc{position:absolute;inset:0;opacity:0;transform:translateY(16px) scale(.98);transition:opacity .45s var(--ease),transform .45s var(--ease);pointer-events:none}
+.sc.is-on{opacity:1;transform:none}
+.sc .phone{--w:230px;position:absolute}
+.sc-card{position:absolute;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 40px -24px rgba(14,11,26,.45);padding:16px}
+/* s1 create */
+.s1 .phone{right:8%;top:4%}
+.s1 .sc-card{left:0;top:22%;width:250px;display:grid;gap:10px}
+.s1 .fake-in{border:1.5px solid var(--purple);border-radius:10px;padding:10px 12px;font-weight:700;min-height:44px;display:flex;align-items:center}
+.caret{display:inline-block;width:2px;height:18px;background:var(--purple);margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.s1 .dots{display:flex;gap:8px}.s1 .dots i{width:22px;height:22px;border-radius:50%}
+.s1 .dots i.on{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.lbl-sm{font-size:12px;font-weight:700;color:var(--ink-2)}
+/* s2 share */
+.s2 .pc-wrap{position:absolute;left:0;top:30%;width:280px;transform:rotate(-8deg)}
+.s2 .phone{right:6%;top:6%}
+.scanframe{position:absolute;inset:18% 14% 34%;border:3px solid #fff;border-radius:18px;z-index:4;box-shadow:0 0 0 999px rgba(14,11,26,.35)}
+.scanline{position:absolute;left:6%;right:6%;height:3px;background:var(--yellow);box-shadow:0 0 12px var(--yellow);top:10%}
+.sc.is-on .scanline{animation:scan 1.8s ease-in-out infinite alternate}
+@keyframes scan{to{top:88%}}
+.bubble{position:absolute;left:4%;top:4%;background:#DCF8C6;color:#0E0B1A;border-radius:14px 14px 14px 4px;padding:10px 14px;font-size:14px;font-weight:600;box-shadow:0 10px 24px -14px rgba(0,0,0,.4);display:flex;gap:8px;align-items:center;z-index:5}
+.bubble .i{width:18px;height:18px;color:#128C7E}
+.sc.is-on .bubble{animation:pop 3.6s var(--ease) infinite}
+@keyframes pop{0%{opacity:0;transform:translateY(10px) scale(.9)}12%,85%{opacity:1;transform:none}100%{opacity:0}}
+.nfc-ring{position:absolute;left:210px;top:44%;width:60px;height:60px;border-radius:50%;border:3px solid var(--purple);opacity:0;z-index:5}
+.sc.is-on .nfc-ring{animation:ring 1.8s ease-out infinite}
+.sc.is-on .nfc-ring:nth-of-type(2){animation-delay:.6s}
+@keyframes ring{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+/* s3 save */
+.s3 .phone{left:50%;top:2%;transform:translateX(-50%)}
+.tap{position:absolute;left:50%;top:78%;width:46px;height:46px;margin-left:-23px;border-radius:50%;background:rgba(107,63,216,.25);border:2px solid var(--purple);z-index:5;opacity:0}
+.sc.is-on .tap{animation:tap 3.6s var(--ease) infinite}
+@keyframes tap{0%,20%{opacity:0;transform:scale(1.6)}30%{opacity:1;transform:scale(1)}40%{opacity:0;transform:scale(.8)}100%{opacity:0}}
+.sheet{position:absolute;left:50%;width:250px;margin-left:-125px;bottom:6%;background:#fff;border-radius:20px;padding:16px;box-shadow:0 24px 50px -20px rgba(14,11,26,.55);display:flex;gap:12px;align-items:center;z-index:6;opacity:0;transform:translateY(30px)}
+.sc.is-on .sheet{animation:sheet 3.6s var(--ease) infinite}
+@keyframes sheet{0%,38%{opacity:0;transform:translateY(30px)}48%,90%{opacity:1;transform:none}100%{opacity:0;transform:translateY(10px)}}
+.sheet .ok{width:40px;height:40px;border-radius:50%;background:var(--mint);color:var(--mint-ink);display:grid;place-items:center}
+.sheet .ok .i{width:22px;height:22px}
+.sheet b{display:block}.sheet span{font-size:13px;color:var(--ink-2)}
+/* s4 track */
+.s4 .sc-card{left:50%;top:6%;width:min(380px,92%);transform:translateX(-50%);padding:20px}
+.s4 .big{font-size:48px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.s4 svg{width:100%;height:90px;margin:12px 0}
+.s4 .draw{stroke-dasharray:800;stroke-dashoffset:800}
+.sc.is-on .draw{animation:draw 2.4s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.s4 .rows{display:grid;gap:8px}
+.s4 .row{display:flex;gap:10px;align-items:center;font-size:14px;padding:8px 10px;border-radius:10px;background:var(--soft);opacity:0;transform:translateX(-10px)}
+.s4 .row .i{width:16px;height:16px;color:var(--purple)}
+.sc.is-on .row{animation:rowin .5s var(--ease) forwards}
+.sc.is-on .row:nth-child(2){animation-delay:.5s}.sc.is-on .row:nth-child(3){animation-delay:1s}
+@keyframes rowin{to{opacity:1;transform:none}}
+
+/* ---------- template gallery ---------- */
+.gal-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.gal{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:28px 24px 12px;margin:0 -24px;scrollbar-width:thin}
+.gal figure{scroll-snap-align:start;border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;background:var(--soft)}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.gal figure:hover img{transform:scale(1.04)}
+.swipe{font-size:13px;color:var(--ink-3);font-weight:600;display:none}
+
+/* ---------- mobile sticky bar ---------- */
+.mbar{display:none}
+@media (max-width:900px){
+  .flow-grid{grid-template-columns:1fr;gap:0}
+  .flow-stage{display:none}
+  .fstep{min-height:0;padding:28px 0 28px 20px}
+  .fscene-inline{display:block;position:relative;height:400px;margin-top:20px;border-radius:var(--r);background:#fff;border:1px solid var(--line);overflow:hidden}
+  .fscene-inline .sc{transform:scale(.86);transform-origin:50% 0}
+  .fscene-inline .sc.is-on{transform:scale(.86)}
+  .dw-grid,.what-grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .choose{display:block}
+  .hero-ctas .btn-white{display:none}
+  .proof{display:none}
+  .diwali{padding:64px 0 72px}
+  .dw-art{max-width:340px}
+  .dw-art .phone{--w:160px}
+  .dw-badge{width:90px;height:90px}.dw-badge b{font-size:28px}
+  .diya{width:70px}
+  .what-img{aspect-ratio:4/3}
+  .gal{grid-auto-columns:68%;margin:0 -16px;padding:20px 16px 8px}
+  .swipe{display:block}
+  .wa-fab{display:none}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;gap:10px;align-items:center;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -8px 24px -12px rgba(14,11,26,.25);transform:translateY(110%);transition:transform .3s var(--ease)}
+  .mbar.show{transform:none}
+  .mbar .t{flex:1;min-width:0;line-height:1.2}
+  .mbar small{display:block;font-size:12px;font-weight:700;color:var(--purple)}
+  .mbar b{font-size:15px;white-space:nowrap}
+  .mbar .wa{width:48px;height:48px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;flex:none}
+  .mbar .wa .i{width:24px;height:24px}
+  body{padding-bottom:76px}
+  .tpl-tabs{flex-wrap:nowrap;overflow-x:auto;margin-left:-16px;margin-right:-16px;padding:0 16px 4px;scrollbar-width:none}
+  .tpl-tabs button{flex:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .sc,.sc *{animation:none!important}
+  .sheet,.s4 .row,.bubble{opacity:1!important;transform:none!important}
+  .s4 .draw{stroke-dashoffset:0}
+  .dw-rangoli,.flame,.bulb,.spark{animation:none}
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="promo">Add <b>Analytics</b> to any digital card for ₹199 and see who viewed, scanned, tapped and saved it. <a href="dashboard.html">See the dashboard</a></div>
+<div class="promo">Diwali offer: <b>50% off</b> every digital card. <a href="#diwali">See prices</a></div>
 
 <header class="site-nav">
   <div class="wrap">
@@ -221,6 +399,11 @@ section{position:relative}
         <span data-icon="phone">No app needed</span>
         <span data-icon="edit">Unlimited edits, same link</span>
       </div>
+      <div class="choose">
+        <p class="label">What do you need?</p>
+        <a class="ch ch-digital" href="#what"><span class="ic" data-icon="phone"></span><span><b>Digital card</b><small>Link, QR code &amp; NFC</small></span><span class="p"><s>₹499</s>from ₹249.50</span></a>
+        <a class="ch ch-print" href="#printed"><span class="ic" data-icon="print"></span><span><b>Printed visiting cards</b><small>Matte, gloss or synthetic</small></span><span class="p">from ₹625</span></a>
+      </div>
     </div>
     <div class="stage" aria-label="Your digital card and printed visiting card, updating as you type">
       <div id="hero-phone"></div>
@@ -234,9 +417,69 @@ section{position:relative}
 </section>
 
 <div class="marquee" aria-hidden="true"><div class="marquee-track">
-  <span>Digital cards from ₹499</span><span>Printed cards from ₹625</span><span>Analytics +₹199</span><span>NFC card +₹399</span><span>Delivered across India</span>
-  <span>Digital cards from ₹499</span><span>Printed cards from ₹625</span><span>Analytics +₹199</span><span>NFC card +₹399</span><span>Delivered across India</span>
+  <span>Diwali: digital cards 50% off</span><span>Printed cards from ₹625</span><span>Analytics +₹199</span><span>NFC card +₹399</span><span>Delivered across India</span>
+  <span>Diwali: digital cards 50% off</span><span>Printed cards from ₹625</span><span>Analytics +₹199</span><span>NFC card +₹399</span><span>Delivered across India</span>
 </div></div>
+
+<!-- DIWALI OFFER -->
+<section id="diwali" class="diwali" aria-labelledby="dw-h">
+  <div class="dw-lights" aria-hidden="true"><svg viewBox="0 0 1200 90" preserveAspectRatio="none" id="dw-lights"></svg></div>
+  <div class="wrap dw-grid">
+    <div class="reveal">
+      <p class="eyebrow">Diwali offer</p>
+      <h2 class="h-lg" id="dw-h"><em>50% off</em> every digital card this Diwali.</h2>
+      <p class="lede">Your own link, QR code and Save Contact button, at half the usual price. Pick a design to start.</p>
+      <ul class="dw-prices" id="dw-prices"></ul>
+      <div class="dw-ctas"><a class="btn btn-yellow btn-lg" href="editor-digital.html">Claim 50% off<span data-icon="arrow"></span></a><a class="btn btn-white btn-lg" href="https://wa.me/919042018017?text=Hi%20Vueme%2C%20I%27d%20like%20the%20Diwali%2050%25%20offer%20on%20a%20digital%20card" ><span data-icon="whatsapp"></span>Ask on WhatsApp</a></div>
+      <p class="dw-count" id="dw-count" hidden></p>
+      <p class="dw-fine">50% off the digital card price. Analytics (+₹199), the NFC card (+₹399) and renewal (₹299 a year) stay at their usual price.</p>
+    </div>
+    <div class="dw-art reveal" aria-hidden="true">
+      <svg class="dw-rangoli" viewBox="0 0 400 400" id="rangoli"></svg>
+      <div id="dw-phone"></div>
+      <div class="dw-badge"><div><b>50%</b><span>off</span></div></div>
+      <div class="diyas" id="diyas"></div>
+      <i class="spark" style="left:6%;top:18%"></i><i class="spark" style="left:88%;top:52%;animation-delay:.7s"></i><i class="spark" style="left:16%;top:62%;animation-delay:1.3s;width:14px;height:14px"></i><i class="spark" style="left:72%;top:4%;animation-delay:.3s"></i>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS A DIGITAL CARD -->
+<section id="what" class="sec">
+  <div class="wrap what-grid">
+    <figure class="what-img reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/colourful-digital-business-card-phone-mockup.webp" alt="A hand holding a phone that shows a Vueme digital business card with photo, contact buttons and Add to contact" width="900" height="1200" loading="lazy"></figure>
+    <div class="reveal">
+      <p class="eyebrow">New to digital cards?</p>
+      <h2 class="h-lg" style="margin-top:14px">Your business card, as a page on their phone.</h2>
+      <ul class="facts">
+        <li><span class="ic" data-icon="phone"></span><div><b>Opens on any phone</b><span>A mobile-friendly page with your photo, contact details and social links. No app needed.</span></div></li>
+        <li><span class="ic" data-icon="qr"></span><div><b>Your own link and QR code</b><span>Send the link on WhatsApp or let people scan the QR code.</span></div></li>
+        <li><span class="ic" data-icon="save"></span><div><b>Saved in one tap</b><span>A Save Contact button puts your details into their phone.</span></div></li>
+        <li><span class="ic" data-icon="edit"></span><div><b>Edit any time</b><span>Update your details from My Account. Your link and QR code stay the same.</span></div></li>
+      </ul>
+      <div class="hero-ctas" style="margin-top:28px"><a class="btn btn-ink" href="#how">See how it works<span data-icon="down"></span></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANIMATED FLOW -->
+<section id="how" class="sec flow" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="reveal" style="max-width:760px">
+      <p class="eyebrow">How a digital card works</p>
+      <h2 class="h-lg" id="how-h" style="margin-top:14px">From your phone to their contacts in four steps.</h2>
+    </div>
+    <div class="flow-grid">
+      <ol class="flow-steps">
+        <li class="fstep" data-step="1"><span class="n">01 · Create</span><h3>Design it on your phone</h3><p>Pick a template, add your photo and details, and watch the card update as you type. Pay, and your link and QR code appear right away.</p><div class="fscene-inline" data-scene="1" aria-hidden="true"></div></li>
+        <li class="fstep" data-step="2"><span class="n">02 · Share</span><h3>Share it your way</h3><p>Send your link on WhatsApp, show your QR code, or tap your NFC card on their phone.</p><div class="fscene-inline" data-scene="2" aria-hidden="true"></div></li>
+        <li class="fstep" data-step="3"><span class="n">03 · Save</span><h3>They save you in one tap</h3><p>Your card opens in their browser. One tap on Save Contact and your number is in their phone.</p><div class="fscene-inline" data-scene="3" aria-hidden="true"></div></li>
+        <li class="fstep" data-step="4"><span class="n">04 · Track</span><h3>See what happened next</h3><p>With the Analytics add-on, see who viewed, scanned, tapped and saved your card.</p><div class="fscene-inline" data-scene="4" aria-hidden="true"></div></li>
+      </ol>
+      <div class="flow-stage" id="flow-stage" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
 
 <!-- DIGITAL (purple block) -->
 <section id="digital" class="sec" style="padding-bottom:0">
@@ -257,11 +500,27 @@ section{position:relative}
           <div class="addon"><b>Analytics <span>+₹199</span></b><p>See who viewed, scanned, tapped and saved your card.</p></div>
           <div class="addon"><b>NFC card <span>+₹399</span></b><p>Physical tap-to-open card, delivered in 3–5 working days.</p></div>
         </div>
-        <div class="hero-ctas" style="margin-top:28px"><a class="btn btn-white" href="editor-digital.html" id="tpl-cta">Design with Aria · ₹499</a></div>
+        <div class="hero-ctas" style="margin-top:28px"><a class="btn btn-white" href="editor-digital.html" id="tpl-cta">Design with Aria</a></div>
         <p class="fine">Renewal ₹299 per year, starting 1 year after purchase. We email you before it's due.</p>
       </div>
       <div class="phone-col reveal"><div id="tpl-phone"></div></div>
     </div>
+  </div>
+</section>
+
+<!-- TEMPLATE GALLERY -->
+<section class="sec" aria-labelledby="gal-h" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="gal-head reveal"><div><p class="eyebrow">More designs</p><h2 class="h-lg" id="gal-h" style="margin-top:14px">Find a card that looks like you.</h2></div><a class="btn btn-white" href="https://vueme.in/index.php/product-category/digital-business-card/">See all digital designs<span data-icon="arrow"></span></a></div>
+    <div class="gal" tabindex="0" aria-label="Digital card designs, scroll sideways">
+      <figure><img src="https://vueme.in/wp-content/uploads/2026/10/Vibrant-Yellow-UX-Designer-Profile-Mockup.webp" alt="Bold yellow and purple digital card on a phone" loading="lazy" width="900" height="1200"></figure>
+      <figure><img src="https://vueme.in/wp-content/uploads/2026/10/gradient-digital-business-card-phone-mockup.webp" alt="Pink gradient digital card with a round profile photo" loading="lazy" width="900" height="1200"></figure>
+      <figure><img src="https://vueme.in/wp-content/uploads/2026/10/digital-business-card-for-freelancers-phone-mockup-1.webp" alt="Pink tile digital card for a marketing specialist" loading="lazy" width="900" height="1200"></figure>
+      <figure><img src="https://vueme.in/wp-content/uploads/2026/10/aesthetic-digital-business-card-features.webp" alt="Lime green digital card with its features listed" loading="lazy" width="900" height="1200"></figure>
+      <figure><img src="https://vueme.in/wp-content/uploads/2026/10/neo-brutalist-business-card-phone-mockup.webp" alt="Neo-brutalist digital card on a phone" loading="lazy" width="900" height="1200"></figure>
+      <figure><img src="https://vueme.in/wp-content/uploads/2026/10/elegant-digital-business-card-phone-mockup.webp" alt="Elegant digital card with a photo banner" loading="lazy" width="900" height="1200"></figure>
+    </div>
+    <p class="swipe">Swipe for more designs →</p>
   </div>
 </section>
 
@@ -359,18 +618,6 @@ section{position:relative}
   </div>
 </section>
 
-<!-- HOW (white) -->
-<section class="sec">
-  <div class="wrap">
-    <div class="reveal"><p class="eyebrow">How it works</p><h2 class="h-lg" style="margin-top:14px">Three steps to your card.</h2></div>
-    <ol class="steps">
-      <li class="step reveal"><span class="n">01</span><h3>Pick a template</h3><p>Choose a digital design, a printed finish, or both.</p></li>
-      <li class="step reveal"><span class="n">02</span><h3>Design your card</h3><p>Add your photo, details and colours and watch it update as you type.</p></li>
-      <li class="step reveal"><span class="n">03</span><h3>Pay and share</h3><p>Your link and QR code appear right after payment. Printed cards ship by Speed Post with tracking.</p></li>
-    </ol>
-  </div>
-</section>
-
 <!-- FAQ (white, real answers from vueme.in/faqs) -->
 <section id="faq" class="sec" style="padding-top:0">
   <div class="wrap faq">
@@ -407,6 +654,12 @@ section{position:relative}
 </footer>
 <a class="wa-fab" href="https://wa.me/919042018017" aria-label="Chat with Vueme on WhatsApp" data-icon="whatsapp"></a>
 
+<div class="mbar" id="mbar" role="region" aria-label="Diwali offer">
+  <div class="t"><small>Diwali · 50% off</small><b>Digital card from <span id="mb-price">₹249.50</span></b></div>
+  <a class="btn btn-primary btn-sm" href="editor-digital.html">Start</a>
+  <a class="wa" href="https://wa.me/919042018017?text=Hi%20Vueme%2C%20I%27d%20like%20a%20digital%20card" aria-label="Chat with Vueme on WhatsApp" data-icon="whatsapp"></a>
+</div>
+
 <script src="assets/vendor/qrcode.js"></script>
 <script src="assets/vendor/gsap.min.js"></script>
 <script src="assets/vendor/ScrollTrigger.min.js"></script>
@@ -428,13 +681,13 @@ section{position:relative}
 
   // --- template switcher (tabs)
   const tabs = $('#tpl-tabs'); let cur = 'aria';
-  tabs.innerHTML = V.TEMPLATES.map(t => `<button role="tab" id="tab-${t.id}" aria-controls="tpl-phone" aria-selected="${t.id === cur}" tabindex="${t.id === cur ? 0 : -1}" data-t="${t.id}">${t.name}<small>${V.inr(t.price)}</small></button>`).join('');
+  tabs.innerHTML = V.TEMPLATES.map(t => `<button role="tab" id="tab-${t.id}" aria-controls="tpl-phone" aria-selected="${t.id === cur}" tabindex="${t.id === cur ? 0 : -1}" data-t="${t.id}">${t.name}<small>${V.inr(V.offerPrice(t.price))}</small></button>`).join('');
   function showTpl(id) {
     cur = id; const t = V.TEMPLATES.find(x => x.id === id);
     tabs.querySelectorAll('[role=tab]').forEach(b => { const on = b.dataset.t === id; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
     $('#tpl-phone').innerHTML = V.phone(V.digitalCard({ template: id, accent: id === 'bauhaus' ? '#E5484D' : id === 'spotlight' ? '#FCC305' : '#6B3FD8' }), t.name + ' template preview');
     $('#tpl-phone').setAttribute('aria-labelledby', 'tab-' + id);
-    const cta = $('#tpl-cta'); cta.textContent = `Design with ${t.name} · ${V.inr(t.price)}`; cta.href = 'editor-digital.html?template=' + id;
+    const cta = $('#tpl-cta'); cta.textContent = `Design with ${t.name} · ${V.inr(V.offerPrice(t.price))}` + (V.OFFER.active ? ` (${V.OFFER.pct}% off)` : ''); cta.href = 'editor-digital.html?template=' + id;
   }
   tabs.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) showTpl(b.dataset.t); });
   tabs.addEventListener('keydown', e => {
@@ -455,6 +708,72 @@ section{position:relative}
   const line = xy.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
   $('#spark').innerHTML = `<path d="${line} L${w} ${h} L0 ${h}Z" fill="#6B3FD8" fill-opacity=".08"/><path d="${line}" fill="none" stroke="#6B3FD8" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
 
+  // --- Diwali offer
+  const O = V.OFFER;
+  $('#dw-prices').innerHTML = V.TEMPLATES.map(t => `<li><a href="editor-digital.html?template=${t.id}"><span><b>${t.name}</b><small>${t.note}</small></span><s>${V.inr(t.price)}</s><span class="now">${V.inr(V.offerPrice(t.price))}</span></a></li>`).join('');
+  $('#mb-price').textContent = V.inr(V.offerPrice(Math.min(...V.TEMPLATES.map(t => t.price))));
+  if (O.ends) {
+    const el = $('#dw-count'), end = new Date(O.ends);
+    const tick = () => { const ms = end - Date.now(); if (ms <= 0) { el.textContent = 'Offer ended'; return; }
+      const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+      el.textContent = `Ends in ${d}d ${h}h ${m}m`; };
+    el.hidden = false; tick(); setInterval(tick, 30000);
+  }
+  // lights, rangoli, diyas, phone
+  let lights = '<path d="M0 10 Q300 80 600 20 T1200 14" fill="none" stroke="#B9A6F0" stroke-width="1.5" opacity=".6"/>';
+  for (let i = 0; i < 24; i++) { const x = 25 + i * 50, y = 10 + Math.sin(i / 23 * Math.PI * 2 + .5) * 26 + 22; lights += `<circle class="bulb" cx="${x}" cy="${y}" r="5" fill="${['#FCC305','#FF8A00','#FFE58A'][i % 3]}"/>`; }
+  $('#dw-lights').innerHTML = lights;
+  let r = '<defs><radialGradient id="rg"><stop offset="0" stop-color="#FCC305" stop-opacity=".35"/><stop offset="1" stop-color="#FCC305" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="198" fill="url(#rg)"/>';
+  const ring = (n, rad, rx, ry, col, op) => { for (let i = 0; i < n; i++) r += `<ellipse cx="200" cy="${200 - rad}" rx="${rx}" ry="${ry}" fill="${col}" opacity="${op}" transform="rotate(${i * 360 / n} 200 200)"/>`; };
+  ring(16, 160, 16, 34, '#FF8A00', .55); ring(12, 118, 18, 36, '#FCC305', .8); ring(8, 70, 20, 40, '#E879F9', .6);
+  for (let i = 0; i < 32; i++) r += `<circle cx="200" cy="12" r="4" fill="#FFE58A" transform="rotate(${i * 360 / 32} 200 200)"/>`;
+  r += '<circle cx="200" cy="200" r="30" fill="#FCC305"/><circle cx="200" cy="200" r="14" fill="#FF8A00"/>';
+  $('#rangoli').innerHTML = r;
+  const diya = `<svg class="diya" viewBox="0 0 120 100"><defs><radialGradient id="fg" cx=".5" cy=".7"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".5" stop-color="#FCC305"/><stop offset="1" stop-color="#FF8A00"/></radialGradient><radialGradient id="gl"><stop offset="0" stop-color="#FCC305" stop-opacity=".55"/><stop offset="1" stop-color="#FCC305" stop-opacity="0"/></radialGradient></defs>
+    <circle cx="60" cy="40" r="40" fill="url(#gl)"/><path class="flame" d="M60 14 C70 30 70 44 60 50 C50 44 50 30 60 14Z" fill="url(#fg)"/>
+    <path d="M14 58 Q60 106 106 58 Q112 54 118 50 Q106 64 100 60 Z" fill="#C2410C"/><path d="M14 58 Q60 98 100 60" fill="#9A3412"/><ellipse cx="60" cy="58" rx="46" ry="8" fill="#EA580C"/><ellipse cx="60" cy="57" rx="36" ry="5" fill="#7C2D12"/></svg>`;
+  $('#diyas').innerHTML = diya + diya + diya;
+  $('#dw-phone').innerHTML = V.phone(V.digitalCard({ template: 'bauhaus', accent: '#6B3FD8' }));
+
+  // --- animated flow scenes (shared markup for the sticky stage and the inline mobile slots)
+  const QR = V.qrSvg('https://vueme.in/ananya-rao', { margin: 1, label: '' });
+  const scene = n => {
+    if (n === 1) return `<div class="sc s1"><div class="sc-card"><span class="lbl-sm">Full name</span><div class="fake-in"><span class="typed"></span><span class="caret"></span></div><span class="lbl-sm">Colour</span><div class="dots"><i class="on" style="background:#6B3FD8"></i><i style="background:#0E0B1A"></i><i style="background:#E5484D"></i><i style="background:#12A150"></i></div></div>${V.phone(V.digitalCard({ name: ' ' }))}</div>`;
+    if (n === 2) return `<div class="sc s2"><div class="bubble">${V.icon('whatsapp')}vueme.in/ananya-rao</div><div class="pc-wrap">${V.printSide({ finish: 'gloss' }, 'back')}</div><span class="nfc-ring"></span><span class="nfc-ring"></span><div class="phone" style="--w:210px"><div class="phone-notch"></div><div class="phone-screen" style="background:#2a2540"><div style="position:absolute;inset:18% 14% 34%;display:grid;place-items:center">${QR}</div><div class="scanframe"><div class="scanline"></div></div></div></div></div>`;
+    if (n === 3) return `<div class="sc s3">${V.phone(V.digitalCard({}))}<span class="tap"></span><div class="sheet"><span class="ok">${V.icon('check')}</span><div><b>Contact saved</b><span>Ananya Rao · Studio Rao</span></div></div></div>`;
+    return `<div class="sc s4"><div class="sc-card"><span class="lbl-sm">Card views · last 30 days</span><div class="big" data-count="1284">0</div><svg viewBox="0 0 300 90" preserveAspectRatio="none"><path class="draw" d="M0 80 L30 70 L60 74 L90 58 L120 62 L150 44 L180 50 L210 30 L240 36 L270 18 L300 22" fill="none" stroke="#6B3FD8" stroke-width="3" stroke-linejoin="round"/></svg><div class="rows"><div class="row">${V.icon('qr')}QR scan · Chennai</div><div class="row">${V.icon('whatsapp')}WhatsApp tap · Bengaluru</div><div class="row">${V.icon('save')}Contact saved · Kochi</div></div></div></div>`;
+  };
+  $('#flow-stage').innerHTML = [1, 2, 3, 4].map(scene).join('');
+  document.querySelectorAll('.fscene-inline').forEach(el => el.innerHTML = scene(+el.dataset.scene));
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function play(sc) {
+    if (!sc || sc.classList.contains('is-on')) return;
+    sc.classList.add('is-on');
+    const t = sc.querySelector('.typed');
+    if (t) { const full = 'Ananya Rao'; let i = still ? full.length : 0; clearInterval(sc._t);
+      const nameEl = sc.querySelector('.dc-name');
+      const step = () => { t.textContent = full.slice(0, i); if (nameEl) nameEl.textContent = full.slice(0, i) || ' '; const av = sc.querySelector('.dc-initials'); if (av) av.textContent = V.initials(full.slice(0, i)) === 'V' && !i ? '' : V.initials(full.slice(0, i)); if (i < full.length) i++; else clearInterval(sc._t); };
+      step(); if (!still) sc._t = setInterval(step, 110); }
+    const c = sc.querySelector('[data-count]');
+    if (c) { const to = +c.dataset.count, t0 = performance.now(), dur = still ? 0 : 1400;
+      const f = now => { const k = dur ? Math.min(1, (now - t0) / dur) : 1; c.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString('en-IN'); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+  }
+  function stop(sc) { if (!sc) return; sc.classList.remove('is-on'); clearInterval(sc._t); }
+  const stageScenes = [...document.querySelectorAll('#flow-stage .sc')];
+  const steps = [...document.querySelectorAll('.fstep')];
+  const setStep = n => { steps.forEach(s => s.classList.toggle('active', +s.dataset.step === n)); stageScenes.forEach((s, i) => i + 1 === n ? play(s) : stop(s)); };
+  if ('IntersectionObserver' in window) {
+    const stepIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setStep(+e.target.dataset.step); }), { rootMargin: "-45% 0px -45% 0px" });
+    steps.forEach(s => stepIO.observe(s));
+  }
+  setStep(1);
+  const inlineIO = new IntersectionObserver(es => es.forEach(e => { const sc = e.target.querySelector('.sc'); e.isIntersecting ? play(sc) : stop(sc); }), { threshold: .45 });
+  document.querySelectorAll('.fscene-inline').forEach(el => inlineIO.observe(el));
+
+  // --- mobile sticky bar: shows once the hero has scrolled away
+  const mbar = $('#mbar');
+  new IntersectionObserver(([e]) => mbar.classList.toggle('show', !e.isIntersecting), { threshold: 0 }).observe(document.querySelector('.hero'));
+
   // --- motion (GSAP): skipped entirely for reduced motion
   if (window.gsap) {
     gsap.registerPlugin(ScrollTrigger);
@@ -467,6 +786,8 @@ section{position:relative}
         start: 'top 92%', once: true,
         onEnter: els => gsap.to(els, { y: 0, opacity: 1, duration: .6, ease: 'expo.out', stagger: .06, overwrite: true }),
       });
+      gsap.to('.diyas', { y: -24, ease: 'none', scrollTrigger: { trigger: '#diwali', start: 'top bottom', end: 'bottom top', scrub: true } });
+      gsap.to('.dw-badge', { rotate: -8, ease: 'none', scrollTrigger: { trigger: '#diwali', start: 'top bottom', end: 'bottom top', scrub: true } });
       return () => gsap.set('.reveal', { clearProps: 'all' });
     });
   }

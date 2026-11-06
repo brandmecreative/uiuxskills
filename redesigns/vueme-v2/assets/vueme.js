@@ -62,7 +62,13 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const initials = n => (String(n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('') || 'V').toUpperCase();
   const slug = n => String(n || 'your-name').toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-').slice(0, 32) || 'your-name';
-  const inr = n => '₹' + Number(n).toLocaleString('en-IN');
+  const inr = n => '₹' + Number(n).toLocaleString('en-IN', Number.isInteger(+n) ? {} : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // ---------- offer (edit here; set active:false to switch it off everywhere) ----------
+  // Applies to the digital card price only. Add-ons and renewal stay at their usual price.
+  // ends: ISO date-time string (e.g. '2026-11-15T23:59:00+05:30') shows a countdown; '' hides it.
+  const OFFER = { active: true, name: 'Diwali offer', pct: 50, ends: '' };
+  const offerPrice = p => OFFER.active ? Math.round(p * (100 - OFFER.pct)) / 100 : p;
   // readable text on an arbitrary accent
   function onColor(hex) {
     const h = hex.replace('#', ''); const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
@@ -230,5 +236,5 @@
 
   document.addEventListener('DOMContentLoaded', () => { hydrateIcons(); nav(); });
 
-  window.Vueme = { icon, hydrateIcons, esc, slug, inr, initials, onColor, qrSvg, digitalCard, phone, printSide, DEFAULT, TEMPLATES, PRINT_DEFAULT, PRINT_TEMPLATES, PRINT_PRICES, toast, copy, store };
+  window.Vueme = { OFFER, offerPrice, icon, hydrateIcons, esc, slug, inr, initials, onColor, qrSvg, digitalCard, phone, printSide, DEFAULT, TEMPLATES, PRINT_DEFAULT, PRINT_TEMPLATES, PRINT_PRICES, toast, copy, store };
 })();

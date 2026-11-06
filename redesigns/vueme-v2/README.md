@@ -31,6 +31,12 @@ Refero's live research server was not connected, so the research used the refero
 | Dashboard: one hue, single axis, direct labels, tooltip + table, lilac only as meter track | dataviz skill (validator: lilac fails as a data colour) | Accessible and calm |
 | Motion: GSAP expo.out reveals, off for reduced motion | ui-ux-pro-max `gsap` presets | Short, purposeful, respects user setting |
 
+## Diwali offer and mobile
+- The offer lives in one place: `OFFER` at the top of `assets/vueme.js` (`active`, `name`, `pct`, `ends`). It discounts the digital card price on the landing page and in the digital editor; add-ons and renewal stay full price. Set `ends` to show a countdown, or `active: false` to switch it off everywhere.
+- Mobile: a "What do you need?" chooser in the hero, a plain "New to digital cards?" explainer, swipeable templates and gallery, and a sticky bottom bar (offer price, Start, WhatsApp) that appears after the hero.
+- The "How a digital card works" flow uses a sticky animated stage on desktop and a small animated scene inside each step on phones. All motion stops for reduced-motion users.
+- Diwali artwork (lights, rangoli, diyas) is drawn in SVG; other images are Vueme's own creatives from vueme.in.
+
 ## Copy pass
 The page copy was audited with the avoid-ai-writing skill (warm, plain voice). It removed em dashes from our own copy (Vueme's tagline is kept as written), a two-item negation chain ("No software, no designer"), unsupported claims ("Live in about five minutes", "Same QR, forever", "Visitors stay anonymous", "soft to the touch"), and a rewording that had dropped Vueme's "if approved" condition on reprints. It also corrected synthetic cards to Vueme's spec: 180 micron synthetic sheet, not 300 GSM.
 

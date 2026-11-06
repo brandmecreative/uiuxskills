@@ -76,7 +76,7 @@ body{background:var(--soft)}
   .share{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:start}
 }
 @media (max-width:760px){
-  .crumb,.status,.ebar-end .btn-ghost{display:none}
+  .crumb,.status,.ebar-end .btn-ghost,#offer-tag{display:none!important}
   .editor{display:block}
   .side{position:static;max-height:none;border-right:0}
   .mtabs{display:flex;position:sticky;top:64px;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 16px}
@@ -101,7 +101,7 @@ body{background:var(--soft)}
     <span class="status" id="status" aria-live="polite"><span data-icon="check"></span>Draft saved</span>
     <div class="ebar-end">
       <a class="btn btn-ghost btn-sm" href="editor-print.html"><span data-icon="print"></span>Visiting card editor</a>
-      <button class="btn btn-primary btn-sm" id="publish">Pay &amp; publish · <span class="js-total">₹499</span></button>
+      <span class="tag" id="offer-tag" style="margin-right:4px" hidden>Diwali 50% off</span><button class="btn btn-primary btn-sm" id="publish">Pay &amp; publish · <span class="js-total">₹499</span></button>
     </div>
   </div>
 </header>
@@ -179,6 +179,7 @@ body{background:var(--soft)}
     <div><h2>Order summary</h2>
       <div class="sum" style="margin-top:12px" aria-live="polite">
         <div><span id="sum-tpl">Aria template</span><span id="sum-tpl-p">₹499</span></div>
+        <div id="sum-offer" hidden style="color:var(--mint-ink);font-weight:700"><span id="sum-offer-l">Diwali offer</span><span id="sum-offer-v"></span></div>
         <div id="sum-an" hidden><span>Analytics</span><span>₹199</span></div>
         <div id="sum-nfc" hidden><span>NFC card</span><span>₹399</span></div>
         <div class="tot"><span>Total today</span><span class="js-total">₹499</span></div>
@@ -204,7 +205,7 @@ body{background:var(--soft)}
   if (qs.get('template') && V.TEMPLATES.some(t => t.id === qs.get('template'))) d.template = qs.get('template');
 
   // build template + swatch pickers
-  $('#tpl-pick').innerHTML = V.TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}"><div class="thumb" aria-hidden="true">${V.phone(V.digitalCard({ template: t.id }))}</div><b>${t.name}<span>${V.inr(t.price)}</span></b><small>${t.note}</small></label>`).join('');
+  $('#tpl-pick').innerHTML = V.TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}"><div class="thumb" aria-hidden="true">${V.phone(V.digitalCard({ template: t.id }))}</div><b>${t.name}<span>${V.OFFER.active ? `<s style="font-weight:500;color:var(--ink-3);margin-right:4px">${V.inr(t.price)}</s>` : ''}${V.inr(V.offerPrice(t.price))}</span></b><small>${t.note}</small></label>`).join('');
   $('#swatches').innerHTML = ACCENTS.map(([c, n]) => `<label class="swatch" style="background:${c}" title="${n}"><input type="radio" name="accent" value="${c}" aria-label="${n}"></label>`).join('');
 
   // fill form from state
@@ -227,7 +228,9 @@ body{background:var(--soft)}
     $('#photo-rm').hidden = !d.photo;
     $('#bio-count').textContent = (d.bio || '').length + ' / 160';
     // pricing
-    const total = tpl.price + (d.analytics ? 199 : 0) + (d.nfc ? 399 : 0);
+    const cardPrice = V.offerPrice(tpl.price), off = tpl.price - cardPrice;
+    const total = cardPrice + (d.analytics ? 199 : 0) + (d.nfc ? 399 : 0);
+    $('#sum-offer').hidden = !off; $('#sum-offer-l').textContent = `${V.OFFER.name} (${V.OFFER.pct}% off)`; $('#sum-offer-v').textContent = '−' + V.inr(off);
     $('#sum-tpl').textContent = tpl.name + ' template'; $('#sum-tpl-p').textContent = V.inr(tpl.price);
     $('#sum-an').hidden = !d.analytics; $('#sum-nfc').hidden = !d.nfc;
     document.querySelectorAll('.js-total').forEach(e => e.textContent = V.inr(total));
@@ -269,6 +272,7 @@ body{background:var(--soft)}
     document.querySelectorAll('.mtabs [data-view]').forEach(x => x.setAttribute('aria-pressed', x === b));
     window.scrollTo(0, 0);
   }));
+  if (V.OFFER.active) { const ot = $('#offer-tag'); ot.hidden = false; ot.textContent = `${V.OFFER.name.replace(' offer','')} ${V.OFFER.pct}% off`; }
   if (location.hash === '#addons') { $('#a-nfc').checked = true; d.nfc = true; }
   render();
 })();
