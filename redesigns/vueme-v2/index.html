@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vueme — Digital & Printed Business Cards</title>
+<meta name="description" content="A digital business card with your own link and QR code from ₹499, and premium matte, gloss and synthetic visiting cards from ₹625. Design both online with Vueme.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vueme.css">
+<link rel="stylesheet" href="assets/cards.css">
+<style>
+section{position:relative}
+.sec{padding:112px 0}
+.h-xl{font-size:clamp(40px,5vw,68px);letter-spacing:-.045em;line-height:.98}
+.h-lg{font-size:clamp(34px,4.6vw,60px);letter-spacing:-.035em}
+.lede{font-size:clamp(17px,1.5vw,19px);color:var(--ink-2);max-width:52ch}
+.stack-sm>*+*{margin-top:12px}.stack>*+*{margin-top:20px}
+
+/* hero */
+.hero{padding:64px 0 96px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.try{margin-top:32px;max-width:520px}
+.try label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:8px}
+.try label span{font-family:var(--mono);font-weight:500;color:var(--ink-3);font-size:12px}
+.try-row{display:flex;gap:8px;padding:6px;border:1.5px solid var(--ink);border-radius:var(--pill);background:#fff}
+.try-row:focus-within{box-shadow:var(--focus)}
+.try-row input{flex:1;min-width:0;border:0;padding:0 16px;font-size:17px;font-weight:600;background:transparent;min-height:48px}
+.try-row input:focus{outline:none}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.proof{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:28px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.proof span{display:flex;gap:8px;align-items:center}
+.proof .i{color:var(--purple);width:18px;height:18px}
+.stage{position:relative;height:620px}
+.stage .phone{--w:290px;position:absolute;right:6%;top:0;z-index:2}
+.stage .pc-wrap{position:absolute;left:4%;bottom:24px;width:min(380px,62%);z-index:3;transform:rotate(-6deg)}
+.stage .pc-wrap.back{left:-2%;bottom:190px;width:min(330px,54%);z-index:1;transform:rotate(-14deg)}
+.stage .chip{position:absolute;z-index:4;display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:8px 14px 8px 10px;font-size:13px;font-weight:700;box-shadow:0 10px 24px -12px rgba(14,11,26,.3)}
+.stage .chip .i{width:18px;height:18px;color:var(--purple)}
+.stage .chip.c1{left:6%;top:30px}.stage .chip.c2{left:14%;top:84px}.stage .chip.c3{right:-2%;bottom:28px}
+
+/* marquee */
+.marquee{background:var(--ink);color:#fff;overflow:hidden;padding:18px 0}
+.marquee-track{display:flex;gap:48px;width:max-content;font-family:var(--mono);font-size:14px;letter-spacing:.14em;text-transform:uppercase;animation:mq 28s linear infinite}
+.marquee-track span{display:flex;gap:48px;align-items:center}
+.marquee-track span::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--yellow)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* color-block section shell */
+.cb{margin:0 24px;padding:88px 0;border-radius:var(--r-lg)}
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.block-purple .eyebrow,.block-purple .lede,.block-purple .fine{color:#fff}
+
+/* digital block */
+.tpl-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0}
+.tpl-tabs button{min-height:44px;padding:0 18px;border-radius:var(--pill);font-weight:700;font-size:14px;background:rgba(255,255,255,.12);color:#fff;transition:background-color .18s,color .18s}
+.tpl-tabs button:hover{background:rgba(255,255,255,.22)}
+.tpl-tabs button[aria-selected="true"]{background:#fff;color:var(--ink)}
+.tpl-tabs small{font-weight:600;margin-left:6px}
+.feat-list{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;margin-top:8px}
+.feat-list li{display:flex;gap:10px;font-weight:600;font-size:15px}
+.feat-list .i{width:20px;height:20px;color:var(--yellow);margin-top:2px}
+.addons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px}
+.addon{border-radius:var(--r);padding:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.addon b{display:flex;justify-content:space-between;font-size:16px}
+.addon p{font-size:14px;color:#fff;margin-top:6px}
+.phone-col{display:flex;justify-content:center}
+.phone-col .phone{--w:320px}
+.fine{font-size:13px;margin-top:16px;color:#DCCFFF}
+
+/* editors */
+.ed-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.ed-card{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s,transform .25s var(--ease)}
+.ed-card:hover{border-color:var(--ink);transform:translateY(-3px)}
+.ed-shot{background:var(--soft);aspect-ratio:16/10;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.ed-body{padding:28px;display:flex;flex-direction:column;gap:10px;flex:1}
+.ed-body h3{font-size:26px}
+.ed-body p{color:var(--ink-2)}
+.ed-body ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.ed-body .btn{align-self:flex-start;margin-top:auto}
+/* code-native mini editor screenshots */
+.mini{position:absolute;inset:24px 24px 0;background:#fff;border-radius:14px 14px 0 0;border:1px solid var(--line);box-shadow:0 20px 40px -24px rgba(14,11,26,.4);display:grid;grid-template-columns:38% 1fr;overflow:hidden}
+.mini-side{border-right:1px solid var(--line);padding:14px;display:grid;gap:8px;align-content:start}
+.mini-side i{display:block;height:10px;border-radius:4px;background:var(--line)}
+.mini-side i.l{width:40%;height:8px;background:var(--line-2)}
+.mini-side .box{height:28px;border-radius:7px;border:1.5px solid var(--line-2)}
+.mini-side .sw{display:flex;gap:6px}.mini-side .sw b{width:18px;height:18px;border-radius:50%}
+.mini-main{display:grid;place-items:center;background:var(--soft);padding:14px}
+.mini-main .phone{--w:120px;box-shadow:none}
+.mini-main .pc{width:80%}
+
+/* analytics block */
+.dash-prev{background:#fff;border-radius:var(--r);padding:20px;box-shadow:0 30px 60px -30px rgba(42,22,112,.35);border:1px solid var(--line)}
+.dash-prev-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.dash-prev-top b{font-size:15px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpi span{display:flex;gap:6px;align-items:center;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.kpi span .i{width:15px;height:15px;color:var(--purple)}
+.kpi b{display:block;font-size:26px;letter-spacing:-.03em;margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi em{font-style:normal;font-size:12px;font-weight:700;color:var(--mint-ink)}
+.spark{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:14px}
+.spark-h{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.spark svg{width:100%;height:120px;margin-top:8px}
+
+/* printed */
+.fin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.fin{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}
+.fin img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.fin-b{padding:24px;display:flex;flex-direction:column;gap:8px;flex:1}
+.fin-b h3{font-size:24px;display:flex;justify-content:space-between;align-items:baseline}
+.fin-b h3 small{font-size:15px;font-weight:700}
+.fin-b p{color:var(--ink-2);font-size:15px}
+.fin-b .opts{font-size:13.5px;color:var(--ink-2);font-weight:600;margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+.specs{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:var(--r);margin-top:20px}
+.specs div{padding:18px 20px;border-left:1px solid var(--line)}
+.specs div:first-child{border-left:0}
+.specs dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.specs dd{margin:4px 0 0;font-weight:700}
+
+/* nfc */
+.nfc-img{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/4.4}
+.nfc-img img{width:100%;height:100%;object-fit:cover}
+.price-big{font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.price-big small{font-size:16px;font-weight:700;letter-spacing:0;margin-left:6px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;counter-reset:s;list-style:none;padding:0}
+.step{border-top:2px solid var(--ink);padding-top:20px}
+.step .n{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink-3)}
+.step h3{font-size:24px;margin:8px 0}
+.step p{color:var(--ink-2)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:22px 0;font-weight:700;font-size:18px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .i{width:22px;height:22px;transition:transform .25s var(--ease)}
+.faq details[open] summary .i{transform:rotate(45deg)}
+.faq details p{padding-bottom:22px;color:var(--ink-2);max-width:62ch}
+
+@media (max-width:1024px){
+  .hero-grid,.cb-grid,.faq{grid-template-columns:1fr}
+  .stage{height:560px;max-width:560px;margin:0 auto;width:100%}
+  .ed-cards{grid-template-columns:1fr}
+  .specs{grid-template-columns:repeat(3,1fr)}
+  .specs div:nth-child(4){border-left:0}
+  .specs div:nth-child(n+4){border-top:1px solid var(--line)}
+}
+@media (max-width:720px){
+  .sec{padding:72px 0}
+  .hero{padding:32px 0 56px}
+  .stage{height:470px}
+  .stage .phone{--w:220px;right:0}
+  .stage .pc-wrap{width:72%;bottom:8px}
+  .stage .pc-wrap.back{bottom:64px;left:2%}
+  .stage .chip.c2,.stage .chip.c3,.stage .pc-wrap.back{display:none}
+  .stage .chip.c1{top:8px;left:0}
+  .cb{margin:0 12px;padding:56px 0}
+  .feat-list,.addons,.kpis{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpis .kpi:last-child{grid-column:span 2}
+  .fin-grid,.steps{grid-template-columns:1fr}
+  .specs{grid-template-columns:1fr 1fr}
+  .specs div{border-left:0!important;border-top:1px solid var(--line)}
+  .specs div:nth-child(-n+2){border-top:0}
+  .specs div:nth-child(odd){border-right:1px solid var(--line)}
+  .phone-col .phone{--w:270px}
+  .hero-ctas .btn{flex:1 1 100%}
+  .try-row{flex-direction:column;border-radius:20px}
+  .try-row .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="promo">Add <b>Analytics</b> to any digital card for ₹199 — see who viewed, scanned, tapped and saved. <a href="dashboard.html">See the dashboard</a></div>
+
+<header class="site-nav">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="110" height="24"></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#digital">Digital cards</a>
+      <a href="#printed">Printed cards</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#nfc">NFC card</a>
+      <a href="#faq">Help</a>
+    </nav>
+    <div class="nav-end">
+      <a class="icon-btn" href="dashboard.html" aria-label="My account" data-icon="user"></a>
+      <a class="icon-btn" href="https://vueme.in/index.php/shop/" aria-label="Cart, 0 items" data-icon="bag"></a>
+      <a class="btn btn-ink btn-sm" href="editor-digital.html">Design my card</a>
+      <button class="icon-btn nav-menu" aria-label="Open menu" aria-expanded="false" aria-controls="mnav" data-icon="menu"></button>
+    </div>
+  </div>
+  <nav class="mnav" id="mnav" aria-label="Mobile">
+    <a href="#digital">Digital cards</a><a href="#printed">Printed cards</a><a href="#analytics">Analytics</a><a href="#nfc">NFC card</a><a href="#faq">Help</a><a href="editor-digital.html">Design my card</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Link · QR code · NFC · Print</p>
+      <h1 class="h-xl" style="margin-top:16px" data-hero>One card for the handshake. One link for everything after.</h1>
+      <p class="lede" style="margin-top:20px">Get a digital card with your own link and QR code, or order premium printed cards — all designed online with Vueme.</p>
+      <form class="try" onsubmit="event.preventDefault();location.href='editor-digital.html?name='+encodeURIComponent(this.n.value)">
+        <label for="try-name">Try it — type your name<span id="try-url">vueme.in/ananya-rao</span></label>
+        <div class="try-row">
+          <input id="try-name" name="n" value="Ananya Rao" autocomplete="name" maxlength="40">
+          <button class="btn btn-primary">Design my digital card<span data-icon="arrow"></span></button>
+        </div>
+      </form>
+      <div class="hero-ctas"><a class="btn btn-white" href="editor-print.html">Design a visiting card · from ₹625</a></div>
+      <div class="proof">
+        <span data-icon="sparkle">Link &amp; QR right after payment</span>
+        <span data-icon="phone">No app needed</span>
+        <span data-icon="edit">Unlimited edits, same link</span>
+      </div>
+    </div>
+    <div class="stage" aria-label="Your digital card and printed visiting card, updating as you type">
+      <div id="hero-phone"></div>
+      <div class="pc-wrap back" id="hero-pc-back" aria-hidden="true"></div>
+      <div class="pc-wrap" id="hero-pc"></div>
+      <span class="chip c1" data-icon="qr">Same QR, forever</span>
+      <span class="chip c2" data-icon="nfc">Tap to open</span>
+      <span class="chip c3" data-icon="save">Saved to contacts</span>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="marquee-track">
+  <span>Digital cards from ₹499</span><span>Printed cards from ₹625</span><span>Analytics +₹199</span><span>NFC card +₹399</span><span>Delivered across India</span>
+  <span>Digital cards from ₹499</span><span>Printed cards from ₹625</span><span>Analytics +₹199</span><span>NFC card +₹399</span><span>Delivered across India</span>
+</div></div>
+
+<!-- DIGITAL (purple block) -->
+<section id="digital" class="sec" style="padding-bottom:0">
+  <div class="cb block-purple">
+    <div class="wrap cb-grid">
+      <div class="reveal">
+        <p class="eyebrow">Digital business card</p>
+        <h2 class="h-lg" style="margin-top:14px">One link. Your whole profile.</h2>
+        <p class="lede" style="margin-top:18px">Add your photo and details, pick your colours and watch the card update as you type. Your link and QR code never change, so you can edit any time.</p>
+        <div class="tpl-tabs" role="tablist" aria-label="Templates" id="tpl-tabs"></div>
+        <ul class="feat-list">
+          <li><span data-icon="check"></span>Photo, bio, phone, email</li>
+          <li><span data-icon="check"></span>Socials &amp; WhatsApp</li>
+          <li><span data-icon="check"></span>Save Contact button</li>
+          <li><span data-icon="check"></span>Works on any phone</li>
+        </ul>
+        <div class="addons">
+          <div class="addon"><b>Analytics <span>+₹199</span></b><p>See who viewed, scanned, tapped and saved your card.</p></div>
+          <div class="addon"><b>NFC card <span>+₹399</span></b><p>Physical tap-to-open card, delivered in 3–5 working days.</p></div>
+        </div>
+        <div class="hero-ctas" style="margin-top:28px"><a class="btn btn-white" href="editor-digital.html" id="tpl-cta">Design with Aria · ₹499</a></div>
+        <p class="fine">Renewal ₹299 per year, starting 1 year after purchase. We email you before it's due.</p>
+      </div>
+      <div class="phone-col reveal"><div id="tpl-phone"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDITORS (white) -->
+<section class="sec">
+  <div class="wrap">
+    <div class="reveal" style="max-width:760px">
+      <p class="eyebrow">Design it yourself</p>
+      <h2 class="h-lg" style="margin-top:14px">Two editors. No software, no designer.</h2>
+      <p class="lede" style="margin-top:18px">Start from a ready-made design and change anything in your browser. Save a draft and finish later.</p>
+    </div>
+    <div class="ed-cards">
+      <a class="ed-card reveal" href="editor-digital.html">
+        <div class="ed-shot" aria-hidden="true"><div class="mini"><div class="mini-side"><i class="l"></i><div class="box"></div><i class="l"></i><div class="box"></div><i class="l"></i><div class="sw"><b style="background:#6B3FD8"></b><b style="background:#0E0B1A"></b><b style="background:#E5484D"></b><b style="background:#12A150"></b></div><i class="l"></i><div class="box"></div></div><div class="mini-main" id="mini-digital"></div></div></div>
+        <div class="ed-body">
+          <span class="eyebrow">Digital card editor</span>
+          <h3>Type, pick colours, publish.</h3>
+          <p>Live phone preview, four templates, your link and QR code ready to share.</p>
+          <ul><li class="tag lilac">Live preview</li><li class="tag lilac">QR download</li><li class="tag lilac">Same link forever</li></ul>
+          <span class="btn btn-ink">Open the digital editor<span data-icon="arrow"></span></span>
+        </div>
+      </a>
+      <a class="ed-card reveal" href="editor-print.html">
+        <div class="ed-shot" aria-hidden="true"><div class="mini"><div class="mini-side"><i class="l"></i><div class="box"></div><i class="l"></i><div class="box"></div><i class="l"></i><div class="sw"><b style="background:#6B3FD8"></b><b style="background:#0E0B1A"></b><b style="background:#1F6FEB"></b><b style="background:#C2410C"></b></div><i class="l"></i><div class="box"></div></div><div class="mini-main" id="mini-print"></div></div></div>
+        <div class="ed-body">
+          <span class="eyebrow">Visiting card editor</span>
+          <h3>Front, back and the cut line.</h3>
+          <p>Edit both sides, check bleed and safe area with print guides, then choose finish and quantity.</p>
+          <ul><li class="tag mint">Print guides</li><li class="tag mint">Upload your logo</li><li class="tag mint">QR to your digital card</li></ul>
+          <span class="btn btn-ink">Open the visiting card editor<span data-icon="arrow"></span></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYTICS (lilac block) -->
+<section id="analytics" style="padding-bottom:112px">
+  <div class="cb block-lilac">
+    <div class="wrap cb-grid">
+      <div class="reveal">
+        <p class="eyebrow">Analytics add-on · +₹199</p>
+        <h2 class="h-lg" style="margin-top:14px">Know what happens after you hand it over.</h2>
+        <p class="lede" style="margin-top:18px">Views, QR code scans, link taps, call taps and saved contacts, in a private dashboard only you can see. It switches on automatically after payment.</p>
+        <div class="hero-ctas" style="margin-top:28px"><a class="btn btn-ink" href="dashboard.html">Explore the dashboard<span data-icon="arrow"></span></a></div>
+      </div>
+      <div class="dash-prev reveal" aria-label="Preview of the analytics dashboard with sample numbers">
+        <div class="dash-prev-top"><b>Last 30 days</b><span class="tag soft">Sample data</span></div>
+        <div class="kpis">
+          <div class="kpi"><span data-icon="eye">Views</span><b>1,284</b><em>▲ 18%</em></div>
+          <div class="kpi"><span data-icon="qr">QR scans</span><b>412</b><em>▲ 9%</em></div>
+          <div class="kpi"><span data-icon="save">Saved</span><b>96</b><em>▲ 24%</em></div>
+        </div>
+        <div class="spark"><div class="spark-h"><span>Card views per day</span><span>Peak 71 · 18 Oct</span></div><svg id="spark" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRINTED (white) -->
+<section id="printed" class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div style="max-width:720px"><p class="eyebrow">Printed visiting cards</p><h2 class="h-lg" style="margin-top:14px">Business cards that feel as good as they look.</h2></div>
+      <a class="btn btn-white" href="editor-print.html">Design a visiting card<span data-icon="arrow"></span></a>
+    </div>
+    <div class="fin-grid">
+      <article class="fin reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/matte-visiting-card-closeup.webp" alt="Close-up of a matte visiting card" width="900" height="675" loading="lazy"><div class="fin-b"><h3>Matte <small>from ₹675</small></h3><p>Low-glare and soft to the touch. Calm and professional.</p><p class="opts">Single side or front &amp; back · Rounded corners +₹100</p></div></article>
+      <article class="fin reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/Gloss-Visiting-Card-Design-Front-and-Back.webp" alt="Gloss visiting card, front and back" width="900" height="675" loading="lazy"><div class="fin-b"><h3>Gloss <small>from ₹625</small></h3><p>Shiny lamination that makes colour and photos pop.</p><p class="opts">Single side or front &amp; back · Rounded corners +₹100</p></div></article>
+      <article class="fin reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/Synthetic-Visiting-Card-Design.webp" alt="Synthetic visiting card" width="900" height="675" loading="lazy"><div class="fin-b"><h3>Synthetic <small>from ₹800</small></h3><p>Plastic-based stock for cards that get handled a lot.</p><p class="opts">Single side or front &amp; back</p></div></article>
+    </div>
+    <dl class="specs reveal">
+      <div><dt>Size</dt><dd>90 × 53 mm</dd></div>
+      <div><dt>Paper</dt><dd>300 GSM</dd></div>
+      <div><dt>Quantity</dt><dd>500 or 1000</dd></div>
+      <div><dt>Files</dt><dd>JPG / PNG, 300 DPI</dd></div>
+      <div><dt>Shipping</dt><dd>India Post Speed Post</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- NFC (yellow block) -->
+<section id="nfc">
+  <div class="cb block-yellow">
+    <div class="wrap cb-grid">
+      <div class="nfc-img reveal"><img src="https://vueme.in/wp-content/uploads/2026/10/Vibrant-Festival-NFC-Card-Mockup.webp" alt="A colourful Vueme NFC card with an illustrated design" width="900" height="1200" loading="lazy"></div>
+      <div class="reveal">
+        <p class="eyebrow">NFC card add-on</p>
+        <h2 class="h-lg" style="margin-top:14px">Tap a phone. Your card opens.</h2>
+        <p class="lede" style="margin-top:18px;color:var(--ink)">A physical card that opens your digital card when tapped on a phone. Sent by India Post, it arrives in 3 to 5 working days with delivery included.</p>
+        <p class="price-big" style="margin-top:28px">+₹399<small>with any digital card</small></p>
+        <div class="hero-ctas" style="margin-top:24px"><a class="btn btn-ink" href="editor-digital.html#addons">Add an NFC card<span data-icon="arrow"></span></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW (white) -->
+<section class="sec">
+  <div class="wrap">
+    <div class="reveal"><p class="eyebrow">How it works</p><h2 class="h-lg" style="margin-top:14px">Live in about five minutes.</h2></div>
+    <ol class="steps">
+      <li class="step reveal"><span class="n">01</span><h3>Pick a template</h3><p>Choose a digital design, a printed finish, or both.</p></li>
+      <li class="step reveal"><span class="n">02</span><h3>Design your card</h3><p>Add your photo, details and colours and watch it update as you type.</p></li>
+      <li class="step reveal"><span class="n">03</span><h3>Pay and share</h3><p>Your link and QR code appear right after payment. Printed cards ship by Speed Post with tracking.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- FAQ (white, real answers from vueme.in/faqs) -->
+<section id="faq" class="sec" style="padding-top:0">
+  <div class="wrap faq">
+    <div class="reveal">
+      <p class="eyebrow">Help</p>
+      <h2 class="h-lg" style="margin-top:14px">Questions, answered.</h2>
+      <p class="lede" style="margin-top:16px">We usually reply within 1 working day. Mon – Sat, 10 AM – 6 PM.</p>
+      <div class="hero-ctas" style="margin-top:24px"><a class="btn btn-white" href="mailto:support@vueme.in">Email support</a><a class="btn btn-ghost" href="https://wa.me/919042018017"><span data-icon="whatsapp"></span>WhatsApp us</a></div>
+    </div>
+    <div class="reveal">
+      <details open><summary>What is a Vueme digital business card?<span data-icon="plus"></span></summary><p>A mobile-friendly web page with your photo, contact details and social links. It has its own link and QR code, so anyone can open it on their phone without an app.</p></details>
+      <details><summary>How quickly do I get my digital card?<span data-icon="plus"></span></summary><p>Instantly. Your card link and QR code appear right after successful payment, and you can edit the card any time from My Account.</p></details>
+      <details><summary>What does the Analytics add-on show?<span data-icon="plus"></span></summary><p>Views, QR code scans, link taps, call taps and saved contacts, in a private dashboard only you can see. It switches on automatically after payment.</p></details>
+      <details><summary>How long is the digital card valid?<span data-icon="plus"></span></summary><p>The card is billed yearly. Renew before it expires to keep it live; if not renewed, the card becomes inactive until you renew.</p></details>
+      <details><summary>Which paper types do you offer for printed cards?<span data-icon="plus"></span></summary><p>Matte, Gloss and Synthetic, in single side or front and back. Rounded corners are available on Matte and Gloss for ₹100.</p></details>
+      <details><summary>How are printed cards shipped?<span data-icon="plus"></span></summary><p>By India Post Speed Post with tracking. We add the tracking number to your order and email it to you once shipped. We deliver within India only.</p></details>
+      <details><summary>Which payment methods do you accept?<span data-icon="plus"></span></summary><p>UPI, debit and credit cards, net banking and wallets through PayU. Cash on delivery is not available.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><p style="max-width:34ch;color:#E7E4F2">Your business card, reimagined. Get a digital card with your own link and QR code, or order premium printed cards — all designed online with Vueme.</p></div>
+      <div><h4>Shop</h4><ul><li><a href="editor-digital.html">Digital Business Cards</a></li><li><a href="editor-print.html">All Printed Cards</a></li><li><a href="#printed">Matte · Gloss · Synthetic</a></li><li><a href="dashboard.html">Analytics</a></li></ul></div>
+      <div><h4>Support</h4><ul><li><a href="https://vueme.in/index.php/contact-us/">Contact Us</a></li><li><a href="#faq">FAQs</a></li><li><a href="https://vueme.in/index.php/order-tracking/">Track Your Order</a></li><li><a href="https://vueme.in/index.php/refund-policy/">Refund &amp; Replacement</a></li></ul></div>
+      <div><h4>Get in touch</h4><ul><li><a href="mailto:support@vueme.in">support@vueme.in</a></li><li><a href="tel:+919042018017">+91 90420 18017</a></li><li>Mon – Sat, 10 AM – 6 PM</li></ul></div>
+    </div>
+    <div class="wordmark-xl" aria-hidden="true">vueme</div>
+    <div class="foot-bottom"><span>© 2026 Vueme. All rights reserved.</span><span><a href="https://vueme.in/index.php/privacy-policy/">Privacy Policy</a> · <a href="https://vueme.in/index.php/terms-and-conditions/">Terms &amp; Conditions</a> · Designed by brandme</span></div>
+  </div>
+</footer>
+<a class="wa-fab" href="https://wa.me/919042018017" aria-label="Chat with Vueme on WhatsApp" data-icon="whatsapp"></a>
+
+<script src="assets/vendor/qrcode.js"></script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vueme.js"></script>
+<script>
+(() => {
+  const V = window.Vueme;
+  const $ = s => document.querySelector(s);
+  // --- hero: one name drives three previews
+  const nameIn = $('#try-name');
+  function hero() {
+    const name = nameIn.value.trim() || 'Your Name';
+    $('#try-url').textContent = 'vueme.in/' + V.slug(name);
+    $('#hero-phone').innerHTML = V.phone(V.digitalCard({ name, template: 'aria' }), 'Digital card for ' + name);
+    $('#hero-pc').innerHTML = V.printSide({ name, template: 'classic', finish: 'matte' });
+    $('#hero-pc-back').innerHTML = V.printSide({ name, finish: 'matte' }, 'back');
+  }
+  nameIn.addEventListener('input', hero); hero();
+
+  // --- template switcher (tabs)
+  const tabs = $('#tpl-tabs'); let cur = 'aria';
+  tabs.innerHTML = V.TEMPLATES.map(t => `<button role="tab" id="tab-${t.id}" aria-controls="tpl-phone" aria-selected="${t.id === cur}" tabindex="${t.id === cur ? 0 : -1}" data-t="${t.id}">${t.name}<small>${V.inr(t.price)}</small></button>`).join('');
+  function showTpl(id) {
+    cur = id; const t = V.TEMPLATES.find(x => x.id === id);
+    tabs.querySelectorAll('[role=tab]').forEach(b => { const on = b.dataset.t === id; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+    $('#tpl-phone').innerHTML = V.phone(V.digitalCard({ template: id, accent: id === 'bauhaus' ? '#E5484D' : id === 'spotlight' ? '#FCC305' : '#6B3FD8' }), t.name + ' template preview');
+    $('#tpl-phone').setAttribute('aria-labelledby', 'tab-' + id);
+    const cta = $('#tpl-cta'); cta.textContent = `Design with ${t.name} · ${V.inr(t.price)}`; cta.href = 'editor-digital.html?template=' + id;
+  }
+  tabs.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) showTpl(b.dataset.t); });
+  tabs.addEventListener('keydown', e => {
+    if (!['ArrowRight', 'ArrowLeft'].includes(e.key)) return;
+    const ids = V.TEMPLATES.map(t => t.id); let i = ids.indexOf(cur) + (e.key === 'ArrowRight' ? 1 : -1);
+    i = (i + ids.length) % ids.length; showTpl(ids[i]); tabs.querySelector(`[data-t="${ids[i]}"]`).focus();
+  });
+  showTpl('aria');
+
+  // --- mini editor shots
+  $('#mini-digital').innerHTML = V.phone(V.digitalCard({ template: 'bento' }));
+  $('#mini-print').innerHTML = V.printSide({ template: 'block', finish: 'gloss', color: '#1F6FEB' });
+
+  // --- sparkline (single series, sample data)
+  const pts = [22,30,28,35,31,40,38,44,41,39,47,52,49,55,58,51,63,71,60,57,62,66,59,64,68,61,65,70,67,72];
+  const max = 80, w = 600, h = 120, step = w / (pts.length - 1);
+  const xy = pts.map((v, i) => [i * step, h - (v / max) * (h - 8)]);
+  const line = xy.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
+  $('#spark').innerHTML = `<path d="${line} L${w} ${h} L0 ${h}Z" fill="#6B3FD8" fill-opacity=".08"/><path d="${line}" fill="none" stroke="#6B3FD8" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
+
+  // --- motion (GSAP): skipped entirely for reduced motion
+  if (window.gsap) {
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from('[data-hero]', { y: 24, opacity: 0, duration: .7, ease: 'expo.out' });
+      gsap.from('.stage > *', { y: 40, opacity: 0, duration: .8, ease: 'expo.out', stagger: .08, delay: .15 });
+      gsap.set('.reveal', { y: 24, opacity: 0 });
+      ScrollTrigger.batch('.reveal', {
+        start: 'top 92%', once: true,
+        onEnter: els => gsap.to(els, { y: 0, opacity: 1, duration: .6, ease: 'expo.out', stagger: .06, overwrite: true }),
+      });
+      return () => gsap.set('.reveal', { clearProps: 'all' });
+    });
+  }
+})();
+</script>
+</body>
+</html>

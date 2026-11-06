@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Card Editor — Vueme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vueme.css">
+<link rel="stylesheet" href="assets/cards.css">
+<style>
+body{background:var(--soft)}
+.ebar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.ebar-in{display:flex;align-items:center;gap:16px;height:64px;padding:0 20px}
+.ebar .logo img{height:22px}
+.crumb{display:flex;gap:10px;align-items:center;font-weight:700;font-size:15px}
+.crumb::before{content:"";width:1px;height:22px;background:var(--line-2)}
+.status{font-size:13px;color:var(--ink-3);font-weight:600;display:flex;gap:6px;align-items:center}
+.status .i{width:16px;height:16px;color:var(--mint-ink)}
+.ebar-end{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+.editor{display:grid;grid-template-columns:400px 1fr 340px;min-height:calc(100vh - 64px)}
+.side{background:#fff;border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 64px);position:sticky;top:64px}
+.side-in{padding:8px 20px 40px}
+.grp{border-bottom:1px solid var(--line)}
+.grp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:60px;font-weight:800;font-size:16px}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary .num{font-family:var(--mono);font-size:12px;color:var(--ink-3);font-weight:600;width:22px}
+.grp>summary .chev{margin-left:auto;width:20px;height:20px;transition:transform .2s var(--ease)}
+.grp[open]>summary .chev{transform:rotate(180deg)}
+.grp-body{display:grid;gap:16px;padding:0 0 24px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tpl-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tpl-opt{position:relative;border:1.5px solid var(--line-2);border-radius:var(--r-sm);padding:10px;cursor:pointer;display:grid;gap:8px;transition:border-color .15s}
+.tpl-opt:hover{border-color:var(--ink-3)}
+.tpl-opt:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tpl-opt:has(input:focus-visible){box-shadow:var(--focus)}
+.tpl-opt input{position:absolute;opacity:0}
+.tpl-opt .thumb{height:120px;border-radius:8px;overflow:hidden;background:var(--soft);display:grid;place-items:start center;pointer-events:none}
+.tpl-opt .thumb .phone{--w:90px;margin-top:6px;box-shadow:none}
+.tpl-opt b{font-size:14px;display:flex;justify-content:space-between}
+.tpl-opt small{font-size:12px;color:var(--ink-3)}
+.photo-row{display:flex;gap:14px;align-items:center}
+.photo-prev{width:64px;height:64px;border-radius:50%;background:var(--lilac);display:grid;place-items:center;font-weight:800;color:var(--purple-900);overflow:hidden;flex:none}
+.photo-prev img{width:100%;height:100%;object-fit:cover}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;font-weight:600;font-size:14px;cursor:pointer}
+.toggle input{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--line-2);position:relative;cursor:pointer;transition:background-color .15s;flex:none}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s var(--ease)}
+.toggle input:checked{background:var(--purple)}
+.toggle input:checked::after{transform:translateX(18px)}
+.toggle input:focus-visible{box-shadow:var(--focus)}
+.count{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);text-align:right}
+
+.canvas{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:40px 20px 80px;gap:20px;background-image:radial-gradient(#D9D5E4 1px,transparent 1px);background-size:20px 20px}
+.canvas .phone{--w:340px}
+.url-pill{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:8px 8px 8px 16px;font-weight:600;font-size:14px;box-shadow:0 6px 16px -10px rgba(14,11,26,.25);max-width:100%}
+.url-pill .i{width:16px;height:16px;color:var(--purple)}
+.url-pill span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.share{background:#fff;border-left:1px solid var(--line);padding:24px 20px;display:flex;flex-direction:column;gap:20px;max-height:calc(100vh - 64px);overflow:auto;position:sticky;top:64px}
+.share h2{font-size:18px;letter-spacing:-.01em}
+.qr-box{border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;justify-items:center;gap:12px}
+.qr-box .qr{width:180px}
+.qr-box p{font-size:13px;color:var(--ink-3);text-align:center}
+.sum{border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:10px;font-size:14px}
+.sum div{display:flex;justify-content:space-between;gap:12px}
+.sum .tot{border-top:1px solid var(--line);padding-top:12px;font-weight:800;font-size:18px}
+.sum small{color:var(--ink-3);font-size:12.5px}
+.note{font-size:12.5px;color:var(--ink-3);display:flex;gap:8px}
+.note .i{width:16px;height:16px;flex:none;margin-top:2px}
+
+.mtabs{display:none}
+.mbar{display:none}
+@media (max-width:1180px){
+  .editor{grid-template-columns:380px 1fr}
+  .share{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:start}
+}
+@media (max-width:760px){
+  .crumb,.status,.ebar-end .btn-ghost{display:none}
+  .editor{display:block}
+  .side{position:static;max-height:none;border-right:0}
+  .mtabs{display:flex;position:sticky;top:64px;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 16px}
+  .mtabs .seg{width:100%}.mtabs .seg button{flex:1;justify-content:center}
+  body[data-view="preview"] .side{display:none}
+  body[data-view="edit"] .canvas{display:none}
+  .canvas .phone{--w:290px}
+  .share{display:none}
+  body[data-view="preview"] .share{display:flex}
+  .mbar{display:flex;position:sticky;bottom:0;z-index:25;background:#fff;border-top:1px solid var(--line);padding:12px 16px;gap:12px;align-items:center}
+  .mbar b{font-size:18px}
+  .mbar .btn{margin-left:auto}
+}
+</style>
+</head>
+<body data-view="edit">
+<a class="skip" href="#editor">Skip to editor</a>
+<header class="ebar">
+  <div class="ebar-in">
+    <a class="logo" href="index.html" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="100" height="22"></a>
+    <span class="crumb">Digital card editor</span>
+    <span class="status" id="status" aria-live="polite"><span data-icon="check"></span>Draft saved</span>
+    <div class="ebar-end">
+      <a class="btn btn-ghost btn-sm" href="editor-print.html"><span data-icon="print"></span>Visiting card editor</a>
+      <button class="btn btn-primary btn-sm" id="publish">Pay &amp; publish · <span class="js-total">₹499</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mtabs"><div class="seg" role="group" aria-label="View"><button type="button" aria-pressed="true" data-view="edit">Edit</button><button type="button" aria-pressed="false" data-view="preview">Preview &amp; share</button></div></div>
+
+<main class="editor" id="editor">
+  <form class="side" id="form" aria-label="Card details" autocomplete="on" onsubmit="return false">
+    <div class="side-in">
+      <details class="grp" open><summary><span class="num">01</span>Template<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body"><div class="tpl-pick" id="tpl-pick" role="radiogroup" aria-label="Template"></div></div>
+      </details>
+
+      <details class="grp" open><summary><span class="num">02</span>Profile<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="photo-row">
+            <div class="photo-prev" id="photo-prev" aria-hidden="true"></div>
+            <div style="display:grid;gap:6px">
+              <label class="btn btn-white btn-sm" style="cursor:pointer"><span data-icon="upload"></span>Upload photo<input type="file" id="photo" accept="image/*" class="sr-only"></label>
+              <button type="button" class="btn btn-ghost btn-sm" id="photo-rm" hidden>Remove photo</button>
+            </div>
+          </div>
+          <div class="field"><label for="f-name">Full name</label><input class="input" id="f-name" name="name" maxlength="40" autocomplete="name" required></div>
+          <div class="row2">
+            <div class="field"><label for="f-role">Role</label><input class="input" id="f-role" name="role" maxlength="40" autocomplete="organization-title"></div>
+            <div class="field"><label for="f-company">Company</label><input class="input" id="f-company" name="company" maxlength="40" autocomplete="organization"></div>
+          </div>
+          <div class="field"><label for="f-bio">Short bio</label><textarea class="textarea" id="f-bio" name="bio" maxlength="160" aria-describedby="bio-count"></textarea><span class="count" id="bio-count">0 / 160</span></div>
+          <div class="field"><label for="f-tags">Tags</label><input class="input" id="f-tags" name="tags" maxlength="50"><span class="hint">Comma separated. Shown on Bento.</span></div>
+        </div>
+      </details>
+
+      <details class="grp" open><summary><span class="num">03</span>Contact<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="field"><label for="f-phone">Phone</label><input class="input" id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel"></div>
+          <label class="toggle">Show a WhatsApp button<input type="checkbox" name="whatsapp" id="f-wa"></label>
+          <div class="field"><label for="f-email">Email</label><input class="input" id="f-email" name="email" type="email" autocomplete="email"><span class="hint" id="email-err" role="alert" style="color:#C62828" hidden>Enter an email like name@domain.com</span></div>
+          <div class="field"><label for="f-web">Website</label><input class="input" id="f-web" name="website" inputmode="url" autocomplete="url"></div>
+          <div class="field"><label for="f-loc">Location</label><input class="input" id="f-loc" name="location" autocomplete="address-level2"></div>
+        </div>
+      </details>
+
+      <details class="grp"><summary><span class="num">04</span>Social links<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="field"><label for="f-ig">Instagram username</label><input class="input" id="f-ig" name="instagram" autocapitalize="off"></div>
+          <div class="field"><label for="f-li">LinkedIn username</label><input class="input" id="f-li" name="linkedin" autocapitalize="off"></div>
+        </div>
+      </details>
+
+      <details class="grp" open><summary><span class="num">05</span>Colour<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="swatches" role="radiogroup" aria-label="Accent colour" id="swatches"></div>
+          <div class="field"><label for="f-custom">Custom colour</label><input type="color" id="f-custom" class="input" style="padding:4px;height:44px"></div>
+        </div>
+      </details>
+
+      <details class="grp" id="addons" open><summary><span class="num">06</span>Add-ons<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <label class="check"><input type="checkbox" name="analytics" id="a-analytics"><div><b>Analytics</b><span>See who viewed, scanned, tapped and saved your card. <a href="dashboard.html" style="text-decoration:underline">See an example</a></span></div><span class="price">+₹199</span></label>
+          <label class="check"><input type="checkbox" name="nfc" id="a-nfc"><div><b>NFC card</b><span>Physical tap-to-open card, delivered in 3–5 working days. Delivery included.</span></div><span class="price">+₹399</span></label>
+        </div>
+      </details>
+    </div>
+  </form>
+
+  <section class="canvas" aria-label="Live preview">
+    <div class="url-pill"><span data-icon="link"></span><span id="url">vueme.in/ananya-rao</span><button type="button" class="btn btn-ink btn-sm" id="copy-url"><span data-icon="copy"></span>Copy</button></div>
+    <div id="preview"></div>
+  </section>
+
+  <aside class="share" aria-label="Share and checkout">
+    <div><h2>Your QR code</h2>
+      <div class="qr-box" style="margin-top:12px"><div class="qr" id="qr"></div><p>Points to <b id="qr-url">vueme.in/ananya-rao</b>. It never changes, even when you edit.</p><button type="button" class="btn btn-white btn-sm" id="dl-qr"><span data-icon="download"></span>Download QR (SVG)</button></div>
+    </div>
+    <div><h2>Order summary</h2>
+      <div class="sum" style="margin-top:12px" aria-live="polite">
+        <div><span id="sum-tpl">Aria template</span><span id="sum-tpl-p">₹499</span></div>
+        <div id="sum-an" hidden><span>Analytics</span><span>₹199</span></div>
+        <div id="sum-nfc" hidden><span>NFC card</span><span>₹399</span></div>
+        <div class="tot"><span>Total today</span><span class="js-total">₹499</span></div>
+        <small>Renewal ₹299 per year, starting 1 year after purchase.</small>
+      </div>
+    </div>
+    <p class="note"><span data-icon="sparkle"></span>Your link and QR code go live right after payment. Unlimited edits, same link.</p>
+    <p class="note"><span data-icon="lock"></span>Secure payment through PayU: UPI, cards, net banking and wallets.</p>
+  </aside>
+</main>
+
+<div class="mbar"><div><small style="display:block;font-size:12px;color:var(--ink-3)">Total today</small><b class="js-total">₹499</b></div><button class="btn btn-primary" id="publish-m">Pay &amp; publish</button></div>
+
+<script src="assets/vendor/qrcode.js"></script>
+<script src="assets/vueme.js"></script>
+<script>
+(() => {
+  const V = window.Vueme, $ = s => document.querySelector(s), form = $('#form');
+  const ACCENTS = [['#6B3FD8','Vueme purple'],['#0E0B1A','Ink'],['#E5484D','Red'],['#12A150','Green'],['#1F6FEB','Blue'],['#FCC305','Yellow'],['#C2410C','Burnt orange'],['#DB2777','Pink']];
+  const qs = new URLSearchParams(location.search);
+  let d = Object.assign({}, V.DEFAULT, V.store.get('digital', {}), { analytics: false, nfc: false });
+  if (qs.get('name')) d.name = qs.get('name');
+  if (qs.get('template') && V.TEMPLATES.some(t => t.id === qs.get('template'))) d.template = qs.get('template');
+
+  // build template + swatch pickers
+  $('#tpl-pick').innerHTML = V.TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}"><div class="thumb" aria-hidden="true">${V.phone(V.digitalCard({ template: t.id }))}</div><b>${t.name}<span>${V.inr(t.price)}</span></b><small>${t.note}</small></label>`).join('');
+  $('#swatches').innerHTML = ACCENTS.map(([c, n]) => `<label class="swatch" style="background:${c}" title="${n}"><input type="radio" name="accent" value="${c}" aria-label="${n}"></label>`).join('');
+
+  // fill form from state
+  for (const el of form.elements) {
+    if (!el.name || el.type === 'file') continue;
+    if (el.type === 'radio') el.checked = d[el.name] === el.value;
+    else if (el.type === 'checkbox') el.checked = !!d[el.name];
+    else el.value = d[el.name] == null ? '' : d[el.name];
+  }
+  $('#f-custom').value = d.accent;
+
+  let saveT;
+  function render() {
+    const tpl = V.TEMPLATES.find(t => t.id === d.template);
+    const url = 'vueme.in/' + V.slug(d.name);
+    $('#preview').innerHTML = V.phone(V.digitalCard(d), 'Live preview of your ' + tpl.name + ' card');
+    $('#url').textContent = url; $('#qr-url').textContent = url;
+    $('#qr').innerHTML = V.qrSvg('https://' + url, { label: 'QR code for ' + url });
+    $('#photo-prev').innerHTML = d.photo ? `<img src="${V.esc(d.photo)}" alt="">` : V.esc(V.initials(d.name));
+    $('#photo-rm').hidden = !d.photo;
+    $('#bio-count').textContent = (d.bio || '').length + ' / 160';
+    // pricing
+    const total = tpl.price + (d.analytics ? 199 : 0) + (d.nfc ? 399 : 0);
+    $('#sum-tpl').textContent = tpl.name + ' template'; $('#sum-tpl-p').textContent = V.inr(tpl.price);
+    $('#sum-an').hidden = !d.analytics; $('#sum-nfc').hidden = !d.nfc;
+    document.querySelectorAll('.js-total').forEach(e => e.textContent = V.inr(total));
+    // draft
+    clearTimeout(saveT); $('#status').lastChild.textContent = 'Saving…';
+    saveT = setTimeout(() => {
+      const { analytics, nfc, ...draft } = d;
+      let ok = V.store.set('digital', draft);
+      if (!ok && draft.photo) ok = V.store.set('digital', { ...draft, photo: '' }); // photo too large for local storage
+      $('#status').lastChild.textContent = ok ? 'Draft saved' : 'Draft not saved on this device';
+    }, 400);
+  }
+
+  form.addEventListener('input', e => {
+    const el = e.target; if (!el.name) return;
+    if (el.type === 'checkbox') d[el.name] = el.checked;
+    else if (el.type !== 'file') d[el.name] = el.value;
+    if (el.name === 'accent') $('#f-custom').value = el.value;
+    if (el.name === 'email') $('#email-err').hidden = true;
+    render();
+  });
+  $('#f-email').addEventListener('blur', e => { const v = e.target.value.trim(); const bad = v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); $('#email-err').hidden = !bad; e.target.setAttribute('aria-invalid', bad); });
+  $('#f-custom').addEventListener('input', e => { d.accent = e.target.value; form.querySelectorAll('[name=accent]').forEach(r => r.checked = r.value.toLowerCase() === d.accent.toLowerCase()); render(); });
+  $('#photo').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader(); r.onload = () => { d.photo = r.result; render(); V.toast('Photo added'); }; r.readAsDataURL(f);
+  });
+  $('#photo-rm').addEventListener('click', () => { d.photo = ''; $('#photo').value = ''; render(); });
+  $('#copy-url').addEventListener('click', () => V.copy('https://vueme.in/' + V.slug(d.name)));
+  $('#dl-qr').addEventListener('click', () => {
+    const svg = $('#qr').innerHTML, a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' })); a.download = 'vueme-' + V.slug(d.name) + '-qr.svg'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  const publish = () => { if (!form.reportValidity()) return; V.toast('Prototype: this would open PayU checkout'); };
+  $('#publish').addEventListener('click', publish); $('#publish-m').addEventListener('click', publish);
+  document.querySelectorAll('.mtabs [data-view]').forEach(b => b.addEventListener('click', () => {
+    document.body.dataset.view = b.dataset.view;
+    document.querySelectorAll('.mtabs [data-view]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    window.scrollTo(0, 0);
+  }));
+  if (location.hash === '#addons') { $('#a-nfc').checked = true; d.nfc = true; }
+  render();
+})();
+</script>
+</body>
+</html>

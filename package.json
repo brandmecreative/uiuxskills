@@ -9,6 +9,7 @@
     "url": "git+https://github.com/brandmecreative/uiuxskills.git"
   },
   "dependencies": {
-    "gsap": "3.15.1"
+    "gsap": "3.15.1",
+    "qrcode-generator": "1.4.4"
   }
 }

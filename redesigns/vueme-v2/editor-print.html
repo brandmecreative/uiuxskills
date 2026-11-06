@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visiting Card Editor — Vueme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vueme.css">
+<link rel="stylesheet" href="assets/cards.css">
+<style>
+body{background:var(--soft)}
+.ebar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.ebar-in{display:flex;align-items:center;gap:16px;height:64px;padding:0 20px}
+.ebar .logo img{height:22px}
+.crumb{display:flex;gap:10px;align-items:center;font-weight:700;font-size:15px}
+.crumb::before{content:"";width:1px;height:22px;background:var(--line-2)}
+.status{font-size:13px;color:var(--ink-3);font-weight:600;display:flex;gap:6px;align-items:center}
+.status .i{width:16px;height:16px;color:var(--mint-ink)}
+.ebar-end{margin-left:auto;display:flex;gap:8px;align-items:center}
+.editor{display:grid;grid-template-columns:380px 1fr 360px;min-height:calc(100vh - 64px)}
+.side{background:#fff;border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 64px);position:sticky;top:64px}
+.side-in{padding:8px 20px 40px}
+.grp{border-bottom:1px solid var(--line)}
+.grp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:60px;font-weight:800;font-size:16px}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary .num{font-family:var(--mono);font-size:12px;color:var(--ink-3);font-weight:600;width:22px}
+.grp>summary .chev{margin-left:auto;width:20px;height:20px;transition:transform .2s var(--ease)}
+.grp[open]>summary .chev{transform:rotate(180deg)}
+.grp-body{display:grid;gap:16px;padding:0 0 24px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tpl-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tpl-opt{position:relative;border:1.5px solid var(--line-2);border-radius:var(--r-sm);padding:8px;cursor:pointer;display:grid;gap:6px;font-size:12.5px;font-weight:700;text-align:center;transition:border-color .15s}
+.tpl-opt:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tpl-opt:has(input:focus-visible){box-shadow:var(--focus)}
+.tpl-opt input{position:absolute;opacity:0}
+.tpl-opt .pc{box-shadow:0 1px 3px rgba(14,11,26,.15);pointer-events:none}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;font-weight:600;font-size:14px;cursor:pointer}
+.toggle input{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--line-2);position:relative;cursor:pointer;transition:background-color .15s;flex:none}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s var(--ease)}
+.toggle input:checked{background:var(--purple)}
+.toggle input:checked::after{transform:translateX(18px)}
+.toggle input:focus-visible{box-shadow:var(--focus)}
+.toggle input:disabled{opacity:.4;cursor:not-allowed}
+
+.canvas{display:flex;flex-direction:column;align-items:center;padding:32px 24px 80px;gap:18px;background-image:radial-gradient(#D9D5E4 1px,transparent 1px);background-size:20px 20px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.stage{width:min(620px,100%);position:relative;padding:4%}
+.stage .pc{box-shadow:0 2px 2px rgba(14,11,26,.06),0 30px 60px -24px rgba(14,11,26,.45)}
+.flip{perspective:1600px}
+.flip-in{position:relative;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip-in.is-back{transform:rotateY(180deg)}
+.face{backface-visibility:hidden;-webkit-backface-visibility:hidden;position:relative}
+.face.back{position:absolute;inset:0;transform:rotateY(180deg)}
+.legend{display:flex;gap:16px;font-size:12.5px;font-weight:600;color:var(--ink-2);flex-wrap:wrap;justify-content:center}
+.legend span{display:flex;gap:6px;align-items:center}
+.legend i{width:18px;border-top:2px dashed}
+.dims{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+
+.order{background:#fff;border-left:1px solid var(--line);padding:24px 20px;display:flex;flex-direction:column;gap:22px;max-height:calc(100vh - 64px);overflow:auto;position:sticky;top:64px}
+.order h2{font-size:18px}
+.opt-h{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between}
+.opt-h span{font-weight:600;color:var(--ink-3)}
+.fins{display:grid;gap:8px}
+.fin{display:flex;gap:12px;align-items:center;padding:12px;border:1.5px solid var(--line-2);border-radius:var(--r-sm);cursor:pointer;transition:border-color .15s}
+.fin:has(input:checked){border-color:var(--ink);background:var(--soft)}
+.fin:has(input:focus-visible){box-shadow:var(--focus)}
+.fin input{position:absolute;opacity:0}
+.fin .sw{width:40px;height:28px;border-radius:5px;flex:none;border:1px solid var(--line-2)}
+.fin b{display:block;font-size:14.5px}
+.fin small{font-size:12.5px;color:var(--ink-3)}
+.fin .from{margin-left:auto;font-weight:700;font-size:13.5px;white-space:nowrap}
+.seg{width:100%}
+.seg label{flex:1;justify-content:center;position:relative}
+.seg label:has(input:disabled){opacity:.4;cursor:not-allowed}
+.price-box{border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:8px;font-size:14px}
+.price-box div{display:flex;justify-content:space-between;gap:12px}
+.price-box .tot{border-top:1px solid var(--line);padding-top:12px;align-items:baseline}
+.price-box .tot b{font-size:26px;letter-spacing:-.03em}
+.price-box s{color:var(--ink-3)}
+.price-box .save{color:var(--mint-ink);font-weight:700}
+.note{font-size:12.5px;color:var(--ink-3);display:flex;gap:8px}
+.note .i{width:16px;height:16px;flex:none;margin-top:2px}
+.upl{border:1.5px dashed var(--line-2);border-radius:var(--r-sm);padding:16px;text-align:center;font-size:13.5px;color:var(--ink-2);display:grid;gap:8px;justify-items:center}
+.mbar{display:none}
+@media (max-width:1180px){
+  .editor{grid-template-columns:360px 1fr}
+  .order{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+}
+@media (max-width:760px){
+  .crumb,.status,.ebar-end .btn-ghost{display:none}
+  .editor{display:block}
+  .canvas{position:sticky;top:64px;z-index:5;padding:16px 12px;gap:10px;background-color:var(--soft);border-bottom:1px solid var(--line)}
+  .canvas .legend,.canvas .dims{display:none}
+  .stage{width:min(360px,100%)}
+  .side{position:static;max-height:none;border-right:0}
+  .order{display:flex}
+  .mbar{display:flex;position:sticky;bottom:0;z-index:25;background:#fff;border-top:1px solid var(--line);padding:12px 16px;gap:12px;align-items:center}
+  .mbar b{font-size:18px}.mbar .btn{margin-left:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#editor">Skip to editor</a>
+<header class="ebar">
+  <div class="ebar-in">
+    <a class="logo" href="index.html" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="100" height="22"></a>
+    <span class="crumb">Visiting card editor</span>
+    <span class="status" id="status" aria-live="polite"><span data-icon="check"></span>Draft saved</span>
+    <div class="ebar-end">
+      <a class="btn btn-ghost btn-sm" href="editor-digital.html"><span data-icon="phone"></span>Digital card editor</a>
+      <button class="btn btn-primary btn-sm" id="cart">Add to cart · <span class="js-total">₹675</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="editor" id="editor">
+  <form class="side" id="form" aria-label="Card design" onsubmit="return false">
+    <div class="side-in">
+      <details class="grp" open><summary><span class="num">01</span>Design<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body"><div class="tpl-pick" id="tpl-pick" role="radiogroup" aria-label="Design"></div>
+          <div class="upl"><span>Already have a design?</span><label class="btn btn-white btn-sm" style="cursor:pointer"><span data-icon="upload"></span>Upload your file<input type="file" accept="image/png,image/jpeg" class="sr-only" id="own"></label><small>JPG or PNG, ideally 300 DPI. Low-resolution images may print blurry.</small></div>
+        </div>
+      </details>
+      <details class="grp" open><summary><span class="num">02</span>Front<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="field"><label for="p-name">Name</label><input class="input" id="p-name" name="name" maxlength="32" autocomplete="name"></div>
+          <div class="row2">
+            <div class="field"><label for="p-role">Role</label><input class="input" id="p-role" name="role" maxlength="36"></div>
+            <div class="field"><label for="p-company">Company</label><input class="input" id="p-company" name="company" maxlength="36"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="p-phone">Phone</label><input class="input" id="p-phone" name="phone" type="tel" inputmode="tel"></div>
+            <div class="field"><label for="p-web">Website</label><input class="input" id="p-web" name="website"></div>
+          </div>
+          <div class="field"><label for="p-email">Email</label><input class="input" id="p-email" name="email" type="email"></div>
+          <div class="field"><label for="p-addr">Address</label><input class="input" id="p-addr" name="address" maxlength="70"><span class="hint" id="addr-warn" hidden style="color:#B45309">Long addresses may be cut off. Keep it under 50 characters.</span></div>
+          <div class="field"><span class="label">Logo</span><div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn btn-white btn-sm" style="cursor:pointer"><span data-icon="image"></span>Upload logo<input type="file" accept="image/*" class="sr-only" id="logo"></label><button type="button" class="btn btn-ghost btn-sm" id="logo-rm" hidden>Remove</button></div><span class="hint">Without a logo we use your initials.</span></div>
+        </div>
+      </details>
+      <details class="grp" open><summary><span class="num">03</span>Back<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="field"><label for="p-tag">Tagline</label><input class="input" id="p-tag" name="tagline" maxlength="60"></div>
+          <label class="toggle">QR code to my digital card<input type="checkbox" name="qr" id="p-qr"></label>
+          <p class="hint" id="back-note" hidden>Choose front &amp; back printing to use the back side.</p>
+        </div>
+      </details>
+      <details class="grp" open><summary><span class="num">04</span>Colour<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body"><div class="swatches" role="radiogroup" aria-label="Card colour" id="swatches"></div></div>
+      </details>
+    </div>
+  </form>
+
+  <section class="canvas" aria-label="Card preview">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Side" style="width:auto"><button type="button" data-side="front" aria-pressed="true">Front</button><button type="button" data-side="back" aria-pressed="false" id="back-btn">Back</button></div>
+      <label class="toggle" style="background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:0 8px 0 16px">Print guides<input type="checkbox" id="guides" checked></label>
+    </div>
+    <div class="stage flip"><div class="flip-in" id="flip"><div class="face" id="front"></div><div class="face back" id="back"></div></div></div>
+    <div class="legend"><span><i style="border-color:#E5484D"></i>Bleed — background runs past this line</span><span><i style="border-color:#2E7D32"></i>Safe area — keep text inside</span></div>
+    <div class="dims">90 × 53 mm · 300 GSM · CMYK</div>
+  </section>
+
+  <aside class="order" aria-label="Print options">
+    <div><h2>Print options</h2></div>
+    <fieldset style="border:0;padding:0"><legend class="opt-h">Finish</legend><div class="fins" id="fins"></div></fieldset>
+    <fieldset style="border:0;padding:0"><legend class="opt-h">Printing</legend>
+      <div class="seg"><label><input type="radio" name="sides" value="single">Single side</label><label><input type="radio" name="sides" value="double">Front &amp; back</label></div></fieldset>
+    <fieldset style="border:0;padding:0"><legend class="opt-h">Quantity</legend>
+      <div class="seg"><label><input type="radio" name="qty" value="500">500 cards</label><label><input type="radio" name="qty" value="1000">1000 cards</label></div>
+      <p class="hint" id="qty-note" hidden style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Synthetic front &amp; back comes in 1000 only.</p></fieldset>
+    <label class="check" id="corners-l"><input type="checkbox" id="corners"><div><b>Rounded corners</b><span id="corners-note">Smooth rounded edges on all cards</span></div><span class="price">+₹100</span></label>
+    <div class="price-box" aria-live="polite">
+      <div><span id="pl-name">Matte · single side · 500</span><span id="pl-p">₹675</span></div>
+      <div id="pl-corners" hidden><span>Rounded corners</span><span>₹100</span></div>
+      <div class="tot"><span>Total <s id="pl-reg">₹849</s></span><b class="js-total">₹675</b></div>
+      <div><span class="save" id="pl-save">You save ₹174</span><span></span></div>
+    </div>
+    <p class="note"><span data-icon="truck"></span>Ships by India Post Speed Post with tracking, within India.</p>
+    <p class="note"><span data-icon="shield"></span>Damaged or misprinted? Tell us within 48 hours and we reprint free.</p>
+    <a class="btn btn-white" href="https://wa.me/919042018017?text=Bulk%20visiting%20card%20quote" style="justify-content:center"><span data-icon="whatsapp"></span>Ordering in bulk? Get a quote</a>
+  </aside>
+</main>
+<div class="mbar"><div><small style="display:block;font-size:12px;color:var(--ink-3)">Total</small><b class="js-total">₹675</b></div><button class="btn btn-primary" id="cart-m">Add to cart</button></div>
+
+<script src="assets/vendor/qrcode.js"></script>
+<script src="assets/vueme.js"></script>
+<script>
+(() => {
+  const V = window.Vueme, $ = s => document.querySelector(s), form = $('#form');
+  const COLORS = [['#6B3FD8','Vueme purple'],['#0E0B1A','Ink'],['#1F6FEB','Blue'],['#0F766E','Teal'],['#C2410C','Burnt orange'],['#B91C1C','Red'],['#FCC305','Yellow']];
+  const FINS = [
+    ['matte','Matte','Low-glare, soft touch','#ECEAF1'],
+    ['gloss','Gloss','Shiny, colours pop','linear-gradient(120deg,#E8E4F5,#fff 50%,#E8E4F5)'],
+    ['synthetic','Synthetic','Plastic-based, hard-wearing','linear-gradient(180deg,#F3F6FA,#DDE4EE)'],
+  ];
+  let d = Object.assign({}, V.PRINT_DEFAULT, V.store.get('print', {}));
+  let o = Object.assign({ finish: 'matte', sides: 'single', qty: '500', corners: false }, V.store.get('print-order', {}));
+  let side = 'front';
+
+  $('#tpl-pick').innerHTML = V.PRINT_TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}">${V.printSide({ template: t.id, name: 'Ananya Rao' })}${t.name}</label>`).join('');
+  $('#swatches').innerHTML = COLORS.map(([c, n]) => `<label class="swatch" style="background:${c}" title="${n}"><input type="radio" name="color" value="${c}" aria-label="${n}"></label>`).join('');
+  $('#fins').innerHTML = FINS.map(([id, n, s, bg]) => { const p = V.PRINT_PRICES[id].single[500][0]; return `<label class="fin"><input type="radio" name="finish" value="${id}"><span class="sw" style="background:${bg}"></span><span><b>${n}</b><small>${s}</small></span><span class="from">from ${V.inr(p)}</span></label>`; }).join('');
+
+  for (const el of form.elements) {
+    if (!el.name || el.type === 'file') continue;
+    if (el.type === 'radio') el.checked = d[el.name] === el.value;
+    else if (el.type === 'checkbox') el.checked = !!d[el.name];
+    else el.value = d[el.name] || '';
+  }
+  const ord = $('.order');
+  ord.querySelectorAll('input[type=radio]').forEach(r => r.checked = String(o[r.name]) === r.value);
+  $('#corners').checked = o.corners;
+
+  let saveT;
+  function render() {
+    // option rules from vueme.in: synthetic double = 1000 only; no rounded corners on synthetic
+    const syn = o.finish === 'synthetic';
+    if (syn && o.sides === 'double') o.qty = '1000';
+    if (syn) o.corners = false;
+    ord.querySelectorAll('[name=qty]').forEach(r => { r.disabled = syn && o.sides === 'double' && r.value === '500'; r.checked = r.value === String(o.qty); });
+    $('#qty-note').hidden = !(syn && o.sides === 'double');
+    $('#corners').disabled = syn; $('#corners').checked = o.corners;
+    $('#corners-note').textContent = syn ? 'Available on Matte and Gloss only' : 'Smooth rounded edges on all cards';
+    const dbl = o.sides === 'double';
+    $('#back-btn').disabled = !dbl; $('#p-qr').disabled = !dbl; $('#p-tag').disabled = !dbl; $('#back-note').hidden = dbl;
+    if (!dbl && side === 'back') setSide('front');
+
+    const card = Object.assign({}, d, { finish: o.finish, corners: o.corners });
+    const guides = $('#guides').checked ? '<div class="guides" aria-hidden="true"><div class="bleed"></div><div class="safe"></div></div>' : '';
+    $('#front').innerHTML = V.printSide(card, 'front') + guides;
+    $('#back').innerHTML = V.printSide(card, 'back') + guides;
+    $('#addr-warn').hidden = (d.address || '').length <= 50;
+
+    const [sale, reg] = V.PRINT_PRICES[o.finish][o.sides][o.qty];
+    const total = sale + (o.corners ? 100 : 0), regT = reg + (o.corners ? 100 : 0);
+    const fname = FINS.find(f => f[0] === o.finish)[1];
+    $('#pl-name').textContent = `${fname} · ${dbl ? 'front & back' : 'single side'} · ${o.qty}`;
+    $('#pl-p').textContent = V.inr(sale); $('#pl-corners').hidden = !o.corners;
+    $('#pl-reg').textContent = V.inr(regT); $('#pl-save').textContent = 'You save ' + V.inr(regT - total);
+    document.querySelectorAll('.js-total').forEach(e => e.textContent = V.inr(total));
+
+    clearTimeout(saveT); $('#status').lastChild.textContent = 'Saving…';
+    saveT = setTimeout(() => { const ok = V.store.set('print', d) && V.store.set('print-order', o); $('#status').lastChild.textContent = ok ? 'Draft saved' : 'Draft not saved on this device'; }, 400);
+  }
+  function setSide(s) {
+    side = s; $('#flip').classList.toggle('is-back', s === 'back');
+    document.querySelectorAll('[data-side]').forEach(b => b.setAttribute('aria-pressed', b.dataset.side === s));
+    $('#front').setAttribute('aria-hidden', s === 'back'); $('#back').setAttribute('aria-hidden', s === 'front');
+  }
+  form.addEventListener('input', e => { const el = e.target; if (!el.name) return; d[el.name] = el.type === 'checkbox' ? el.checked : el.value; render(); });
+  ord.addEventListener('change', e => { const el = e.target; if (el.id === 'corners') o.corners = el.checked; else if (el.name) o[el.name] = el.value; render(); });
+  $('#guides').addEventListener('change', render);
+  document.querySelectorAll('[data-side]').forEach(b => b.addEventListener('click', () => setSide(b.dataset.side)));
+  $('#logo').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { d.logo = r.result; $('#logo-rm').hidden = false; render(); }; r.readAsDataURL(f); });
+  $('#logo-rm').addEventListener('click', () => { d.logo = ''; $('#logo').value = ''; $('#logo-rm').hidden = true; render(); });
+  $('#own').addEventListener('change', e => { if (e.target.files[0]) V.toast('Prototype: your file would replace the template'); });
+  const cart = () => V.toast('Added to cart (prototype)');
+  $('#cart').addEventListener('click', cart); $('#cart-m').addEventListener('click', cart);
+  $('#logo-rm').hidden = !d.logo;
+  setSide('front'); render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card Analytics — Vueme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vueme.css">
+<link rel="stylesheet" href="assets/cards.css">
+<style>
+body{background:var(--soft)}
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.rail{background:#fff;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px}
+.rail .logo{padding:6px 10px 20px}
+.rail .logo img{height:22px}
+.rail a.nav{display:flex;gap:12px;align-items:center;min-height:44px;padding:0 12px;border-radius:12px;font-weight:600;font-size:15px;color:var(--ink-2);transition:background-color .15s}
+.rail a.nav .i{width:20px;height:20px}
+.rail a.nav:hover{background:var(--soft)}
+.rail a.nav[aria-current="page"]{background:var(--ink);color:#fff}
+.rail .renew{margin-top:auto;border-radius:var(--r);background:var(--yellow);padding:16px;font-size:13.5px}
+.rail .renew b{display:block;font-size:15px;margin-bottom:4px}
+.rail .renew .btn{margin-top:12px;width:100%}
+.main{padding:28px 32px 64px;min-width:0}
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:24px}
+.top h1{font-size:30px;letter-spacing:-.03em}
+.top p{color:var(--ink-2);font-size:14.5px;margin-top:4px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.cardsel{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:6px 14px 6px 6px;font-weight:700;font-size:14px}
+.cardsel .av{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.card-h h2{font-size:16px;letter-spacing:-.01em}
+.card-h .sub{font-size:13px;color:var(--ink-3);font-weight:600}
+.c-12{grid-column:span 12}.c-8{grid-column:span 8}.c-6{grid-column:span 6}.c-4{grid-column:span 4}
+/* hero + kpis */
+.hero-fig{display:flex;flex-direction:column;justify-content:space-between;background:var(--purple);color:#fff;border:0}
+.hero-fig .lbl{display:flex;gap:8px;align-items:center;font-weight:700;font-size:14px;color:#fff}
+.hero-fig .lbl .i{width:18px;height:18px}
+.hero-fig .num{font-size:64px;font-weight:800;letter-spacing:-.05em;line-height:1;margin-top:18px;font-variant-numeric:tabular-nums}
+.hero-fig .dlt{margin-top:10px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+.pillup{display:inline-flex;align-items:center;gap:2px;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.18);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;height:100%}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column}
+.kpi .lbl{white-space:nowrap}
+.kpi svg.spk{margin-top:auto!important;padding-top:8px}
+.kpi .lbl{display:flex;gap:7px;align-items:center;font-size:13px;font-weight:700;color:var(--ink-2)}
+.kpi .lbl .i{width:16px;height:16px;color:var(--purple)}
+.kpi .num{font-size:30px;font-weight:800;letter-spacing:-.04em;margin-top:6px;font-variant-numeric:tabular-nums}
+.delta{font-size:12.5px;font-weight:700;display:inline-flex;gap:3px;align-items:center}
+.delta .i{width:14px;height:14px}
+.delta.up{color:var(--mint-ink)}.delta.down{color:#B42318}
+.delta span{color:var(--ink-3);font-weight:600;margin-left:4px}
+.kpi svg.spk{width:100%;height:34px;margin-top:8px}
+/* line chart */
+.chart-wrap{position:relative}
+.chart-wrap svg{width:100%;height:280px;display:block;overflow:visible}
+.axis text{font-family:var(--mono);font-size:11px;fill:var(--ink-3)}
+.gridline{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;border-radius:10px;padding:8px 12px;font-size:13px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .12s;z-index:5}
+.tip b{display:block;font-size:16px}
+.tip.show{opacity:1}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:left;font-weight:600;padding:8px 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.tbl td.r,.tbl th.r{text-align:right}
+.tbl-scroll{max-height:280px;overflow:auto}
+/* bar lists */
+.bars{display:grid;gap:12px;list-style:none;padding:0}
+.bar{display:grid;grid-template-columns:132px 1fr 56px;gap:12px;align-items:center;font-size:14px;font-weight:600;position:relative}
+.bar .nm{display:flex;gap:8px;align-items:center;min-width:0}
+.bar .nm .i{width:17px;height:17px;color:var(--ink-2);flex:none}
+.bar .nm span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .trk{height:12px;position:relative}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--purple);border-radius:0 4px 4px 0;min-width:2px;transition:width .5s var(--ease)}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.bar .pct{font-size:12px;color:var(--ink-3);font-weight:600}
+/* meter */
+.meter{height:14px;border-radius:99px;background:var(--lilac);overflow:hidden;margin:14px 0 8px}
+.meter i{display:block;height:100%;background:var(--purple);border-radius:99px}
+.big{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-3);font-size:13.5px}
+/* feed */
+.feed{list-style:none;padding:0;display:grid}
+.feed li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.feed li:last-child{border-bottom:0}
+.feed .ic{width:34px;height:34px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex:none}
+.feed .ic .i{width:17px;height:17px;color:var(--purple)}
+.feed time{display:block;font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.preview-card{display:flex;gap:20px;align-items:center}
+.preview-card .phone{--w:150px;flex:none;box-shadow:0 16px 30px -18px rgba(14,11,26,.5)}
+.preview-card .acts{display:grid;gap:8px}
+.demo-note{display:flex;gap:10px;align-items:center;background:var(--yellow-200);border-radius:var(--r-sm);padding:10px 14px;font-size:13.5px;font-weight:600;margin-bottom:20px}
+.demo-note .i{width:18px;height:18px;flex:none}
+.mtop{display:none}
+@media (max-width:1280px){.kpis{grid-template-columns:repeat(3,1fr)}.c-4{grid-column:span 6}.c-8{grid-column:span 12}}
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}
+  .rail{display:none}
+  .mtop{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .mtop img{height:22px}
+  .main{padding:20px 16px 48px}
+  .c-6,.c-4{grid-column:span 12}
+  .kpis{grid-template-columns:1fr 1fr}
+  .bar{grid-template-columns:104px 1fr 48px}
+  .hero-fig .num{font-size:52px}
+  .preview-card{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="app">
+  <aside class="rail" aria-label="Account">
+    <a class="logo" href="index.html" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="100" height="22"></a>
+    <a class="nav" href="dashboard.html" aria-current="page"><span data-icon="chart"></span>Analytics</a>
+    <a class="nav" href="editor-digital.html"><span data-icon="edit"></span>Edit digital card</a>
+    <a class="nav" href="editor-print.html"><span data-icon="print"></span>Visiting cards</a>
+    <a class="nav" href="https://vueme.in/index.php/order-tracking/"><span data-icon="truck"></span>Orders</a>
+    <a class="nav" href="https://vueme.in/index.php/my-account/"><span data-icon="user"></span>Account</a>
+    <div class="renew"><b>Card live until 6 Nov 2027</b>Renewal ₹299 per year. We'll email you before it's due.<a class="btn btn-ink btn-sm" href="https://vueme.in/index.php/my-account/">Manage renewal</a></div>
+  </aside>
+  <header class="mtop"><a href="index.html" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="100" height="22"></a><a class="btn btn-ink btn-sm" href="editor-digital.html">Edit card</a></header>
+
+  <main class="main" id="main">
+    <div class="demo-note" role="note"><span data-icon="sparkle"></span>Sample data. With the Analytics add-on (+₹199) this shows your real numbers, privately.</div>
+    <div class="top">
+      <div><h1>Card analytics</h1><p>Who viewed, scanned, tapped and saved your card.</p></div>
+      <div class="filters">
+        <span class="cardsel"><span class="av">AR</span>vueme.in/ananya-rao</span>
+        <div class="seg" role="group" aria-label="Date range" id="range"><button type="button" data-r="7" aria-pressed="false">7 days</button><button type="button" data-r="30" aria-pressed="true">30 days</button><button type="button" data-r="90" aria-pressed="false">90 days</button></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card hero-fig c-4">
+        <div><span class="lbl"><span data-icon="eye"></span>Card views</span><div class="num" id="h-views">0</div>
+        <div class="dlt"><span class="pillup" id="h-delta"></span><span id="h-range">vs previous 30 days</span></div></div>
+        <p style="font-size:13.5px;color:#fff;margin-top:18px" id="h-unique"></p>
+      </div>
+      <div class="c-8"><div class="kpis" id="kpis"></div></div>
+
+      <section class="card c-8" aria-labelledby="t-views">
+        <div class="card-h"><div><h2 id="t-views">Views per day</h2><span class="sub" id="t-views-sub"></span></div>
+          <div class="seg" role="group" aria-label="View as"><button type="button" aria-pressed="true" data-v="chart">Chart</button><button type="button" aria-pressed="false" data-v="table">Table</button></div></div>
+        <div class="chart-wrap" id="line-wrap"><svg id="line" role="img" aria-labelledby="t-views"></svg><div class="tip" id="tip"></div></div>
+        <div class="tbl-scroll" id="line-table" hidden></div>
+      </section>
+
+      <section class="card c-4" aria-labelledby="t-src">
+        <div class="card-h"><h2 id="t-src">How people opened it</h2></div>
+        <ul class="bars" id="src"></ul>
+        <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+        <h2 style="font-size:16px">Saved to contacts</h2>
+        <div class="big" style="margin-top:12px" id="conv">0%</div>
+        <div class="meter" role="meter" aria-label="Views that ended in a saved contact" aria-valuemin="0" aria-valuemax="100" id="conv-m"><i></i></div>
+        <p class="muted" id="conv-t"></p>
+      </section>
+
+      <section class="card c-6" aria-labelledby="t-taps">
+        <div class="card-h"><h2 id="t-taps">What they tapped</h2><span class="sub">Taps on your card's buttons</span></div>
+        <ul class="bars" id="taps"></ul>
+      </section>
+
+      <section class="card c-6" aria-labelledby="t-city">
+        <div class="card-h"><h2 id="t-city">Top cities</h2><span class="sub">By views</span></div>
+        <ul class="bars" id="cities"></ul>
+      </section>
+
+      <section class="card c-6" aria-labelledby="t-feed">
+        <div class="card-h"><h2 id="t-feed">Recent activity</h2><span class="sub">Visitors stay anonymous</span></div>
+        <ul class="feed" id="feed"></ul>
+      </section>
+
+      <section class="card c-6" aria-labelledby="t-card">
+        <div class="card-h"><h2 id="t-card">Your card</h2><span class="tag mint">Live</span></div>
+        <div class="preview-card"><div id="mini"></div>
+          <div class="acts"><p class="muted">vueme.in/ananya-rao · Aria template</p>
+            <a class="btn btn-ink btn-sm" href="editor-digital.html"><span data-icon="edit"></span>Edit card</a>
+            <button class="btn btn-white btn-sm" type="button" id="share"><span data-icon="copy"></span>Copy link</button>
+            <a class="btn btn-white btn-sm" href="editor-print.html"><span data-icon="print"></span>Order matching visiting cards</a></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="assets/vendor/qrcode.js"></script>
+<script src="assets/vueme.js"></script>
+<script>
+(() => {
+  const V = window.Vueme, $ = s => document.querySelector(s);
+  const nf = n => Math.round(n).toLocaleString('en-IN');
+  // deterministic sample data
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  function series(days, seed) {
+    const r = rng(seed), out = [], today = new Date(2026, 10, 6);
+    for (let i = days - 1; i >= 0; i--) {
+      const dt = new Date(today); dt.setDate(today.getDate() - i);
+      const wk = [0, 6].includes(dt.getDay()) ? .7 : 1;
+      const trend = 1 + (days - i) / days * .5;
+      out.push({ d: dt, v: Math.round((24 + r() * 26) * wk * trend + (i === 18 ? 22 : 0)) });
+    }
+    return out;
+  }
+  const fmtD = d => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+  function render(days) {
+    const s = series(days, days * 97 + 13), prev = series(days, days * 31 + 7);
+    const views = s.reduce((a, b) => a + b.v, 0), pv = prev.reduce((a, b) => a + b.v, 0) * .86;
+    const dPct = Math.round((views - pv) / pv * 100);
+    $('#h-views').textContent = nf(views);
+    $('#h-delta').innerHTML = (dPct >= 0 ? '▲ ' : '▼ ') + Math.abs(dPct) + '%';
+    $('#h-range').textContent = `vs previous ${days} days`;
+    $('#h-unique').textContent = `${nf(views * .71)} unique visitors · ${fmtD(s[0].d)} – ${fmtD(s[s.length - 1].d)}`;
+
+    const k = [
+      ['qr', 'QR scans', views * .32, 9], ['nfc', 'NFC taps', views * .11, 31], ['link', 'Link opens', views * .57, 12],
+      ['phone', 'Call taps', views * .09, -4], ['save', 'Saved', views * .075, 24],
+    ];
+    $('#kpis').innerHTML = k.map(([ic, l, v, dl], i) => {
+      const sp = series(14, i * 11 + days).map(p => p.v), mx = Math.max(...sp), mn = Math.min(...sp);
+      const pts = sp.map((y, j) => `${(j / (sp.length - 1) * 100).toFixed(1)},${(30 - (y - mn) / (mx - mn || 1) * 26).toFixed(1)}`).join(' ');
+      return `<div class="kpi"><div class="lbl">${V.icon(ic)}${l}</div><div class="num">${nf(v)}</div>
+        <span class="delta ${dl >= 0 ? 'up' : 'down'}">${V.icon(dl >= 0 ? 'up' : 'down')}${Math.abs(dl)}%<span class="sr-only"> vs previous period</span></span>
+        <svg class="spk" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#6B3FD8" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg></div>`;
+    }).join('');
+
+    drawLine(s);
+    $('#t-views-sub').textContent = `${fmtD(s[0].d)} – ${fmtD(s[s.length - 1].d)}`;
+    $('#line-table').innerHTML = `<table class="tbl"><caption class="sr-only">Card views per day</caption><thead><tr><th scope="col">Date</th><th scope="col" class="r">Views</th></tr></thead><tbody>${s.slice().reverse().map(p => `<tr><td>${fmtD(p.d)}</td><td class="r">${p.v}</td></tr>`).join('')}</tbody></table>`;
+
+    bars('#src', [['link', 'Shared link', views * .57], ['qr', 'QR scan', views * .32], ['nfc', 'NFC tap', views * .11]], true);
+    const conv = 7.5 + days / 90;
+    $('#conv').textContent = conv.toFixed(1) + '%';
+    $('#conv-m').setAttribute('aria-valuenow', conv.toFixed(1)); $('#conv-m i').style.width = conv * 4 + '%';
+    $('#conv-t').textContent = `${nf(views * conv / 100)} of ${nf(views)} views ended with "Save contact". Bar scaled to 25%.`;
+    bars('#taps', [['whatsapp', 'WhatsApp', views * .14], ['phone', 'Call', views * .09], ['save', 'Save contact', views * conv / 100], ['instagram', 'Instagram', views * .06], ['globe', 'Website', views * .045], ['mail', 'Email', views * .02]]);
+    bars('#cities', [['pin', 'Bengaluru', views * .41], ['pin', 'Chennai', views * .17], ['pin', 'Hyderabad', views * .12], ['pin', 'Mumbai', views * .09], ['pin', 'Kochi', views * .06], ['pin', 'Other', views * .15]], true);
+  }
+
+  function bars(sel, rows, pct) {
+    const total = rows.reduce((a, r) => a + r[2], 0), max = Math.max(...rows.map(r => r[2]));
+    $(sel).innerHTML = rows.map(([ic, n, v]) => `<li class="bar" title="${n}: ${nf(v)}${pct ? ' (' + Math.round(v / total * 100) + '%)' : ''}"><span class="nm">${V.icon(ic)}<span>${n}</span></span><span class="trk" aria-hidden="true"><span class="fill" style="width:${(v / max * 100).toFixed(1)}%"></span></span><span class="v">${nf(v)}${pct ? `<span class="pct"> ${Math.round(v / total * 100)}%</span>` : ''}</span></li>`).join('');
+  }
+
+  let pts = [];
+  function drawLine(s) {
+    const svg = $('#line'), W = svg.clientWidth || 700, H = 280, pl = 36, pr = 8, pt = 12, pb = 26;
+    const max = Math.ceil(Math.max(...s.map(p => p.v)) / 20) * 20;
+    const x = i => pl + i / (s.length - 1) * (W - pl - pr), y = v => pt + (1 - v / max) * (H - pt - pb);
+    pts = s.map((p, i) => ({ x: x(i), y: y(p.v), p }));
+    const d = pts.map((q, i) => (i ? 'L' : 'M') + q.x.toFixed(1) + ' ' + q.y.toFixed(1)).join('');
+    const ticks = [0, max / 2, max];
+    const every = Math.ceil(s.length / 6);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML = `<g class="axis">${ticks.map(t => `<line class="gridline" x1="${pl}" x2="${W - pr}" y1="${y(t)}" y2="${y(t)}"/><text x="${pl - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`).join('')}
+      ${s.map((p, i) => i % every === 0 ? `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${fmtD(p.d)}</text>` : '').join('')}</g>
+      <path d="${d} L${x(s.length - 1)} ${y(0)} L${pl} ${y(0)}Z" fill="#6B3FD8" fill-opacity=".07"/>
+      <path d="${d}" fill="none" stroke="#6B3FD8" stroke-width="2" stroke-linejoin="round"/>
+      <line id="xh" y1="${pt}" y2="${H - pb}" stroke="#0E0B1A" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+      <circle id="dot" r="5" fill="#6B3FD8" stroke="#fff" stroke-width="2" opacity="0"/>
+      <rect x="${pl}" y="0" width="${W - pl - pr}" height="${H}" fill="transparent" id="hit" tabindex="0" aria-label="Move with arrow keys to read daily views"/>`;
+    const hit = $('#hit'); let idx = pts.length - 1;
+    const show = i => {
+      idx = Math.max(0, Math.min(pts.length - 1, i)); const q = pts[idx];
+      $('#xh').setAttribute('x1', q.x); $('#xh').setAttribute('x2', q.x); $('#xh').setAttribute('opacity', .5);
+      $('#dot').setAttribute('cx', q.x); $('#dot').setAttribute('cy', q.y); $('#dot').setAttribute('opacity', 1);
+      const tip = $('#tip'); tip.innerHTML = `<b>${q.p.v} views</b>${q.p.d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}`;
+      tip.style.left = Math.min(Math.max(q.x / W * 100, 10), 90) + '%'; tip.style.top = q.y + 'px'; tip.classList.add('show');
+    };
+    const hide = () => { $('#tip').classList.remove('show'); $('#xh').setAttribute('opacity', 0); $('#dot').setAttribute('opacity', 0); };
+    hit.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width * W; show(Math.round((px - pl) / (W - pl - pr) * (pts.length - 1))); });
+    hit.addEventListener('pointerleave', hide);
+    hit.addEventListener('focus', () => show(idx)); hit.addEventListener('blur', hide);
+    hit.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') { show(idx - 1); e.preventDefault(); } if (e.key === 'ArrowRight') { show(idx + 1); e.preventDefault(); } });
+  }
+
+  // feed
+  const feed = [['save', 'Someone in Bengaluru saved your contact', '12 min ago'], ['whatsapp', 'WhatsApp tap from Chennai', '48 min ago'], ['nfc', 'NFC tap · card opened in Bengaluru', '2 h ago'], ['qr', 'QR scan from Hyderabad', '3 h ago'], ['phone', 'Call tap from Kochi', 'Yesterday, 6:40 PM']];
+  $('#feed').innerHTML = feed.map(([i, t, w]) => `<li><span class="ic">${V.icon(i)}</span><div>${t}<time>${w}</time></div></li>`).join('');
+  $('#mini').innerHTML = V.phone(V.digitalCard({ template: 'aria' }), 'Your live card');
+  $('#share').addEventListener('click', () => V.copy('https://vueme.in/ananya-rao'));
+
+  let cur = 30;
+  document.querySelectorAll('#range [data-r]').forEach(b => b.addEventListener('click', () => {
+    cur = +b.dataset.r; document.querySelectorAll('#range [data-r]').forEach(x => x.setAttribute('aria-pressed', x === b)); render(cur);
+  }));
+  document.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => {
+    const t = b.dataset.v === 'table'; $('#line-wrap').hidden = t; $('#line-table').hidden = !t;
+    document.querySelectorAll('[data-v]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  }));
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => render(cur), 150); });
+  render(cur);
+})();
+</script>
+</body>
+</html>
