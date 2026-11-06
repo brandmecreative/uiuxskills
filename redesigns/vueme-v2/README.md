@@ -6,7 +6,7 @@ A clickable, static prototype of a vueme.in redesign. Open `index.html` in a bro
 
 | Page | What it does |
 | --- | --- |
-| `index.html` | Landing page. Type a name in the hero and a digital card and a printed card update live. Also has a template switcher, editor showcase, analytics preview, printed finishes, NFC card, how it works and the real FAQ. |
+| `index.html` | Landing page. The hero shows an auto-typing preview: sample names appear on a digital card and a printed card (no input, because on vueme.in the editor is 2-3 pages away and a typed name could not be carried there). Also has a template switcher, editor showcase, analytics preview, printed finishes, NFC card, how it works and the real FAQ. |
 | `editor-digital.html` | Digital card editor: 4 templates, photo upload, contact and social fields, accent colour, Analytics/NFC add-ons, live phone preview, link copy, QR download (SVG), order total, auto-saved draft. Accepts `?name=` and `?template=`. |
 | `editor-print.html` | Visiting card editor: 3 designs, front and back with flip, logo upload, QR to the digital card on the back, print guides (bleed and safe area), finish, sides and quantity, rounded corners, real prices with savings, auto-saved draft. |
 | `dashboard.html` | Analytics dashboard (sample data): views figure, QR, NFC, link, call and saved KPIs, views-per-day chart with hover and keyboard tooltip plus a table view, how people opened the card, saved-contact rate, taps, top cities, recent activity, renewal. 7, 30 and 90-day ranges. |

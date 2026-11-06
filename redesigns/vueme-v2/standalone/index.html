@@ -298,8 +298,11 @@ section{position:relative}
 .hero{padding:64px 0 96px;overflow:hidden}
 .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
 .try{margin-top:32px;max-width:520px}
-.try label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:8px}
-.try label span{font-family:var(--mono);font-weight:500;color:var(--ink-3);font-size:12px}
+.try-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.try-lbl #try-url{font-family:var(--mono);font-weight:500;color:var(--ink-3);font-size:12px}
+.try-demo{flex:1;min-width:0;padding:0 16px;font-size:17px;font-weight:700;min-height:48px;display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;color:var(--purple-900);cursor:default;user-select:none}
+.try-demo small{font-size:12px;font-weight:600;color:var(--ink-3)}
+.try .try-row{border:0;background:var(--lilac)}
 .try-row{display:flex;gap:8px;padding:6px;border:1.5px solid var(--ink);border-radius:var(--pill);background:#fff}
 .try-row:focus-within{box-shadow:var(--focus)}
 .try-row input{flex:1;min-width:0;border:0;padding:0 16px;font-size:17px;font-weight:600;background:transparent;min-height:48px}
@@ -838,13 +841,14 @@ section{position:relative}
       <p class="eyebrow">Link · QR code · NFC · Print</p>
       <h1 class="h-xl" style="margin-top:16px" data-hero>Your business card, saved in their phone in one tap.</h1>
       <p class="lede" style="margin-top:20px">Get a digital card with your own link and QR code, or order premium printed cards — all designed online with Vueme.</p>
-      <form class="try" onsubmit="event.preventDefault();document.getElementById('digital').scrollIntoView({behavior:'smooth'})">
-        <label for="try-name">Preview: type your name<span id="try-url">vueme.in/ananya-rao</span></label>
+      <div class="try">
+        <p class="try-lbl"><span class="pv-badge">Preview</span><span id="try-url" aria-hidden="true">vueme.in/ananya-rao</span></p>
         <div class="try-row">
-          <input id="try-name" name="n" value="Ananya Rao" autocomplete="name" maxlength="40">
-          <button class="btn btn-primary">Choose a template<span data-icon="arrow"></span></button>
+          <div class="try-demo" aria-hidden="true"><small>Sample:</small><span id="try-typed">Ananya Rao</span><span class="caret"></span></div>
+          <a class="btn btn-primary" href="#digital">Choose a template<span data-icon="arrow"></span></a>
         </div>
-      </form>
+        <p class="sr-only">Animated preview: sample names appear on a digital card and a printed card.</p>
+      </div>
       <div class="hero-ctas"><a class="btn btn-white" href="#print-pick">Order printed cards · from ₹625</a></div>
       <div class="proof">
         <span data-icon="sparkle">Link &amp; QR right after payment</span>
@@ -3695,15 +3699,31 @@ var qrcode = function() {
   const V = window.Vueme;
   const $ = s => document.querySelector(s);
   // --- hero: one name drives three previews
-  const nameIn = $('#try-name');
-  function hero() {
-    const name = nameIn.value.trim() || 'Your Name';
+  // hero preview: sample names type themselves (nothing is entered or saved here;
+  // the real editor opens later, after the customer picks a template on vueme.in)
+  function hero(name) {
+    name = name || 'Ananya Rao';
     $('#try-url').textContent = 'vueme.in/' + V.slug(name);
     $('#hero-phone').innerHTML = V.phone(V.digitalCard({ name, template: 'aria' }), 'Digital card for ' + name);
     $('#hero-pc').innerHTML = V.printSide({ name, template: 'classic', finish: 'matte' });
     $('#hero-pc-back').innerHTML = V.printSide({ name, finish: 'matte' }, 'back');
   }
-  nameIn.addEventListener('input', hero); hero();
+  hero();
+  const SAMPLES = ['Ananya Rao', 'Ravi Kumar', 'Meera Iyer', 'Arjun Nair'];
+  const heroStill = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!heroStill) {
+    let si = 0, ci = SAMPLES[0].length, dir = -1, hold = 14, ht = null;
+    const typedEl = $('#try-typed');
+    const tickHero = () => {
+      if (hold > 0) { hold--; return; }
+      ci += dir; const s = SAMPLES[si], txt = s.slice(0, Math.max(ci, 0));
+      typedEl.textContent = txt;
+      if (dir < 0 && ci <= 0) { si = (si + 1) % SAMPLES.length; dir = 1; hold = 3; }
+      else if (dir > 0 && ci >= SAMPLES[si].length) { dir = -1; hold = 22; hero(SAMPLES[si]); }
+      else if (dir > 0) $('#try-url').textContent = 'vueme.in/' + V.slug(txt || 'your-name');
+    };
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) { if (!ht) ht = setInterval(tickHero, 90); } else { clearInterval(ht); ht = null; } }).observe($('.hero'));
+  }
 
   // --- template switcher (tabs)
   const tabs = $('#tpl-tabs'); let cur = 'aria';
