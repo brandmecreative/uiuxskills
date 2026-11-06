@@ -41,7 +41,7 @@ Refero's live research server was not connected, so the research used the refero
 ## Selection first
 Neither editor opens on its own, matching how vueme.in works:
 - Digital: choose a template first. Opening `editor-digital.html` without `?template=` shows that step.
-- Print: choose material, printing and quantity first (the picker on the home page, `#print-pick`). Opening `editor-print.html` without `?finish=&sides=&qty=` shows that step. `&upload=1` opens it ready for an upload.
+- Print: choose material, printing and quantity first. The home page's `#print-pick` is a price guide only: material and printing pick the exact vueme.in product page (its button goes there); quantity and design are chosen on that page, because a landing-page choice cannot be carried 2-3 pages forward. Opening `editor-print.html` without `?finish=&sides=&qty=` shows that step. `&upload=1` opens it ready for an upload.
 - The home page shows both editors as auto-playing previews labelled "Preview"; every home-page button leads to a selection step, never straight into an editor.
 
 ## Copy pass
