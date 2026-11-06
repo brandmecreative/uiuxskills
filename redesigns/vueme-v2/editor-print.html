@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Visiting Card Editor — Vueme</title>
+<title>Visiting Card Editor | Vueme</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/vueme.css">
@@ -157,8 +157,8 @@ body{background:var(--soft)}
       <label class="toggle" style="background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:0 8px 0 16px">Print guides<input type="checkbox" id="guides" checked></label>
     </div>
     <div class="stage flip"><div class="flip-in" id="flip"><div class="face" id="front"></div><div class="face back" id="back"></div></div></div>
-    <div class="legend"><span><i style="border-color:#E5484D"></i>Bleed — background runs past this line</span><span><i style="border-color:#2E7D32"></i>Safe area — keep text inside</span></div>
-    <div class="dims">90 × 53 mm · 300 GSM · CMYK</div>
+    <div class="legend"><span><i style="border-color:#E5484D"></i>Bleed: background runs past this line</span><span><i style="border-color:#2E7D32"></i>Safe area: keep text inside</span></div>
+    <div class="dims" id="dims">90 × 53 mm · 300 GSM · CMYK</div>
   </section>
 
   <aside class="order" aria-label="Print options">
@@ -177,7 +177,7 @@ body{background:var(--soft)}
       <div><span class="save" id="pl-save">You save ₹174</span><span></span></div>
     </div>
     <p class="note"><span data-icon="truck"></span>Ships by India Post Speed Post with tracking, within India.</p>
-    <p class="note"><span data-icon="shield"></span>Damaged or misprinted? Tell us within 48 hours and we reprint free.</p>
+    <p class="note"><span data-icon="shield"></span>If cards arrive damaged or misprinted, email us within 48 hours of delivery. If approved, we reprint or replace them free.</p>
     <a class="btn btn-white" href="https://wa.me/919042018017?text=Bulk%20visiting%20card%20quote" style="justify-content:center"><span data-icon="whatsapp"></span>Ordering in bulk? Get a quote</a>
   </aside>
 </main>
@@ -190,9 +190,9 @@ body{background:var(--soft)}
   const V = window.Vueme, $ = s => document.querySelector(s), form = $('#form');
   const COLORS = [['#6B3FD8','Vueme purple'],['#0E0B1A','Ink'],['#1F6FEB','Blue'],['#0F766E','Teal'],['#C2410C','Burnt orange'],['#B91C1C','Red'],['#FCC305','Yellow']];
   const FINS = [
-    ['matte','Matte','Low-glare, soft touch','#ECEAF1'],
-    ['gloss','Gloss','Shiny, colours pop','linear-gradient(120deg,#E8E4F5,#fff 50%,#E8E4F5)'],
-    ['synthetic','Synthetic','Plastic-based, hard-wearing','linear-gradient(180deg,#F3F6FA,#DDE4EE)'],
+    ['matte','Matte','Soft, low-glare lamination','#ECEAF1'],
+    ['gloss','Gloss','Shiny gloss lamination','linear-gradient(120deg,#E8E4F5,#fff 50%,#E8E4F5)'],
+    ['synthetic','Synthetic','Resists water and tearing','linear-gradient(180deg,#F3F6FA,#DDE4EE)'],
   ];
   let d = Object.assign({}, V.PRINT_DEFAULT, V.store.get('print', {}));
   let o = Object.assign({ finish: 'matte', sides: 'single', qty: '500', corners: false }, V.store.get('print-order', {}));
@@ -231,6 +231,7 @@ body{background:var(--soft)}
     $('#front').innerHTML = V.printSide(card, 'front') + guides;
     $('#back').innerHTML = V.printSide(card, 'back') + guides;
     $('#addr-warn').hidden = (d.address || '').length <= 50;
+    $('#dims').textContent = '90 × 53 mm · ' + (syn ? '180 micron synthetic' : '300 GSM') + ' · CMYK';
 
     const [sale, reg] = V.PRINT_PRICES[o.finish][o.sides][o.qty];
     const total = sale + (o.corners ? 100 : 0), regT = reg + (o.corners ? 100 : 0);

@@ -2,6 +2,8 @@
 
 A clickable, static prototype of a vueme.in redesign. Open `index.html` in a browser; no build step is needed.
 
+`standalone/` holds single-file copies of each page with the CSS and JavaScript inlined, for previews that open one HTML file without its `assets/` folder. Rebuild them after any edit with `node tools/build-standalone.mjs`.
+
 | Page | What it does |
 | --- | --- |
 | `index.html` | Landing page. Type a name in the hero and a digital card and a printed card update live. Also has a template switcher, editor showcase, analytics preview, printed finishes, NFC card, how it works and the real FAQ. |
@@ -28,6 +30,9 @@ Refero's live research server was not connected, so the research used the refero
 | Hero name input that updates both cards | refero "one memorable detail" | Shows "digital + printed, one link" in one move |
 | Dashboard: one hue, single axis, direct labels, tooltip + table, lilac only as meter track | dataviz skill (validator: lilac fails as a data colour) | Accessible and calm |
 | Motion: GSAP expo.out reveals, off for reduced motion | ui-ux-pro-max `gsap` presets | Short, purposeful, respects user setting |
+
+## Copy pass
+The page copy was audited with the avoid-ai-writing skill (warm, plain voice). It removed em dashes from our own copy (Vueme's tagline is kept as written), a two-item negation chain ("No software, no designer"), unsupported claims ("Live in about five minutes", "Same QR, forever", "Visitors stay anonymous", "soft to the touch"), and a rewording that had dropped Vueme's "if approved" condition on reprints. It also corrected synthetic cards to Vueme's spec: 180 micron synthetic sheet, not 300 GSM.
 
 ## Checks run
 - Rendered at 1440 and 390 px with no horizontal scroll and no console errors.

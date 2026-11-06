@@ -1,0 +1,3076 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visiting Card Editor | Vueme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Vueme redesign v2 — shared tokens and components
+   Direction: monochrome editor frame + oversized brand color blocks (see README). */
+:root{
+  color-scheme: light;
+  /* brand */
+  --purple:#6B3FD8; --purple-700:#5530B8; --purple-900:#2A1670;
+  --yellow:#FCC305; --yellow-200:#FFE58A; --yellow-ink:#5C4500;
+  --lilac:#EDE6FF; --lilac-2:#DCCFFF;
+  --mint:#D7F5E4; --mint-ink:#0E5A35;
+  /* mono frame */
+  --ink:#0E0B1A; --ink-2:#37324A; --ink-3:#5B5670;
+  --canvas:#FFFFFF; --soft:#F6F5F9; --line:#E6E3EE; --line-2:#D3CFDF;
+  /* type */
+  --sans:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-xs:8px; --r-sm:12px; --r:20px; --r-lg:32px; --pill:999px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --wrap:1240px;
+  --focus:0 0 0 3px #fff,0 0 0 5px var(--purple);
+}
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--canvas);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+img{height:auto}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:none;box-shadow:var(--focus);border-radius:8px}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--pill)}
+.skip:focus{top:12px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{line-height:1.08;letter-spacing:-.025em;text-wrap:balance;font-weight:800}
+p{text-wrap:pretty}
+
+/* taxonomy label (mono, uppercase) */
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.tag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:var(--pill);background:var(--yellow);color:var(--ink);font-size:13px;font-weight:700}
+.tag.soft{background:var(--yellow-200)}
+.tag.lilac{background:var(--lilac);color:var(--purple-900)}
+.tag.mint{background:var(--mint);color:var(--mint-ink)}
+
+/* buttons: pill only */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 24px;border-radius:var(--pill);font-weight:700;font-size:15px;line-height:1;white-space:nowrap;transition:background-color .18s,color .18s,transform .18s var(--ease),box-shadow .18s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-primary:hover{background:var(--purple-700)}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{background:#2a2540}
+.btn-white{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn-white:hover{background:var(--ink);color:#fff}
+.btn-ghost{color:var(--ink);background:transparent}
+.btn-ghost:hover{background:var(--soft)}
+.btn-sm{min-height:40px;padding:0 16px;font-size:14px}
+.btn-lg{min-height:56px;padding:0 30px;font-size:16px}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;transition:background-color .18s}
+.icon-btn:hover{background:var(--soft)}
+.icon-btn svg{width:22px;height:22px}
+
+/* top promo + nav */
+.promo{background:var(--yellow);color:var(--ink);font-size:14px;font-weight:600;text-align:center;padding:9px 16px}
+.promo a{text-decoration:underline;text-underline-offset:3px}
+.site-nav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.5) blur(14px);border-bottom:1px solid var(--line)}
+.site-nav .wrap{display:flex;align-items:center;gap:28px;height:68px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.04em}
+.logo img{height:24px;width:auto}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:10px 14px;border-radius:var(--pill);font-weight:600;font-size:15px;transition:background-color .18s}
+.nav-links a:hover{background:var(--soft)}
+.nav-links a[aria-current="page"]{background:var(--ink);color:#fff}
+.nav-end{margin-left:auto;display:flex;align-items:center;gap:6px}
+.nav-menu{display:none}
+.mnav{display:none;border-top:1px solid var(--line);padding:8px 24px 16px;background:#fff}
+.mnav.open{display:block}
+.mnav a{display:flex;align-items:center;min-height:48px;font-weight:600;border-bottom:1px solid var(--line)}
+
+/* inputs */
+.field{display:grid;gap:6px}
+.field label,.label{font-size:13px;font-weight:700;color:var(--ink)}
+.field .hint{font-size:12.5px;color:var(--ink-3)}
+.input,.select,.textarea{width:100%;min-height:44px;padding:10px 14px;border:1.5px solid var(--line-2);border-radius:var(--r-sm);background:#fff;transition:border-color .15s,box-shadow .15s}
+.textarea{min-height:84px;resize:vertical}
+.input:hover,.select:hover,.textarea:hover{border-color:var(--ink-3)}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(107,63,216,.18)}
+.seg{display:inline-flex;padding:4px;border-radius:var(--pill);background:var(--soft);border:1px solid var(--line)}
+.seg button,.seg label{min-height:38px;padding:0 16px;border-radius:var(--pill);font-weight:700;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:background-color .15s,color .15s}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg [aria-pressed="true"],.seg [aria-selected="true"],.seg input:checked+span{background:var(--ink);color:#fff}
+.seg label:has(input:checked){background:var(--ink);color:#fff}
+.seg label:has(input:focus-visible){box-shadow:var(--focus)}
+.swatches{display:flex;flex-wrap:wrap;gap:10px}
+.swatch{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line-2);cursor:pointer;position:relative}
+.swatch input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.swatch:has(input:checked){box-shadow:0 0 0 2.5px var(--ink)}
+.swatch:has(input:focus-visible){box-shadow:var(--focus)}
+.check{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1.5px solid var(--line-2);border-radius:var(--r-sm);cursor:pointer;transition:border-color .15s,background-color .15s}
+.check:has(input:checked){border-color:var(--ink);background:var(--soft)}
+.check input{width:20px;height:20px;accent-color:var(--purple);margin-top:2px;flex:none}
+.check b{display:block;font-size:15px}
+.check span{font-size:13.5px;color:var(--ink-3)}
+.check .price{margin-left:auto;font-weight:800;white-space:nowrap}
+
+/* cards / panels */
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r)}
+.block{border-radius:var(--r-lg)}
+.block-purple{background:var(--purple);color:#fff}
+.block-yellow{background:var(--yellow);color:var(--ink)}
+.block-lilac{background:var(--lilac);color:var(--ink)}
+.block-ink{background:var(--ink);color:#fff}
+.block-mint{background:var(--mint);color:var(--ink)}
+
+/* footer */
+.site-foot{background:var(--ink);color:#fff;padding:72px 0 32px;margin-top:0}
+.site-foot a{color:#E7E4F2}
+.site-foot a:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:40px}
+.foot-grid h4{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#BDB7D4;margin-bottom:16px}
+.foot-grid ul{list-style:none;padding:0;display:grid;gap:10px;font-size:15px}
+.foot-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid #2C2742;margin-top:56px;padding-top:24px;font-size:14px;color:#BDB7D4}
+.wordmark-xl{font-weight:800;letter-spacing:-.06em;font-size:clamp(80px,17vw,240px);line-height:.8;color:var(--yellow);margin-top:56px;user-select:none}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:#fff;padding:12px 20px;border-radius:var(--pill);font-weight:600;font-size:14px;z-index:90;transition:opacity .2s,transform .2s var(--ease);pointer-events:none;display:flex;gap:10px;align-items:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.wa-fab{position:fixed;right:20px;bottom:20px;z-index:50;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.wa-fab svg{width:28px;height:28px}
+
+@media (max-width:1024px){
+  .nav-links{display:none}
+  .nav-menu{display:grid}
+  .nav-end .btn{display:none}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .foot-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+</style>
+<style>
+/* Card renderers: phone frame, 4 digital templates, printed card (90 x 53 mm) */
+.i{width:1em;height:1em;flex:none}
+
+/* phone */
+.phone{--w:300px;position:relative;width:var(--w);aspect-ratio:9/19.2;border-radius:calc(var(--w)*.15);background:#0E0B1A;padding:calc(var(--w)*.035);box-shadow:0 30px 60px -20px rgba(14,11,26,.45),inset 0 0 0 2px #2b2640}
+.phone-notch{position:absolute;top:calc(var(--w)*.05);left:50%;transform:translateX(-50%);width:28%;height:calc(var(--w)*.075);background:#0E0B1A;border-radius:99px;z-index:3}
+.phone-screen{position:relative;height:100%;border-radius:calc(var(--w)*.12);overflow:hidden;background:#fff;container-type:inline-size}
+.phone-screen > .dc{height:100%;overflow:auto;scrollbar-width:none}
+.phone-screen > .dc::-webkit-scrollbar{display:none}
+
+/* shared digital card bits — sized in cqw so any phone width scales */
+.dc{font-family:var(--sans);color:#0E0B1A;font-size:4.4cqw;line-height:1.4}
+.dc .i{width:5.2cqw;height:5.2cqw}
+.dc-photo{border-radius:50%;object-fit:cover;background:var(--acc);color:var(--on-acc);display:grid;place-items:center;font-weight:800}
+.dc-initials{letter-spacing:-.02em}
+.dc-save{display:flex;align-items:center;justify-content:center;gap:2cqw;margin:4cqw 6cqw 8cqw;min-height:12cqw;border-radius:99px;background:var(--acc);color:var(--on-acc);font-weight:700}
+.dc-socials{display:flex;justify-content:center;gap:3cqw;margin-top:4cqw}
+.dc-social{width:10cqw;height:10cqw;border-radius:50%;display:grid;place-items:center;background:#F2F0F7}
+
+/* aria — minimal link-style */
+.dc-aria{display:flex;flex-direction:column;align-items:center;text-align:center;padding-bottom:2cqw}
+.dc-aria .dc-cover{align-self:stretch;height:30cqw;background:var(--acc)}
+.dc-aria .dc-photo{width:26cqw;height:26cqw;margin-top:-13cqw;border:1.4cqw solid #fff;font-size:9cqw}
+.dc-aria .dc-name{font-size:7cqw;margin-top:3cqw;letter-spacing:-.02em}
+.dc-aria .dc-role{font-size:4cqw;color:#4a4560}
+.dc-aria .dc-bio{font-size:3.8cqw;color:#37324A;margin:3cqw 8cqw 0}
+.dc-aria .dc-links{display:grid;gap:2.4cqw;align-self:stretch;margin:5cqw 6cqw 0}
+.dc-aria .dc-links span{display:flex;align-items:center;gap:3cqw;min-height:12cqw;padding:0 4cqw;border-radius:3.5cqw;border:.4cqw solid #E6E3EE;font-weight:600}
+
+/* bento — tiles */
+.dc-bento{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;padding:12cqw 4cqw 4cqw;background:#F3F1F8;align-content:start}
+.dc-tile{background:#fff;border-radius:5cqw;padding:3.6cqw;display:flex;gap:2cqw;align-items:center;font-size:3.7cqw}
+.dc-bento .dc-me{grid-column:span 2;gap:3cqw}
+.dc-bento .dc-me .dc-photo{width:16cqw;height:16cqw;font-size:6cqw}
+.dc-bento .dc-me b{display:block;font-size:5.4cqw;letter-spacing:-.02em}
+.dc-bento .dc-me span{font-size:3.6cqw;color:#4a4560}
+.dc-bento .dc-acc{background:var(--acc);color:var(--on-acc);flex-direction:column;align-items:flex-start;gap:1.6cqw}
+.dc-bento .dc-acc .dc-k{font-weight:700}
+.dc-bento .dc-acc i{font-style:normal;font-size:3.2cqw;padding:.8cqw 2.4cqw;border-radius:99px;background:rgba(255,255,255,.22)}
+.dc-bento .dc-map{position:relative;overflow:hidden;flex-direction:column;align-items:flex-start;justify-content:flex-end;min-height:30cqw;background:#E7F0E4}
+.dc-mapgrid{position:absolute;inset:0;background:linear-gradient(90deg,transparent 46%,#fff 46% 54%,transparent 54%),linear-gradient(0deg,transparent 60%,#fff 60% 66%,transparent 66%),linear-gradient(35deg,transparent 48%,#d6e6d1 48% 52%,transparent 52%)}
+.dc-bento .dc-map .i,.dc-bento .dc-map span{position:relative}
+.dc-bento .dc-map .i{color:var(--acc);width:7cqw;height:7cqw}
+.dc-bento .dc-map span{font-size:3.2cqw;font-weight:600}
+.dc-bento .dc-bio{grid-column:span 2;font-size:3.6cqw;color:#37324A}
+.dc-bento .dc-act{flex-direction:column;align-items:flex-start;font-weight:600}
+.dc-bento .dc-act .i{color:var(--acc)}
+.dc-bento .dc-save{grid-column:span 2;margin:0;border-radius:5cqw;gap:2cqw;display:flex}
+.dc-bento .dc-url{grid-column:span 2;text-align:center;font-size:3.2cqw;color:#5B5670;padding:2cqw 0 4cqw}
+
+/* spotlight — dark, photo-first */
+.dc-spot{background:#0E0B1A;color:#fff}
+.dc-spot .dc-hero{position:relative;height:96cqw}
+.dc-spot .dc-hero .dc-photo{width:100%;height:100%;border-radius:0;font-size:24cqw}
+.dc-spot .dc-fade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,#0E0B1A 96%)}
+.dc-spot .dc-id{position:absolute;left:6cqw;right:6cqw;bottom:4cqw}
+.dc-spot .dc-id b{display:block;font-size:8cqw;letter-spacing:-.03em;line-height:1.05}
+.dc-spot .dc-id span{font-size:3.8cqw;color:#D9D4EA}
+.dc-spot .dc-bio{margin:2cqw 6cqw 0;font-size:3.8cqw;color:#D9D4EA}
+.dc-spot .dc-row{display:flex;gap:3cqw;margin:5cqw 6cqw 0}
+.dc-spot .dc-round{flex:1;aspect-ratio:1;max-width:16cqw;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--on-acc)}
+.dc-spot .dc-list{margin:5cqw 6cqw 0;display:grid;gap:2.6cqw;font-size:3.8cqw;color:#E7E4F2}
+.dc-spot .dc-list div{display:flex;gap:2.6cqw;align-items:center}
+.dc-spot .dc-social{background:#221d36;color:#fff}
+
+/* bauhaus — geometric bold */
+.dc-bau{position:relative;background:#FFF8E1;overflow:hidden}
+.dc-bau .dc-shapes i{position:absolute;display:block}
+.dc-bau .dc-shapes i:nth-child(1){width:56cqw;height:56cqw;border-radius:50%;background:var(--acc);top:-20cqw;right:-16cqw}
+.dc-bau .dc-shapes i:nth-child(2){width:30cqw;height:30cqw;background:#0E0B1A;top:16cqw;left:-8cqw;transform:rotate(18deg)}
+.dc-bau .dc-shapes i:nth-child(3){width:0;height:0;border-left:16cqw solid transparent;border-right:16cqw solid transparent;border-bottom:26cqw solid #FCC305;top:6cqw;left:30cqw}
+.dc-bau .dc-head{position:relative;padding:44cqw 6cqw 0}
+.dc-bau .dc-head .dc-photo{width:20cqw;height:20cqw;border-radius:4cqw;font-size:7cqw;border:1cqw solid #0E0B1A}
+.dc-bau .dc-head b{display:block;font-size:9.4cqw;line-height:1;letter-spacing:-.04em;margin-top:3cqw;text-transform:uppercase}
+.dc-bau .dc-head span{display:inline-block;margin-top:2cqw;font-size:3.6cqw;font-weight:700;background:#0E0B1A;color:#fff;padding:1cqw 3cqw}
+.dc-bau .dc-bio{position:relative;margin:4cqw 6cqw 0;font-size:3.8cqw}
+.dc-bau .dc-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:2cqw;margin:5cqw 6cqw 0}
+.dc-bau .dc-grid span{display:flex;gap:2cqw;align-items:center;min-height:12cqw;padding:0 3cqw;border:.6cqw solid #0E0B1A;font-weight:700;background:#fff}
+.dc-bau .dc-save{border-radius:0;border:.6cqw solid #0E0B1A;box-shadow:1.4cqw 1.4cqw 0 #0E0B1A;position:relative}
+.dc-bau .dc-social{background:#fff;border:.5cqw solid #0E0B1A;border-radius:0}
+
+/* printed card: 90 x 53 mm */
+.pc{--pc:#6B3FD8;position:relative;width:100%;aspect-ratio:90/53;border-radius:1.6%/2.7%;background:#fff;color:#0E0B1A;overflow:hidden;container-type:inline-size;font-family:var(--sans);box-shadow:0 1px 1px rgba(14,11,26,.08),0 18px 40px -16px rgba(14,11,26,.35)}
+.pc.pc-round{border-radius:7%/11.9%}
+.pc .i{width:3.4cqw;height:3.4cqw;color:var(--pc)}
+.pc-band{position:absolute;background:var(--pc)}
+.pc-top{position:absolute;left:7cqw;top:9cqw;right:7cqw;display:flex;gap:3.4cqw;align-items:center}
+.pc-mono{width:11cqw;height:11cqw;border-radius:2.4cqw;background:var(--pc);color:var(--on-pc);display:grid;place-items:center;font-weight:800;font-size:4.4cqw;letter-spacing:-.03em;flex:none}
+.pc-logo{width:11cqw;height:11cqw;object-fit:contain;flex:none}
+.pc-id b{display:block;font-size:5.6cqw;letter-spacing:-.03em;line-height:1.05}
+.pc-id span{font-size:3.1cqw;color:#4a4560;font-weight:600}
+.pc-lines{position:absolute;left:7cqw;bottom:7cqw;right:7cqw;list-style:none;padding:0;display:grid;gap:1.3cqw;font-size:2.9cqw;font-weight:500}
+.pc-lines li{display:flex;gap:2cqw;align-items:center}
+.pc-lines li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* classic: thin colour rule on the left */
+.pc-classic .pc-band{left:0;top:0;bottom:0;width:2.2cqw}
+/* block: colour panel at right with mark */
+.pc-block .pc-band{right:0;top:0;bottom:0;width:30%}
+.pc-block .pc-top{right:34%}
+.pc-block .pc-lines{right:34%}
+/* split: top half colour */
+.pc-split .pc-band{left:0;right:0;top:0;height:42%}
+.pc-split .pc-top{top:8cqw}
+.pc-split .pc-id b,.pc-split .pc-id span{color:var(--on-pc)}
+.pc-split .pc-mono{background:var(--on-pc);color:var(--pc)}
+/* back */
+.pc-back{background:var(--pc);color:var(--on-pc)}
+.pc-back-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 7cqw;gap:1.4cqw}
+.pc-back .pc-mono{background:var(--on-pc);color:var(--pc)}
+.pc-back b{font-size:6cqw;letter-spacing:-.03em;margin-top:2cqw}
+.pc-back-in > span{font-size:3.2cqw;max-width:52%;opacity:.9}
+.pc-qr{position:absolute;right:7cqw;top:50%;transform:translateY(-50%);width:26cqw;text-align:center}
+.pc-qr svg{width:100%;border-radius:1.6cqw}
+.pc-qr small{display:block;font-size:2.3cqw;margin-top:1.2cqw;font-weight:600}
+/* finishes */
+.pc-sheen{position:absolute;inset:0;pointer-events:none}
+.pc-gloss .pc-sheen{background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 58%);mix-blend-mode:soft-light}
+.pc-gloss{box-shadow:0 1px 1px rgba(14,11,26,.08),0 18px 40px -16px rgba(14,11,26,.35),inset 0 0 0 1px rgba(255,255,255,.4)}
+.pc-matte .pc-sheen{background:repeating-radial-gradient(circle at 30% 30%,rgba(0,0,0,.018) 0 1px,transparent 1px 3px)}
+.pc-synthetic .pc-sheen{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 40%),repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 6px)}
+/* print guides */
+.guides{position:absolute;inset:0;pointer-events:none}
+.guides .bleed{position:absolute;inset:-3.3%;border:1.5px dashed #E5484D;border-radius:2px}
+.guides .safe{position:absolute;inset:5.6%;border:1.5px dashed #2E7D32;border-radius:2px}
+.qr-fallback{display:grid;place-items:center;aspect-ratio:1;background:#fff;color:#0E0B1A;font-weight:800}
+
+</style>
+<style>
+body{background:var(--soft)}
+.ebar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.ebar-in{display:flex;align-items:center;gap:16px;height:64px;padding:0 20px}
+.ebar .logo img{height:22px}
+.crumb{display:flex;gap:10px;align-items:center;font-weight:700;font-size:15px}
+.crumb::before{content:"";width:1px;height:22px;background:var(--line-2)}
+.status{font-size:13px;color:var(--ink-3);font-weight:600;display:flex;gap:6px;align-items:center}
+.status .i{width:16px;height:16px;color:var(--mint-ink)}
+.ebar-end{margin-left:auto;display:flex;gap:8px;align-items:center}
+.editor{display:grid;grid-template-columns:380px 1fr 360px;min-height:calc(100vh - 64px)}
+.side{background:#fff;border-right:1px solid var(--line);overflow:auto;max-height:calc(100vh - 64px);position:sticky;top:64px}
+.side-in{padding:8px 20px 40px}
+.grp{border-bottom:1px solid var(--line)}
+.grp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:60px;font-weight:800;font-size:16px}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary .num{font-family:var(--mono);font-size:12px;color:var(--ink-3);font-weight:600;width:22px}
+.grp>summary .chev{margin-left:auto;width:20px;height:20px;transition:transform .2s var(--ease)}
+.grp[open]>summary .chev{transform:rotate(180deg)}
+.grp-body{display:grid;gap:16px;padding:0 0 24px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tpl-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tpl-opt{position:relative;border:1.5px solid var(--line-2);border-radius:var(--r-sm);padding:8px;cursor:pointer;display:grid;gap:6px;font-size:12.5px;font-weight:700;text-align:center;transition:border-color .15s}
+.tpl-opt:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tpl-opt:has(input:focus-visible){box-shadow:var(--focus)}
+.tpl-opt input{position:absolute;opacity:0}
+.tpl-opt .pc{box-shadow:0 1px 3px rgba(14,11,26,.15);pointer-events:none}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;font-weight:600;font-size:14px;cursor:pointer}
+.toggle input{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--line-2);position:relative;cursor:pointer;transition:background-color .15s;flex:none}
+.toggle input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s var(--ease)}
+.toggle input:checked{background:var(--purple)}
+.toggle input:checked::after{transform:translateX(18px)}
+.toggle input:focus-visible{box-shadow:var(--focus)}
+.toggle input:disabled{opacity:.4;cursor:not-allowed}
+
+.canvas{display:flex;flex-direction:column;align-items:center;padding:32px 24px 80px;gap:18px;background-image:radial-gradient(#D9D5E4 1px,transparent 1px);background-size:20px 20px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.stage{width:min(620px,100%);position:relative;padding:4%}
+.stage .pc{box-shadow:0 2px 2px rgba(14,11,26,.06),0 30px 60px -24px rgba(14,11,26,.45)}
+.flip{perspective:1600px}
+.flip-in{position:relative;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flip-in.is-back{transform:rotateY(180deg)}
+.face{backface-visibility:hidden;-webkit-backface-visibility:hidden;position:relative}
+.face.back{position:absolute;inset:0;transform:rotateY(180deg)}
+.legend{display:flex;gap:16px;font-size:12.5px;font-weight:600;color:var(--ink-2);flex-wrap:wrap;justify-content:center}
+.legend span{display:flex;gap:6px;align-items:center}
+.legend i{width:18px;border-top:2px dashed}
+.dims{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+
+.order{background:#fff;border-left:1px solid var(--line);padding:24px 20px;display:flex;flex-direction:column;gap:22px;max-height:calc(100vh - 64px);overflow:auto;position:sticky;top:64px}
+.order h2{font-size:18px}
+.opt-h{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between}
+.opt-h span{font-weight:600;color:var(--ink-3)}
+.fins{display:grid;gap:8px}
+.fin{display:flex;gap:12px;align-items:center;padding:12px;border:1.5px solid var(--line-2);border-radius:var(--r-sm);cursor:pointer;transition:border-color .15s}
+.fin:has(input:checked){border-color:var(--ink);background:var(--soft)}
+.fin:has(input:focus-visible){box-shadow:var(--focus)}
+.fin input{position:absolute;opacity:0}
+.fin .sw{width:40px;height:28px;border-radius:5px;flex:none;border:1px solid var(--line-2)}
+.fin b{display:block;font-size:14.5px}
+.fin small{font-size:12.5px;color:var(--ink-3)}
+.fin .from{margin-left:auto;font-weight:700;font-size:13.5px;white-space:nowrap}
+.seg{width:100%}
+.seg label{flex:1;justify-content:center;position:relative}
+.seg label:has(input:disabled){opacity:.4;cursor:not-allowed}
+.price-box{border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:8px;font-size:14px}
+.price-box div{display:flex;justify-content:space-between;gap:12px}
+.price-box .tot{border-top:1px solid var(--line);padding-top:12px;align-items:baseline}
+.price-box .tot b{font-size:26px;letter-spacing:-.03em}
+.price-box s{color:var(--ink-3)}
+.price-box .save{color:var(--mint-ink);font-weight:700}
+.note{font-size:12.5px;color:var(--ink-3);display:flex;gap:8px}
+.note .i{width:16px;height:16px;flex:none;margin-top:2px}
+.upl{border:1.5px dashed var(--line-2);border-radius:var(--r-sm);padding:16px;text-align:center;font-size:13.5px;color:var(--ink-2);display:grid;gap:8px;justify-items:center}
+.mbar{display:none}
+@media (max-width:1180px){
+  .editor{grid-template-columns:360px 1fr}
+  .order{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+}
+@media (max-width:760px){
+  .crumb,.status,.ebar-end .btn-ghost{display:none}
+  .editor{display:block}
+  .canvas{position:sticky;top:64px;z-index:5;padding:16px 12px;gap:10px;background-color:var(--soft);border-bottom:1px solid var(--line)}
+  .canvas .legend,.canvas .dims{display:none}
+  .stage{width:min(360px,100%)}
+  .side{position:static;max-height:none;border-right:0}
+  .order{display:flex}
+  .mbar{display:flex;position:sticky;bottom:0;z-index:25;background:#fff;border-top:1px solid var(--line);padding:12px 16px;gap:12px;align-items:center}
+  .mbar b{font-size:18px}.mbar .btn{margin-left:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#editor">Skip to editor</a>
+<header class="ebar">
+  <div class="ebar-in">
+    <a class="logo" href="index.html" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="100" height="22"></a>
+    <span class="crumb">Visiting card editor</span>
+    <span class="status" id="status" aria-live="polite"><span data-icon="check"></span>Draft saved</span>
+    <div class="ebar-end">
+      <a class="btn btn-ghost btn-sm" href="editor-digital.html"><span data-icon="phone"></span>Digital card editor</a>
+      <button class="btn btn-primary btn-sm" id="cart">Add to cart · <span class="js-total">₹675</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="editor" id="editor">
+  <form class="side" id="form" aria-label="Card design" onsubmit="return false">
+    <div class="side-in">
+      <details class="grp" open><summary><span class="num">01</span>Design<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body"><div class="tpl-pick" id="tpl-pick" role="radiogroup" aria-label="Design"></div>
+          <div class="upl"><span>Already have a design?</span><label class="btn btn-white btn-sm" style="cursor:pointer"><span data-icon="upload"></span>Upload your file<input type="file" accept="image/png,image/jpeg" class="sr-only" id="own"></label><small>JPG or PNG, ideally 300 DPI. Low-resolution images may print blurry.</small></div>
+        </div>
+      </details>
+      <details class="grp" open><summary><span class="num">02</span>Front<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="field"><label for="p-name">Name</label><input class="input" id="p-name" name="name" maxlength="32" autocomplete="name"></div>
+          <div class="row2">
+            <div class="field"><label for="p-role">Role</label><input class="input" id="p-role" name="role" maxlength="36"></div>
+            <div class="field"><label for="p-company">Company</label><input class="input" id="p-company" name="company" maxlength="36"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="p-phone">Phone</label><input class="input" id="p-phone" name="phone" type="tel" inputmode="tel"></div>
+            <div class="field"><label for="p-web">Website</label><input class="input" id="p-web" name="website"></div>
+          </div>
+          <div class="field"><label for="p-email">Email</label><input class="input" id="p-email" name="email" type="email"></div>
+          <div class="field"><label for="p-addr">Address</label><input class="input" id="p-addr" name="address" maxlength="70"><span class="hint" id="addr-warn" hidden style="color:#B45309">Long addresses may be cut off. Keep it under 50 characters.</span></div>
+          <div class="field"><span class="label">Logo</span><div style="display:flex;gap:8px;flex-wrap:wrap"><label class="btn btn-white btn-sm" style="cursor:pointer"><span data-icon="image"></span>Upload logo<input type="file" accept="image/*" class="sr-only" id="logo"></label><button type="button" class="btn btn-ghost btn-sm" id="logo-rm" hidden>Remove</button></div><span class="hint">Without a logo we use your initials.</span></div>
+        </div>
+      </details>
+      <details class="grp" open><summary><span class="num">03</span>Back<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body">
+          <div class="field"><label for="p-tag">Tagline</label><input class="input" id="p-tag" name="tagline" maxlength="60"></div>
+          <label class="toggle">QR code to my digital card<input type="checkbox" name="qr" id="p-qr"></label>
+          <p class="hint" id="back-note" hidden>Choose front &amp; back printing to use the back side.</p>
+        </div>
+      </details>
+      <details class="grp" open><summary><span class="num">04</span>Colour<span class="chev" data-icon="down"></span></summary>
+        <div class="grp-body"><div class="swatches" role="radiogroup" aria-label="Card colour" id="swatches"></div></div>
+      </details>
+    </div>
+  </form>
+
+  <section class="canvas" aria-label="Card preview">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Side" style="width:auto"><button type="button" data-side="front" aria-pressed="true">Front</button><button type="button" data-side="back" aria-pressed="false" id="back-btn">Back</button></div>
+      <label class="toggle" style="background:#fff;border:1px solid var(--line);border-radius:var(--pill);padding:0 8px 0 16px">Print guides<input type="checkbox" id="guides" checked></label>
+    </div>
+    <div class="stage flip"><div class="flip-in" id="flip"><div class="face" id="front"></div><div class="face back" id="back"></div></div></div>
+    <div class="legend"><span><i style="border-color:#E5484D"></i>Bleed: background runs past this line</span><span><i style="border-color:#2E7D32"></i>Safe area: keep text inside</span></div>
+    <div class="dims" id="dims">90 × 53 mm · 300 GSM · CMYK</div>
+  </section>
+
+  <aside class="order" aria-label="Print options">
+    <div><h2>Print options</h2></div>
+    <fieldset style="border:0;padding:0"><legend class="opt-h">Finish</legend><div class="fins" id="fins"></div></fieldset>
+    <fieldset style="border:0;padding:0"><legend class="opt-h">Printing</legend>
+      <div class="seg"><label><input type="radio" name="sides" value="single">Single side</label><label><input type="radio" name="sides" value="double">Front &amp; back</label></div></fieldset>
+    <fieldset style="border:0;padding:0"><legend class="opt-h">Quantity</legend>
+      <div class="seg"><label><input type="radio" name="qty" value="500">500 cards</label><label><input type="radio" name="qty" value="1000">1000 cards</label></div>
+      <p class="hint" id="qty-note" hidden style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Synthetic front &amp; back comes in 1000 only.</p></fieldset>
+    <label class="check" id="corners-l"><input type="checkbox" id="corners"><div><b>Rounded corners</b><span id="corners-note">Smooth rounded edges on all cards</span></div><span class="price">+₹100</span></label>
+    <div class="price-box" aria-live="polite">
+      <div><span id="pl-name">Matte · single side · 500</span><span id="pl-p">₹675</span></div>
+      <div id="pl-corners" hidden><span>Rounded corners</span><span>₹100</span></div>
+      <div class="tot"><span>Total <s id="pl-reg">₹849</s></span><b class="js-total">₹675</b></div>
+      <div><span class="save" id="pl-save">You save ₹174</span><span></span></div>
+    </div>
+    <p class="note"><span data-icon="truck"></span>Ships by India Post Speed Post with tracking, within India.</p>
+    <p class="note"><span data-icon="shield"></span>If cards arrive damaged or misprinted, email us within 48 hours of delivery. If approved, we reprint or replace them free.</p>
+    <a class="btn btn-white" href="https://wa.me/919042018017?text=Bulk%20visiting%20card%20quote" style="justify-content:center"><span data-icon="whatsapp"></span>Ordering in bulk? Get a quote</a>
+  </aside>
+</main>
+<div class="mbar"><div><small style="display:block;font-size:12px;color:var(--ink-3)">Total</small><b class="js-total">₹675</b></div><button class="btn btn-primary" id="cart-m">Add to cart</button></div>
+
+<script>
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
+<script>
+/* Vueme redesign v2 — shared UI: icons, card renderers, QR, nav, toast.
+   Exposes window.Vueme. Needs assets/vendor/qrcode.js loaded first for QR codes. */
+(function () {
+  'use strict';
+
+  // ---------- icons (Lucide-style strokes) ----------
+  const P = {
+    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
+    qr: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>',
+    nfc: '<path d="M8 8.3a6 6 0 0 1 0 7.4M11.5 5.5a10 10 0 0 1 0 13M15 3a14 14 0 0 1 0 18"/>',
+    print: '<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/>',
+    phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    pin: '<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
+    save: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>',
+    eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    chart: '<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>',
+    edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+    download: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+    upload: '<path d="M12 21V9M7 14l5-5 5 5M5 3h14"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/>',
+    menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    bag: '<path d="M6 7h12l1 14H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    flip: '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>',
+    grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
+    tap: '<path d="M9 11V5a2 2 0 0 1 4 0v6"/><path d="M13 10a2 2 0 0 1 4 0v2a2 2 0 0 1 4 0v3a7 7 0 0 1-7 7h-1a7 7 0 0 1-6-3.4L4 15a2 2 0 0 1 3.4-2l1.6 2V11"/>',
+    up: '<path d="m6 15 6-6 6 6"/>',
+    down: '<path d="m6 9 6 6 6-6"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    truck: '<path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+    sparkle: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/>',
+    lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  };
+  const FILLED = {
+    whatsapp: '<path fill="currentColor" stroke="none" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3z"/>',
+    instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/>',
+    linkedin: '<path fill="currentColor" stroke="none" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21h-4z"/>',
+    facebook: '<path fill="currentColor" stroke="none" d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.1L14.1 2C10.9 2 10.2 4.4 10.2 6v2.5H8V12h2.2v10H14V12h2.7l.4-3.5z"/>',
+  };
+  function icon(name, cls) {
+    const body = P[name] || FILLED[name] || '';
+    return `<svg class="${cls || 'i'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+  }
+  function hydrateIcons(root) {
+    (root || document).querySelectorAll('[data-icon]').forEach(el => {
+      if (el.dataset.done) return;
+      el.insertAdjacentHTML('afterbegin', icon(el.dataset.icon, el.dataset.iconClass));
+      el.dataset.done = '1';
+    });
+  }
+
+  // ---------- helpers ----------
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const initials = n => (String(n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('') || 'V').toUpperCase();
+  const slug = n => String(n || 'your-name').toLowerCase().normalize('NFKD').replace(/[^\w\s-]/g, '').trim().replace(/[\s_]+/g, '-').replace(/-+/g, '-').slice(0, 32) || 'your-name';
+  const inr = n => '₹' + Number(n).toLocaleString('en-IN');
+  // readable text on an arbitrary accent
+  function onColor(hex) {
+    const h = hex.replace('#', ''); const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+    const L = c => { c /= 255; return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4); };
+    const lum = .2126 * L(r) + .7152 * L(g) + .0722 * L(b);
+    return lum > .4 ? '#0E0B1A' : '#FFFFFF';
+  }
+
+  // ---------- QR ----------
+  function qrSvg(text, opts) {
+    opts = opts || {};
+    if (typeof window.qrcode !== 'function') return '<div class="qr-fallback" aria-label="QR code">QR</div>';
+    const q = window.qrcode(0, 'M'); q.addData(text); q.make();
+    const n = q.getModuleCount(), m = opts.margin == null ? 2 : opts.margin, size = n + m * 2;
+    let d = '';
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += `M${c + m} ${r + m}h1v1h-1z`;
+    const fg = opts.fg || '#0E0B1A', bg = opts.bg || '#fff';
+    return `<svg viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="${esc(opts.label || 'QR code for ' + text)}"><rect width="${size}" height="${size}" fill="${bg}"/><path d="${d}" fill="${fg}"/></svg>`;
+  }
+
+  // ---------- digital card data ----------
+  const DEFAULT = {
+    name: 'Ananya Rao', role: 'Interior Designer', company: 'Studio Rao', bio: 'Homes and small offices that feel calm and work hard. Based in Bengaluru, working across South India.',
+    phone: '+91 98765 43210', email: 'hello@studiorao.in', website: 'studiorao.in', location: 'Indiranagar, Bengaluru',
+    whatsapp: true, instagram: 'studiorao', linkedin: 'ananyarao', photo: '', accent: '#6B3FD8', template: 'aria', tags: 'Residential, Workspaces',
+  };
+  const TEMPLATES = [
+    { id: 'aria', name: 'Aria', note: 'Minimal link-style', price: 499 },
+    { id: 'bento', name: 'Bento', note: 'Bento grid with location', price: 799 },
+    { id: 'spotlight', name: 'Spotlight', note: 'Dark, photo-first', price: 799 },
+    { id: 'bauhaus', name: 'Bauhaus', note: 'Geometric bold', price: 999 },
+  ];
+
+  function avatar(d, size) {
+    return d.photo
+      ? `<img class="dc-photo" src="${esc(d.photo)}" alt="" width="${size}" height="${size}">`
+      : `<div class="dc-photo dc-initials" aria-hidden="true">${esc(initials(d.name))}</div>`;
+  }
+  function actions(d) {
+    const a = [];
+    if (d.phone) a.push(['phone', 'Call']);
+    if (d.whatsapp && d.phone) a.push(['whatsapp', 'WhatsApp']);
+    if (d.email) a.push(['mail', 'Email']);
+    if (d.website) a.push(['globe', 'Website']);
+    return a;
+  }
+  function socials(d) {
+    const s = [];
+    if (d.instagram) s.push(['instagram', 'Instagram']);
+    if (d.linkedin) s.push(['linkedin', 'LinkedIn']);
+    return s.map(([i, l]) => `<span class="dc-social" title="${l}">${icon(i)}</span>`).join('');
+  }
+
+  /* Renders the digital card's phone screen. Returns HTML. */
+  function digitalCard(data) {
+    const d = Object.assign({}, DEFAULT, data);
+    const acc = d.accent, on = onColor(acc);
+    const tags = String(d.tags || '').split(',').map(t => t.trim()).filter(Boolean).slice(0, 3);
+    const style = `--acc:${acc};--on-acc:${on}`;
+    const acts = actions(d);
+    const url = 'vueme.in/' + slug(d.name);
+    if (d.template === 'bento') {
+      return `<div class="dc dc-bento" style="${style}">
+        <div class="dc-tile dc-me">${avatar(d, 64)}<div><b>${esc(d.name)}</b><span>${esc(d.role)}</span></div></div>
+        <div class="dc-tile dc-acc"><span class="dc-k">@${esc(d.instagram || slug(d.name))}</span>${tags.map(t => `<i>${esc(t)}</i>`).join('')}</div>
+        <div class="dc-tile dc-map"><span class="dc-mapgrid" aria-hidden="true"></span>${icon('pin')}<span>${esc(d.location)}</span></div>
+        <div class="dc-tile dc-bio">${esc(d.bio)}</div>
+        ${acts.map(([i, l]) => `<div class="dc-tile dc-act">${icon(i)}<span>${l}</span></div>`).join('')}
+        <div class="dc-tile dc-save">${icon('save')}Save contact</div>
+        <div class="dc-url">${esc(url)}</div></div>`;
+    }
+    if (d.template === 'spotlight') {
+      return `<div class="dc dc-spot" style="${style}">
+        <div class="dc-hero">${avatar(d, 120)}<div class="dc-fade"></div><div class="dc-id"><b>${esc(d.name)}</b><span>${esc(d.role)}${d.company ? ' · ' + esc(d.company) : ''}</span></div></div>
+        <p class="dc-bio">${esc(d.bio)}</p>
+        <div class="dc-row">${acts.slice(0, 4).map(([i, l]) => `<span class="dc-round" title="${l}">${icon(i)}</span>`).join('')}</div>
+        <div class="dc-list">${d.location ? `<div>${icon('pin')}${esc(d.location)}</div>` : ''}${d.website ? `<div>${icon('globe')}${esc(d.website)}</div>` : ''}</div>
+        <div class="dc-socials">${socials(d)}</div>
+        <div class="dc-save">${icon('save')}Save contact</div></div>`;
+    }
+    if (d.template === 'bauhaus') {
+      return `<div class="dc dc-bau" style="${style}">
+        <div class="dc-shapes" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="dc-head">${avatar(d, 72)}<b>${esc(d.name)}</b><span>${esc(d.role)}</span></div>
+        <p class="dc-bio">${esc(d.bio)}</p>
+        <div class="dc-grid">${acts.map(([i, l]) => `<span>${icon(i)}${l}</span>`).join('')}</div>
+        <div class="dc-socials">${socials(d)}</div>
+        <div class="dc-save">${icon('save')}Save contact</div></div>`;
+    }
+    // aria (default)
+    return `<div class="dc dc-aria" style="${style}">
+      <div class="dc-cover"></div>
+      ${avatar(d, 84)}
+      <b class="dc-name">${esc(d.name)}</b>
+      <span class="dc-role">${esc(d.role)}${d.company ? ' · ' + esc(d.company) : ''}</span>
+      <p class="dc-bio">${esc(d.bio)}</p>
+      <div class="dc-links">${acts.map(([i, l]) => `<span>${icon(i)}${l}</span>`).join('')}</div>
+      <div class="dc-socials">${socials(d)}</div>
+      <div class="dc-save">${icon('save')}Save contact</div></div>`;
+  }
+
+  function phone(inner, label) {
+    return `<div class="phone" role="img" aria-label="${esc(label || 'Digital card preview on a phone')}"><div class="phone-notch"></div><div class="phone-screen">${inner}</div></div>`;
+  }
+
+  // ---------- printed card ----------
+  const PRINT_DEFAULT = {
+    name: 'Ananya Rao', role: 'Interior Designer', company: 'Studio Rao', phone: '+91 98765 43210', email: 'hello@studiorao.in',
+    website: 'studiorao.in', address: '12, 4th Cross, Indiranagar, Bengaluru 560038', tagline: 'Spaces that feel calm and work hard.',
+    template: 'classic', color: '#6B3FD8', finish: 'matte', corners: false, qr: true, logo: '',
+  };
+  const PRINT_TEMPLATES = [{ id: 'classic', name: 'Classic' }, { id: 'block', name: 'Colour block' }, { id: 'split', name: 'Split' }];
+
+  function printSide(data, side) {
+    const d = Object.assign({}, PRINT_DEFAULT, data);
+    const c = d.color, on = onColor(c);
+    const cls = `pc pc-${esc(d.template)} pc-${esc(d.finish)} ${d.corners ? 'pc-round' : ''}`;
+    const style = `--pc:${c};--on-pc:${on}`;
+    const mark = d.logo ? `<img class="pc-logo" src="${esc(d.logo)}" alt="">` : `<span class="pc-mono" aria-hidden="true">${esc(initials(d.company || d.name))}</span>`;
+    const lines = [['phone', d.phone], ['mail', d.email], ['globe', d.website], ['pin', d.address]].filter(x => x[1]);
+    if (side === 'back') {
+      return `<div class="${cls} pc-back" style="${style}">
+        <div class="pc-back-in">${mark}<b>${esc(d.company || d.name)}</b><span>${esc(d.tagline)}</span>
+        ${d.qr ? `<div class="pc-qr">${qrSvg('https://vueme.in/' + slug(d.name), { margin: 1, label: 'QR code to the digital card' })}<small>Scan for my digital card</small></div>` : ''}</div>
+        <div class="pc-sheen" aria-hidden="true"></div></div>`;
+    }
+    return `<div class="${cls}" style="${style}">
+      <div class="pc-band" aria-hidden="true"></div>
+      <div class="pc-top">${mark}<div class="pc-id"><b>${esc(d.name)}</b><span>${esc(d.role)}</span></div></div>
+      <ul class="pc-lines">${lines.map(([i, t]) => `<li>${icon(i)}<span>${esc(t)}</span></li>`).join('')}</ul>
+      <div class="pc-sheen" aria-hidden="true"></div></div>`;
+  }
+
+  // Real Vueme prices (sale / regular), from vueme.in product pages.
+  const PRINT_PRICES = {
+    matte: { single: { 500: [675, 849], 1000: [899, 999] }, double: { 500: [849, 999], 1000: [1049, 1199] } },
+    gloss: { single: { 500: [625, 799], 1000: [850, 949] }, double: { 500: [788, 899], 1000: [999, 1149] } },
+    synthetic: { single: { 500: [800, 999], 1000: [1029, 1199] }, double: { 1000: [1249, 1349] } },
+  };
+
+  // ---------- page chrome ----------
+  function toast(msg) {
+    let t = document.querySelector('.toast');
+    if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.innerHTML = icon('check') + '<span>' + esc(msg) + '</span>';
+    t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+  function nav() {
+    const b = document.querySelector('.nav-menu'), m = document.getElementById('mnav');
+    if (!b || !m) return;
+    b.addEventListener('click', () => { const o = m.classList.toggle('open'); b.setAttribute('aria-expanded', o); });
+  }
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); } catch (e) {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (_) {} ta.remove();
+    }
+    toast('Link copied');
+  }
+  // persistent draft (per-viewer convenience only; works without storage)
+  const store = {
+    get(k, fb) { try { const v = localStorage.getItem('vueme:' + k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
+    set(k, v) { try { localStorage.setItem('vueme:' + k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  };
+
+  document.addEventListener('DOMContentLoaded', () => { hydrateIcons(); nav(); });
+
+  window.Vueme = { icon, hydrateIcons, esc, slug, inr, initials, onColor, qrSvg, digitalCard, phone, printSide, DEFAULT, TEMPLATES, PRINT_DEFAULT, PRINT_TEMPLATES, PRINT_PRICES, toast, copy, store };
+})();
+
+</script>
+<script>
+(() => {
+  const V = window.Vueme, $ = s => document.querySelector(s), form = $('#form');
+  const COLORS = [['#6B3FD8','Vueme purple'],['#0E0B1A','Ink'],['#1F6FEB','Blue'],['#0F766E','Teal'],['#C2410C','Burnt orange'],['#B91C1C','Red'],['#FCC305','Yellow']];
+  const FINS = [
+    ['matte','Matte','Soft, low-glare lamination','#ECEAF1'],
+    ['gloss','Gloss','Shiny gloss lamination','linear-gradient(120deg,#E8E4F5,#fff 50%,#E8E4F5)'],
+    ['synthetic','Synthetic','Resists water and tearing','linear-gradient(180deg,#F3F6FA,#DDE4EE)'],
+  ];
+  let d = Object.assign({}, V.PRINT_DEFAULT, V.store.get('print', {}));
+  let o = Object.assign({ finish: 'matte', sides: 'single', qty: '500', corners: false }, V.store.get('print-order', {}));
+  let side = 'front';
+
+  $('#tpl-pick').innerHTML = V.PRINT_TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}">${V.printSide({ template: t.id, name: 'Ananya Rao' })}${t.name}</label>`).join('');
+  $('#swatches').innerHTML = COLORS.map(([c, n]) => `<label class="swatch" style="background:${c}" title="${n}"><input type="radio" name="color" value="${c}" aria-label="${n}"></label>`).join('');
+  $('#fins').innerHTML = FINS.map(([id, n, s, bg]) => { const p = V.PRINT_PRICES[id].single[500][0]; return `<label class="fin"><input type="radio" name="finish" value="${id}"><span class="sw" style="background:${bg}"></span><span><b>${n}</b><small>${s}</small></span><span class="from">from ${V.inr(p)}</span></label>`; }).join('');
+
+  for (const el of form.elements) {
+    if (!el.name || el.type === 'file') continue;
+    if (el.type === 'radio') el.checked = d[el.name] === el.value;
+    else if (el.type === 'checkbox') el.checked = !!d[el.name];
+    else el.value = d[el.name] || '';
+  }
+  const ord = $('.order');
+  ord.querySelectorAll('input[type=radio]').forEach(r => r.checked = String(o[r.name]) === r.value);
+  $('#corners').checked = o.corners;
+
+  let saveT;
+  function render() {
+    // option rules from vueme.in: synthetic double = 1000 only; no rounded corners on synthetic
+    const syn = o.finish === 'synthetic';
+    if (syn && o.sides === 'double') o.qty = '1000';
+    if (syn) o.corners = false;
+    ord.querySelectorAll('[name=qty]').forEach(r => { r.disabled = syn && o.sides === 'double' && r.value === '500'; r.checked = r.value === String(o.qty); });
+    $('#qty-note').hidden = !(syn && o.sides === 'double');
+    $('#corners').disabled = syn; $('#corners').checked = o.corners;
+    $('#corners-note').textContent = syn ? 'Available on Matte and Gloss only' : 'Smooth rounded edges on all cards';
+    const dbl = o.sides === 'double';
+    $('#back-btn').disabled = !dbl; $('#p-qr').disabled = !dbl; $('#p-tag').disabled = !dbl; $('#back-note').hidden = dbl;
+    if (!dbl && side === 'back') setSide('front');
+
+    const card = Object.assign({}, d, { finish: o.finish, corners: o.corners });
+    const guides = $('#guides').checked ? '<div class="guides" aria-hidden="true"><div class="bleed"></div><div class="safe"></div></div>' : '';
+    $('#front').innerHTML = V.printSide(card, 'front') + guides;
+    $('#back').innerHTML = V.printSide(card, 'back') + guides;
+    $('#addr-warn').hidden = (d.address || '').length <= 50;
+    $('#dims').textContent = '90 × 53 mm · ' + (syn ? '180 micron synthetic' : '300 GSM') + ' · CMYK';
+
+    const [sale, reg] = V.PRINT_PRICES[o.finish][o.sides][o.qty];
+    const total = sale + (o.corners ? 100 : 0), regT = reg + (o.corners ? 100 : 0);
+    const fname = FINS.find(f => f[0] === o.finish)[1];
+    $('#pl-name').textContent = `${fname} · ${dbl ? 'front & back' : 'single side'} · ${o.qty}`;
+    $('#pl-p').textContent = V.inr(sale); $('#pl-corners').hidden = !o.corners;
+    $('#pl-reg').textContent = V.inr(regT); $('#pl-save').textContent = 'You save ' + V.inr(regT - total);
+    document.querySelectorAll('.js-total').forEach(e => e.textContent = V.inr(total));
+
+    clearTimeout(saveT); $('#status').lastChild.textContent = 'Saving…';
+    saveT = setTimeout(() => { const ok = V.store.set('print', d) && V.store.set('print-order', o); $('#status').lastChild.textContent = ok ? 'Draft saved' : 'Draft not saved on this device'; }, 400);
+  }
+  function setSide(s) {
+    side = s; $('#flip').classList.toggle('is-back', s === 'back');
+    document.querySelectorAll('[data-side]').forEach(b => b.setAttribute('aria-pressed', b.dataset.side === s));
+    $('#front').setAttribute('aria-hidden', s === 'back'); $('#back').setAttribute('aria-hidden', s === 'front');
+  }
+  form.addEventListener('input', e => { const el = e.target; if (!el.name) return; d[el.name] = el.type === 'checkbox' ? el.checked : el.value; render(); });
+  ord.addEventListener('change', e => { const el = e.target; if (el.id === 'corners') o.corners = el.checked; else if (el.name) o[el.name] = el.value; render(); });
+  $('#guides').addEventListener('change', render);
+  document.querySelectorAll('[data-side]').forEach(b => b.addEventListener('click', () => setSide(b.dataset.side)));
+  $('#logo').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { d.logo = r.result; $('#logo-rm').hidden = false; render(); }; r.readAsDataURL(f); });
+  $('#logo-rm').addEventListener('click', () => { d.logo = ''; $('#logo').value = ''; $('#logo-rm').hidden = true; render(); });
+  $('#own').addEventListener('change', e => { if (e.target.files[0]) V.toast('Prototype: your file would replace the template'); });
+  const cart = () => V.toast('Added to cart (prototype)');
+  $('#cart').addEventListener('click', cart); $('#cart-m').addEventListener('click', cart);
+  $('#logo-rm').hidden = !d.logo;
+  setSide('front'); render();
+})();
+</script>
+</body>
+</html>
