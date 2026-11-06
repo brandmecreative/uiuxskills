@@ -1,0 +1,47 @@
+{
+  "checked": "2026-11-06",
+  "digital": {
+    "templates": [
+      { "id": "aria", "name": "Aria", "note": "Minimal link-style", "price": 499 },
+      { "id": "bento", "name": "Bento", "note": "Bento grid with location", "price": 799 },
+      { "id": "spotlight", "name": "Spotlight", "note": "Dark, photo-first", "price": 799 },
+      { "id": "bauhaus", "name": "Bauhaus", "note": "Geometric bold", "price": 999 }
+    ],
+    "addons": { "analytics": 199, "nfc": 399 },
+    "renewal_per_year": 299
+  },
+  "print": {
+    "size_mm": [90, 53],
+    "stock": { "matte": "300 GSM, matte lamination", "gloss": "300 GSM, gloss lamination", "synthetic": "180 micron synthetic sheet" },
+    "prices_sale_regular": {
+      "matte": { "single": { "500": [675, 849], "1000": [899, 999] }, "double": { "500": [849, 999], "1000": [1049, 1199] } },
+      "gloss": { "single": { "500": [625, 799], "1000": [850, 949] }, "double": { "500": [788, 899], "1000": [999, 1149] } },
+      "synthetic": { "single": { "500": [800, 999], "1000": [1029, 1199] }, "double": { "1000": [1249, 1349] } }
+    },
+    "rounded_corners": { "price": 100, "materials": ["matte", "gloss"] }
+  },
+  "offer": { "name": "Diwali offer", "pct": 50, "applies_to": "digital card price only (assumed)", "ends": null },
+  "urls": {
+    "home": "https://vueme.in/",
+    "digital_category": "https://vueme.in/index.php/product-category/digital-business-card/",
+    "printed_category": "https://vueme.in/index.php/product-category/cards/",
+    "shop": "https://vueme.in/index.php/shop/",
+    "faqs": "https://vueme.in/index.php/faqs/",
+    "contact": "https://vueme.in/index.php/contact-us/",
+    "track_order": "https://vueme.in/index.php/order-tracking/",
+    "my_account": "https://vueme.in/index.php/my-account/",
+    "refund_policy": "https://vueme.in/index.php/refund-policy/",
+    "privacy_policy": "https://vueme.in/index.php/privacy-policy/",
+    "terms": "https://vueme.in/index.php/terms-and-conditions/",
+    "whatsapp": "https://wa.me/919042018017"
+  },
+  "images": {
+    "base": "https://vueme.in/wp-content/uploads/2026/10/",
+    "logo": "vueme-logo.png",
+    "phone_in_hand": "colourful-digital-business-card-phone-mockup.webp",
+    "nfc_card": "Vibrant-Festival-NFC-Card-Mockup.webp",
+    "template_mockups": ["minimal-digital-business-card-phone-mockup.webp", "modern-digital-business-card-phone-mockup.webp", "elegant-digital-business-card-phone-mockup.webp", "neo-brutalist-business-card-phone-mockup.webp", "gradient-digital-business-card-phone-mockup.webp", "tech-digital-business-card-phone-mockup.webp", "digital-business-card-for-freelancers-phone-mockup-1.webp", "Vibrant-Yellow-UX-Designer-Profile-Mockup.webp", "aesthetic-digital-business-card-features.webp"],
+    "printed": ["matte-visiting-card-closeup.webp", "Gloss-Visiting-Card-Design-Front-and-Back.webp", "Synthetic-Visiting-Card-Design.webp", "Speak-Louder-Purple-Card-Mockup-1.webp", "Double-Sided-Gloss-Business-Cards-with-QR-Code-700x798.webp"],
+    "note": "No Diwali photo exists; the redesign draws diyas, rangoli and lights in SVG."
+  }
+}

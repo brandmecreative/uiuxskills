@@ -47,6 +47,9 @@ Neither editor opens on its own, matching how vueme.in works:
 ## Copy pass
 The page copy was audited with the avoid-ai-writing skill (warm, plain voice). It removed em dashes from our own copy (Vueme's tagline is kept as written), a two-item negation chain ("No software, no designer"), unsupported claims ("Live in about five minutes", "Same QR, forever", "Visitors stay anonymous", "soft to the touch"), and a rewording that had dropped Vueme's "if approved" condition on reprints. It also corrected synthetic cards to Vueme's spec: 180 micron synthetic sheet, not 300 GSM.
 
+## Content-skills pass
+Headings and body copy were run through viral-hooks (openers), dumbify (reading level for phone readers) and anti-ai-writing (final filter). Changes: hero headline "One card for the handshake. One link for everything after." became "Your business card, saved in their phone in one tap." (clear topic, "your", a real mechanism; an earlier draft that called paper cards easy to lose was dropped because Vueme sells printed cards too). The analytics heading became "See who viewed your card and saved your number." Printed-card and NFC lines were simplified. storytelling was not used: it is for spoken reel and video scripts. Voice was not checked against Vueme's own posts (no sample available).
+
 ## Checks run
 - Rendered at 1440 and 390 px with no horizontal scroll and no console errors.
 - Functional script: price rules, flip, QR, live preview, email validation, date ranges, tooltip, table view.
