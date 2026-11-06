@@ -38,6 +38,12 @@ Refero's live research server was not connected, so the research used the refero
 - Phone-first layer (80% of visits): templates are a swipe row of real previews with their own Choose buttons; printed finishes swipe; editor cards, facts, analytics and footer are compacted. The landing page went from about 20 phone screens to 12.
 - Diwali artwork (lights, rangoli, diyas) is drawn in SVG; other images are Vueme's own creatives from vueme.in.
 
+## Selection first
+Neither editor opens on its own, matching how vueme.in works:
+- Digital: choose a template first. Opening `editor-digital.html` without `?template=` shows that step.
+- Print: choose material, printing and quantity first (the picker on the home page, `#print-pick`). Opening `editor-print.html` without `?finish=&sides=&qty=` shows that step. `&upload=1` opens it ready for an upload.
+- The home page shows both editors as auto-playing previews labelled "Preview"; every home-page button leads to a selection step, never straight into an editor.
+
 ## Copy pass
 The page copy was audited with the avoid-ai-writing skill (warm, plain voice). It removed em dashes from our own copy (Vueme's tagline is kept as written), a two-item negation chain ("No software, no designer"), unsupported claims ("Live in about five minutes", "Same QR, forever", "Visitors stay anonymous", "soft to the touch"), and a rewording that had dropped Vueme's "if approved" condition on reprints. It also corrected synthetic cards to Vueme's spec: 180 micron synthetic sheet, not 300 GSM.
 

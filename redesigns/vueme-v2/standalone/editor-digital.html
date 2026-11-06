@@ -367,6 +367,30 @@ body{background:var(--soft)}
   .mbar b{font-size:18px}
   .mbar .btn{margin-left:auto}
 }
+
+/* selection gate: the editor opens only after the first choice */
+.gate{padding:40px 20px 80px;max-width:980px;margin:0 auto}
+.gate .eyebrow{display:block}
+.gate h1{font-size:clamp(28px,4vw,40px);margin:10px 0 8px}
+.gate p.sub{color:var(--ink-2);margin-bottom:24px}
+.gate-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.gate-card{border:1.5px solid var(--line-2);border-radius:var(--r);background:#fff;padding:12px;display:grid;gap:10px;justify-items:center;cursor:pointer;text-align:left;transition:border-color .15s,transform .2s var(--ease)}
+.gate-card:hover{border-color:var(--ink);transform:translateY(-2px)}
+.gate-card .phone{--w:150px;box-shadow:none}
+.gate-card .meta{width:100%;display:flex;justify-content:space-between;font-size:15px}
+.gate-card .meta s{color:var(--ink-3);font-size:13px;margin-right:4px}
+.gate-card small{width:100%;font-size:12.5px;color:var(--ink-3)}
+.gate-card .go{width:100%;min-height:44px;border-radius:var(--pill);background:var(--ink);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.gate-pick{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;display:grid;gap:18px}
+.gate-pick fieldset{border:0;padding:0;margin:0}
+.gate-pick legend{font-size:13px;font-weight:700;margin-bottom:8px}
+.gate-pick .seg{width:100%}.gate-pick .seg label{flex:1;justify-content:center;position:relative}
+.gate-pick .seg label:has(input:disabled){opacity:.4;cursor:not-allowed}
+.gate-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+.gate-foot b{font-size:26px;letter-spacing:-.03em}
+.gate-foot s{color:var(--ink-3);margin-left:6px}
+body.gated .editor,body.gated .mtabs,body.gated .mbar,body.gated .ebar-end .btn-primary,body.gated #offer-tag{display:none!important}
+@media (max-width:760px){.gate{padding:24px 16px 48px}.gate-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gate-card{padding:10px}.gate-card .meta{font-size:13px;flex-wrap:wrap}.gate-card .phone{--w:120px}.gate-foot .btn{width:100%}}
 </style>
 </head>
 <body data-view="edit">
@@ -382,6 +406,13 @@ body{background:var(--soft)}
     </div>
   </div>
 </header>
+
+<section class="gate" id="gate" hidden aria-labelledby="gate-h">
+  <span class="eyebrow">Step 1 of 3 · Choose a template</span>
+  <h1 id="gate-h">Pick a design to start your digital card</h1>
+  <p class="sub">The editor opens with the template you choose. You can add Analytics or an NFC card before you pay.</p>
+  <div class="gate-grid" id="gate-grid"></div>
+</section>
 
 <div class="mtabs"><div class="seg" role="group" aria-label="View"><button type="button" aria-pressed="true" data-view="edit">Edit</button><button type="button" aria-pressed="false" data-view="preview">Preview &amp; share</button></div></div>
 
@@ -3020,7 +3051,17 @@ var qrcode = function() {
   const qs = new URLSearchParams(location.search);
   let d = Object.assign({}, V.DEFAULT, V.store.get('digital', {}), { analytics: false, nfc: false });
   if (qs.get('name')) d.name = qs.get('name');
-  if (qs.get('template') && V.TEMPLATES.some(t => t.id === qs.get('template'))) d.template = qs.get('template');
+  const hasTpl = qs.get('template') && V.TEMPLATES.some(t => t.id === qs.get('template'));
+  if (hasTpl) d.template = qs.get('template');
+  else {
+    // no template chosen yet: show step 1 instead of the editor
+    document.body.classList.add('gated'); $('#gate').hidden = false;
+    $('#gate-grid').innerHTML = V.TEMPLATES.map(t => `<button type="button" class="gate-card" data-t="${t.id}">${V.phone(V.digitalCard({ template: t.id }))}<span class="meta"><b>${t.name}</b><span>${V.OFFER.active ? `<s>${V.inr(t.price)}</s>` : ''}<b>${V.inr(V.offerPrice(t.price))}</b></span></span><small>${t.note}</small><span class="go">Choose ${t.name}</span></button>`).join('');
+    $('#gate-grid').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return;
+      d.template = b.dataset.t; const u = new URLSearchParams(location.search); u.set('template', d.template); history.replaceState(null, '', '?' + u);
+      form.querySelectorAll('[name=template]').forEach(r => r.checked = r.value === d.template);
+      document.body.classList.remove('gated'); $('#gate').hidden = true; render(); window.scrollTo(0, 0); $('#f-name').focus(); });
+  }
 
   // build template + swatch pickers
   $('#tpl-pick').innerHTML = V.TEMPLATES.map(t => `<label class="tpl-opt"><input type="radio" name="template" value="${t.id}"><div class="thumb" aria-hidden="true">${V.phone(V.digitalCard({ template: t.id }))}</div><b>${t.name}<span>${V.OFFER.active ? `<s style="font-weight:500;color:var(--ink-3);margin-right:4px">${V.inr(t.price)}</s>` : ''}${V.inr(V.offerPrice(t.price))}</span></b><small>${t.note}</small></label>`).join('');
