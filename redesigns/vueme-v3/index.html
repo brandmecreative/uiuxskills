@@ -382,6 +382,39 @@ body{padding-bottom:76px}
   *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .rv{opacity:1;transform:none}
 }
+
+/* simple hero */
+.hero{padding:24px 0 8px}
+.hero-g{display:grid;gap:18px}
+.hero h1{font-size:clamp(34px,9.4vw,60px);letter-spacing:-.04em;line-height:1.02}
+.hero .sub{font-size:18px;color:var(--ink-2);margin-top:10px}
+.hv{position:relative;height:230px;border-radius:24px;background:radial-gradient(220px 160px at 70% 35%,#E3D8FF,transparent 70%),radial-gradient(200px 140px at 20% 85%,#FFF0B8,transparent 70%),var(--soft);overflow:hidden}
+.hv .pcw{position:absolute;left:6%;top:72px;width:58%;transform:rotate(-8deg);animation:float1 6s ease-in-out infinite}
+.hv .phw{position:absolute;right:8%;top:14px;animation:float2 6s ease-in-out infinite}
+.hv .phone{--w:108px}
+@keyframes float1{50%{transform:rotate(-6deg) translateY(-8px)}}
+@keyframes float2{50%{transform:translateY(8px)}}
+.hbtns{display:grid;gap:10px}
+.hb{display:flex;align-items:center;gap:12px;width:100%;min-height:68px;padding:0 18px;border-radius:20px;text-align:left;transition:transform .15s,box-shadow .2s}
+.hb:active{transform:scale(.98)}
+.hb-d{background:var(--purple);color:#fff;box-shadow:0 14px 28px -16px rgba(107,63,216,.8)}
+.hb-pr{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.hb-t{flex:1}
+.hb-t b{display:block;font-size:18px}
+.hb-t small{font-size:13px;opacity:.8}
+.hb .hb-p{font-weight:800;font-size:15px;text-align:right;line-height:1.2}
+.hb .hb-p em{display:block;font-style:normal;font-size:10.5px;color:var(--ink);background:var(--yellow);border-radius:5px;padding:1px 5px;margin-bottom:2px}
+.hb > .i,.hb > span:last-child svg{width:20px;height:20px;flex:none}
+.swbar{margin-top:8px}
+@media (min-width:900px){
+  .hero{padding:56px 0 24px}
+  .hero-g{grid-template-columns:1fr 1fr;grid-template-areas:"txt vis" "btn vis";column-gap:56px;align-items:start}
+  .hero-txt{grid-area:txt;align-self:end}
+  .hv{grid-area:vis;height:400px}
+  .hbtns{grid-area:btn;max-width:460px}
+  .hv .phone{--w:170px}
+  .hv .pcw{top:150px;width:54%}
+}
 </style>
 </head>
 <body>
@@ -401,30 +434,20 @@ body{padding-bottom:76px}
 <!-- HERO -->
 <section class="hero">
   <div class="wrap hero-g">
-    <div>
-      <h1>Your business card, digital or printed.</h1>
-      <p class="sub">A digital card is a link and QR code people open on their phone. A printed card is the classic one, made from your design.</p>
-      <div class="mg mobile-mg" id="mg-m" aria-hidden="true"></div>
-      <div class="pick2">
-        <button class="pk2 d" type="button" data-go="digital"><span class="ic" data-icon="phone"></span><span><b>Digital card</b><small>Link, QR code and NFC</small></span><span class="pr"><em>50% OFF</em><s id="hp-was">₹499</s><span id="hp-now">₹249.50</span></span></button>
-        <button class="pk2 p" type="button" data-go="print"><span class="ic" data-icon="print"></span><span><b>Printed cards</b><small>Matte, gloss or synthetic</small></span><span class="pr">from<br>₹625</span></button>
-      </div>
-      <div class="trust"><span data-icon="sparkle">Link &amp; QR right after payment</span><span data-icon="truck">Delivery across India</span></div>
+    <div class="hero-txt">
+      <h1>Your business card, made online.</h1>
+      <p class="sub">Pick digital or printed to start.</p>
     </div>
-    <div class="mg desk-mg" id="mg-d" aria-hidden="true"></div>
+    <div class="hv" id="hv" aria-hidden="true"></div>
+    <div class="hbtns">
+      <button class="hb hb-d" type="button" data-go="digital"><span class="hb-t"><b>Digital card</b><small>Link + QR code</small></span><span class="hb-p"><em>50% OFF</em><span id="hp-now">₹249.50</span></span><span data-icon="arrow"></span></button>
+      <button class="hb hb-pr" type="button" data-go="print"><span class="hb-t"><b>Printed cards</b><small>Delivered to you</small></span><span class="hb-p">from ₹625</span><span data-icon="arrow"></span></button>
+    </div>
   </div>
 </section>
 
 <!-- SHOP -->
 <section id="shop" aria-label="Products">
-  <div class="wrap">
-    <div class="dw rv">
-      <svg class="diya" viewBox="0 0 120 100" aria-hidden="true"><defs><radialGradient id="fgd" cx=".5" cy=".7"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".5" stop-color="#FCC305"/><stop offset="1" stop-color="#FF8A00"/></radialGradient></defs><circle cx="60" cy="38" r="34" fill="#FCC305" opacity=".18"/><path class="flame" d="M60 12 C71 30 71 44 60 50 C49 44 49 30 60 12Z" fill="url(#fgd)"/><path d="M14 58 Q60 106 106 58 Z" fill="#C2410C"/><ellipse cx="60" cy="58" rx="46" ry="8" fill="#EA580C"/><ellipse cx="60" cy="57" rx="36" ry="5" fill="#7C2D12"/></svg>
-      <div><b>Diwali: <span>50% off</span> digital cards</b><small>Templates from ₹249.50</small></div>
-      <button type="button" data-go="digital" data-to="templates">See designs</button>
-      <i class="sp" style="left:30%;top:10px"></i><i class="sp" style="left:56%;bottom:8px;animation-delay:.7s"></i>
-    </div>
-  </div>
   <div class="swbar">
     <div class="wrap">
       <div class="sw" role="tablist" aria-label="Product" data-on="digital">
@@ -611,25 +634,10 @@ body{padding-bottom:76px}
       el.textContent = V.inr(k < 1 ? Math.round(v) : to); if (k < 1) requestAnimationFrame(f); })(t0);
   }
 
-  // ---------- hero motion graphic ----------
-  var CAPS = ['Your printed card', 'Put your QR on the back', 'They scan it', 'Your digital card opens'];
-  function buildMG(el) {
-    var qr = V.qrSvg('https://vueme.in/meera-iyer', { margin: 1, label: '' });
-    var card = { name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', tagline: 'Homes and offices in Chennai.', finish: 'gloss' };
-    el.innerHTML = '<div class="mg-cap"><span class="mg-dots"><i></i><i></i><i></i><i></i></span><span class="mg-t"></span></div>' +
-      '<div class="mg-card"><div class="mg-flip"><div class="f">' + V.printSide(card) + '</div><div class="b">' + V.printSide(card, 'back') + '</div></div></div>' +
-      '<div class="mg-phone">' + V.phone('<div class="mg-cam"><div class="q">' + qr + '</div><i class="ln"></i></div>' + V.digitalCard({ name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', template: 'aria' })) + '</div>' +
-      '<div class="mg-toast"><span class="ok">' + V.icon('check') + '</span>Contact saved</div>';
-    var step = -1, timer = null;
-    function go(n) { step = n; el.dataset.step = n; el.querySelector('.mg-t').textContent = CAPS[n];
-      [].forEach.call(el.querySelectorAll('.mg-dots i'), function (d, i) { d.classList.toggle('on', i === n); }); }
-    go(still ? 3 : 0);
-    if (!still) onScreen(el, function () { if (!timer) timer = setInterval(function () { go((step + 1) % 4); }, 2300); }, function () { clearInterval(timer); timer = null; });
-  }
-  var mgEl = matchMedia('(min-width: 900px)').matches ? $('#mg-d') : $('#mg-m');
-  (mgEl === $('#mg-d') ? $('#mg-m') : $('#mg-d')).remove();
-  buildMG(mgEl);
-  $('#hp-was').textContent = V.inr(499); $('#hp-now').textContent = V.inr(V.offerPrice(499));
+  // ---------- hero picture (one calm, floating composition) ----------
+  $('#hv').innerHTML = '<div class="pcw">' + V.printSide({ name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', finish: 'gloss' }) + '</div>' +
+    '<div class="phw">' + V.phone(V.digitalCard({ name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', template: 'aria' })) + '</div>';
+  $('#hp-now').textContent = V.inr(V.offerPrice(499));
 
   // ---------- product switch ----------
   function setPanel(p, focusTab) {
