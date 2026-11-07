@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vueme | Digital & Printed Business Cards</title>
+<meta name="description" content="Digital business cards with your own link and QR code, and printed visiting cards made from your design. Diwali offer: 50% off digital cards.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/vueme.css">
+<link rel="stylesheet" href="assets/cards.css">
+<style>
+body{background:#fff}
+.wrap{max-width:1120px}
+h2{font-size:clamp(24px,6.4vw,36px);letter-spacing:-.03em}
+.lead{color:var(--ink-2);font-size:15px;margin-top:6px}
+.blk{padding:28px 0}
+.blk + .blk{border-top:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--purple)}
+.cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;border-radius:var(--pill);background:var(--purple);color:#fff;font-weight:800;font-size:16px;transition:background-color .2s,transform .15s}
+.cta:hover{background:var(--purple-700)}
+.cta:active{transform:scale(.98)}
+.cta .i{width:20px;height:20px}
+.note{font-size:13px;color:var(--ink-3);margin-top:10px;text-align:center}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+/* strip + header */
+.strip{display:block;width:100%;background:var(--purple-900);color:#fff;font-size:13.5px;font-weight:600;padding:9px 16px;text-align:center}
+.strip b{color:var(--yellow)}
+.strip .i{width:15px;height:15px;color:var(--yellow);display:inline-block;vertical-align:-2px;margin-right:6px;animation:spark 2.4s ease-in-out infinite}
+@keyframes spark{50%{transform:scale(.7) rotate(45deg);opacity:.6}}
+.hd{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hd-in{display:flex;align-items:center;gap:20px;height:58px}
+.hd-in .logo img{height:22px;width:auto}
+.hd-links{display:none;gap:4px;margin-left:12px}
+.hd-links a{padding:8px 14px;border-radius:var(--pill);font-weight:600;font-size:15px}
+.hd-links a:hover{background:var(--soft)}
+.hd-wa{margin-left:auto;display:flex;align-items:center;gap:8px;min-height:40px;padding:0 14px 0 10px;border-radius:var(--pill);background:#E7F8EE;color:#0B6B3A;font-weight:700;font-size:14px}
+.hd-wa .i{width:20px;height:20px;color:#25D366}
+
+/* hero */
+.hero{padding:22px 0 26px}
+.hero h1{font-size:clamp(32px,8.6vw,58px);letter-spacing:-.04em;line-height:1.04}
+.hero .sub{color:var(--ink-2);font-size:16px;margin-top:12px;max-width:44ch}
+.mg{position:relative;height:270px;margin:18px 0 16px;border-radius:24px;overflow:hidden;background:radial-gradient(260px 200px at 75% 30%,#E3D8FF,transparent 70%),radial-gradient(240px 180px at 15% 90%,#FFF0B8,transparent 70%),var(--soft)}
+.mg-cap{position:absolute;left:12px;top:12px;z-index:6;display:flex;align-items:center;gap:8px;background:#fff;border-radius:var(--pill);padding:6px 12px 6px 8px;font-size:12.5px;font-weight:700;box-shadow:0 6px 16px -10px rgba(14,11,26,.4)}
+.mg-dots{display:flex;gap:4px}
+.mg-dots i{width:6px;height:6px;border-radius:50%;background:var(--line-2);transition:background-color .3s,width .3s}
+.mg-dots i.on{background:var(--purple);width:16px;border-radius:3px}
+.mg-card{position:absolute;left:7%;top:78px;width:54%;perspective:900px;z-index:3;transition:transform .8s var(--ease)}
+.mg-flip{position:relative;transform-style:preserve-3d;transition:transform .8s var(--ease)}
+.mg-flip .f,.mg-flip .b{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mg-flip .b{position:absolute;inset:0;transform:rotateY(180deg)}
+.mg[data-step="1"] .mg-flip,.mg[data-step="2"] .mg-flip,.mg[data-step="3"] .mg-flip{transform:rotateY(180deg)}
+.mg[data-step="2"] .mg-card{transform:translateX(6%) rotate(-6deg)}
+.mg[data-step="3"] .mg-card{transform:translate(-14%,30px) rotate(-10deg) scale(.86)}
+.mg-phone{position:absolute;right:7%;top:16px;z-index:4;opacity:0;transform:translateY(40px) scale(.94);transition:opacity .6s var(--ease),transform .7s var(--ease)}
+.mg-phone .phone{--w:112px}
+.mg[data-step="2"] .mg-phone,.mg[data-step="3"] .mg-phone{opacity:1;transform:none}
+.mg-cam{position:absolute;inset:0;z-index:2;background:#1F1A33;display:grid;place-items:center;transition:opacity .5s}
+.mg-cam .q{width:62%;border-radius:8px;overflow:hidden;box-shadow:0 0 0 3px rgba(255,255,255,.85)}
+.mg-cam .ln{position:absolute;left:16%;right:16%;height:2px;background:var(--yellow);box-shadow:0 0 10px var(--yellow);top:36%}
+.mg[data-step="2"] .mg-cam .ln{animation:scan 1.1s ease-in-out infinite alternate}
+@keyframes scan{to{top:62%}}
+.mg[data-step="3"] .mg-cam{opacity:0}
+.mg-toast{position:absolute;right:4%;bottom:14px;z-index:6;display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:8px 12px;font-size:13px;font-weight:700;box-shadow:0 12px 28px -12px rgba(14,11,26,.45);opacity:0;transform:translateY(14px);transition:opacity .4s .5s,transform .5s .5s var(--ease)}
+.mg-toast .ok{width:22px;height:22px;border-radius:50%;background:var(--mint);color:var(--mint-ink);display:grid;place-items:center}
+.mg-toast .i{width:14px;height:14px}
+.mg[data-step="3"] .mg-toast{opacity:1;transform:none}
+.pick2{display:grid;gap:10px}
+.pk2{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;min-height:76px;padding:12px 14px;border-radius:20px;border:1.5px solid var(--line-2);background:#fff;text-align:left;width:100%;transition:border-color .2s,transform .15s,box-shadow .2s}
+.pk2:hover{border-color:var(--ink);box-shadow:0 10px 24px -16px rgba(14,11,26,.4)}
+.pk2:active{transform:scale(.98)}
+.pk2 .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center}
+.pk2 .ic .i{width:24px;height:24px}
+.pk2.d .ic{background:var(--purple);color:#fff}
+.pk2.p .ic{background:var(--yellow);color:var(--ink)}
+.pk2 b{display:block;font-size:17px}
+.pk2 small{font-size:13px;color:var(--ink-2)}
+.pk2 .pr{text-align:right;font-weight:800;font-size:15px;line-height:1.25}
+.pk2 .pr s{display:block;font-size:12px;color:var(--ink-3);font-weight:600}
+.pk2 .pr em{display:inline-block;font-style:normal;font-size:11px;font-weight:800;background:var(--yellow);border-radius:6px;padding:1px 6px;margin-bottom:2px}
+.trust{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.trust span{display:flex;gap:6px;align-items:center}
+.trust .i{width:16px;height:16px;color:var(--purple)}
+
+/* diwali band */
+.dw{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;color:#fff;background:radial-gradient(200px 120px at 90% 0%,rgba(252,195,5,.35),transparent 70%),var(--purple-900)}
+.dw svg.diya{width:58px;flex:none}
+.flame{transform-origin:50% 100%;animation:flicker 1.6s ease-in-out infinite}
+@keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg)}35%{transform:scale(.9,1.1) rotate(2deg)}70%{transform:scale(1.05,.95)}}
+.dw b{display:block;font-size:16px}
+.dw b span{color:var(--yellow)}
+.dw small{font-size:12.5px;color:#E2DAFB}
+.dw button{margin-left:auto;flex:none;min-height:42px;padding:0 14px;border-radius:var(--pill);background:var(--yellow);color:var(--ink);font-weight:800;font-size:13.5px}
+.dw .sp{position:absolute;width:8px;height:8px;background:var(--yellow);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:spark 2s ease-in-out infinite}
+
+/* product switch */
+.swbar{position:sticky;top:58px;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);padding:10px 0;margin-top:18px}
+.sw{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:var(--pill);background:var(--soft);border:1px solid var(--line)}
+.sw button{position:relative;z-index:1;min-height:46px;border-radius:var(--pill);font-weight:800;font-size:15px;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:8px;transition:color .3s}
+.sw button .i{width:18px;height:18px}
+.sw button[aria-selected="true"]{color:#fff}
+.sw-thumb{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:var(--pill);background:var(--ink);transition:transform .45s var(--ease)}
+.sw[data-on="print"] .sw-thumb{transform:translateX(100%)}
+.pnl{animation:pin .45s var(--ease)}
+.pnl.from-right{animation-name:pinr}
+@keyframes pin{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@keyframes pinr{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+
+/* story */
+.story{position:relative;height:400px;margin-top:16px;border-radius:24px;background:var(--lilac);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.bars{position:absolute;top:12px;left:14px;right:14px;z-index:5;display:flex;gap:4px}
+.bars i{flex:1;height:3px;border-radius:2px;background:rgba(42,22,112,.18);overflow:hidden}
+.bars b{display:block;height:100%;width:0;background:var(--purple-900)}
+.bars i.done b{width:100%}
+.bars i.cur b{animation:fill var(--dur,3.8s) linear forwards}
+.story.paused .bars i.cur b{animation-play-state:paused}
+@keyframes fill{to{width:100%}}
+.st{position:absolute;inset:0;padding:34px 18px 18px;display:grid;grid-template-rows:1fr auto;opacity:0;visibility:hidden;transition:opacity .45s,visibility .45s}
+.st.on{opacity:1;visibility:visible}
+.st-art{position:relative;display:grid;place-items:center;min-height:0}
+.st-txt .n{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--purple)}
+.st-txt h3{font-size:21px;margin:4px 0 4px}
+.st-txt p{font-size:14.5px;color:var(--ink-2)}
+.st-nav{position:absolute;top:0;bottom:90px;width:42%;z-index:4}
+.st-nav.prev{left:0}.st-nav.next{right:0}
+.st-hint{position:absolute;right:14px;bottom:18px;z-index:5;font-size:12px;font-weight:700;color:var(--purple-900);display:flex;align-items:center;gap:4px;opacity:.75}
+.st-hint .i{width:14px;height:14px}
+/* story art 1: templates */
+.tg{display:grid;grid-template-columns:repeat(4,auto);gap:10px}
+.tg .phone{--w:58px;box-shadow:0 8px 16px -10px rgba(14,11,26,.5)}
+.tg > div{border-radius:14px;padding:4px;transition:box-shadow .3s,transform .3s var(--ease)}
+.st.on .tg > div:nth-child(2){animation:pickit .5s 1s var(--ease) forwards}
+@keyframes pickit{to{box-shadow:0 0 0 3px var(--purple);transform:translateY(-8px) scale(1.06)}}
+.tap{position:absolute;width:38px;height:38px;border-radius:50%;background:rgba(107,63,216,.25);border:2px solid var(--purple);opacity:0;left:calc(50% - 40px);top:58%}
+.st.on .tap{animation:tapit 1.2s .4s var(--ease) forwards}
+@keyframes tapit{0%{opacity:0;transform:scale(1.8)}50%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}
+/* art 2: typing */
+.a2{position:relative;width:100%;height:100%;display:grid;place-items:center}
+.a2 .phone{--w:122px}
+.a2 .fld{position:absolute;left:0;top:30%;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 12px 24px -14px rgba(14,11,26,.45);font-size:11px;font-weight:700;color:var(--ink-3);display:grid;gap:4px;width:44%;max-width:170px}
+.a2 .fld div{border:1.5px solid var(--purple);border-radius:8px;padding:6px 8px;font-size:13px;color:var(--ink);min-height:30px;white-space:nowrap;overflow:hidden}
+.caret{display:inline-block;width:2px;height:14px;background:var(--purple);margin-left:1px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+/* art 3: pay */
+.pay{width:min(250px,86%);background:#fff;border-radius:20px;padding:16px;box-shadow:0 18px 36px -18px rgba(14,11,26,.45);display:grid;gap:10px}
+.pay .amt{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;color:var(--ink-2)}
+.pay .amt b{font-size:24px;color:var(--ink);letter-spacing:-.02em}
+.pay .ms{display:flex;flex-wrap:wrap;gap:6px}
+.pay .ms span{font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:99px;border:1px solid var(--line-2)}
+.pay .ms span:first-child{border-color:var(--ink);background:var(--soft)}
+.pay .pbtn{position:relative;height:46px;border-radius:99px;background:var(--purple);color:#fff;font-weight:800;display:grid;place-items:center;overflow:hidden}
+.pay .pbtn i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--purple-900)}
+.pay .pbtn span{position:relative}
+.st.on .pay .pbtn i{animation:payfill 1.2s .5s ease-in-out forwards}
+@keyframes payfill{to{width:100%}}
+.paid{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.paid .c{width:84px;height:84px;border-radius:50%;background:var(--mint);color:var(--mint-ink);display:grid;place-items:center;opacity:0;transform:scale(.4);box-shadow:0 0 0 10px rgba(215,245,228,.6)}
+.paid .c .i{width:42px;height:42px}
+.st.on .paid .c{animation:popin .5s 1.8s var(--ease) forwards}
+.st.on .pay{animation:fadeaway .3s 1.75s forwards}
+@keyframes popin{to{opacity:1;transform:none}}
+@keyframes fadeaway{to{opacity:.15;transform:scale(.96)}}
+/* art 4: link + qr */
+.a4{display:grid;justify-items:center;gap:12px}
+.a4 .lk{display:flex;align-items:center;gap:8px;background:#fff;border-radius:99px;padding:8px 8px 8px 14px;font-weight:700;font-size:14px;box-shadow:0 12px 24px -14px rgba(14,11,26,.45);opacity:0;transform:translateY(12px)}
+.a4 .lk .i{width:16px;height:16px;color:var(--purple)}
+.a4 .lk em{font-style:normal;font-size:12px;background:var(--ink);color:#fff;border-radius:99px;padding:5px 10px}
+.a4 .qrb{width:130px;padding:10px;border-radius:18px;background:#fff;box-shadow:0 16px 30px -16px rgba(14,11,26,.45);opacity:0;transform:scale(.6)}
+.st.on .a4 .lk{animation:popin .5s .3s var(--ease) forwards}
+.st.on .a4 .qrb{animation:popin .6s .8s var(--ease) forwards}
+
+/* templates carousel */
+.tpls{display:grid;grid-auto-flow:column;grid-auto-columns:62%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:14px -16px 0;padding:6px 16px 10px;scrollbar-width:none}
+.tpls::-webkit-scrollbar{display:none}
+.tpl{position:relative;scroll-snap-align:center;border:2px solid var(--line);border-radius:22px;padding:12px;display:grid;gap:8px;justify-items:center;background:#fff;text-align:left;transition:border-color .25s,box-shadow .25s,transform .25s var(--ease)}
+.tpl .phone{--w:138px;box-shadow:0 14px 26px -16px rgba(14,11,26,.55)}
+.tpl .meta{width:100%;display:flex;justify-content:space-between;align-items:baseline}
+.tpl .meta b{font-size:16px}
+.tpl .meta span{font-weight:800;color:var(--purple)}
+.tpl .meta s{font-size:12px;color:var(--ink-3);font-weight:600;margin-right:4px}
+.tpl small{width:100%;font-size:12.5px;color:var(--ink-3)}
+.tpl .chk{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;background:var(--purple);color:#fff;display:grid;place-items:center;opacity:0;transform:scale(.5);transition:opacity .25s,transform .3s var(--ease)}
+.tpl .chk .i{width:15px;height:15px}
+.tpl[aria-pressed="true"]{border-color:var(--purple);box-shadow:0 14px 30px -16px rgba(107,63,216,.7)}
+.tpl[aria-pressed="true"] .chk{opacity:1;transform:none}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:6px}
+.dots i{width:6px;height:6px;border-radius:3px;background:var(--line-2);transition:width .3s,background-color .3s}
+.dots i.on{width:18px;background:var(--ink)}
+.more{display:block;text-align:center;font-weight:700;font-size:14px;color:var(--purple);margin-top:12px;text-decoration:underline;text-underline-offset:3px}
+
+/* share infographic */
+.tabs3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
+.tabs3 button{position:relative;min-height:56px;border-radius:16px;border:1.5px solid var(--line-2);background:#fff;font-weight:800;font-size:13.5px;display:grid;justify-items:center;gap:2px;padding:6px 4px;overflow:hidden;transition:border-color .2s,background-color .2s}
+.tabs3 button .i{width:20px;height:20px;color:var(--purple)}
+.tabs3 button[aria-selected="true"]{border-color:var(--ink);background:var(--soft)}
+.tabs3 button .pg{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--purple)}
+.tabs3.auto button[aria-selected="true"] .pg{animation:fill 4.6s linear forwards}
+.shst{position:relative;height:290px;margin-top:10px;border-radius:24px;background:var(--soft);overflow:hidden}
+.sh{position:absolute;inset:0;display:grid;place-items:center;opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+.sh.on{opacity:1;visibility:visible}
+.shcap{font-size:14px;color:var(--ink-2);margin-top:10px;min-height:42px}
+.shcap b{color:var(--ink)}
+/* link scene: chat */
+.chat{width:min(290px,88%);display:grid;gap:8px}
+.bub{justify-self:end;max-width:84%;background:#DCF8C6;border-radius:16px 16px 4px 16px;padding:8px 10px;font-size:13.5px;box-shadow:0 6px 14px -10px rgba(0,0,0,.35);opacity:0;transform:translateY(10px)}
+.bub.in2{justify-self:start;background:#fff;border-radius:16px 16px 16px 4px}
+.lp{display:flex;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:6px;margin-bottom:6px}
+.lp .av{width:34px;height:34px;border-radius:50%;background:var(--purple);color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center;flex:none}
+.lp b{display:block;font-size:12.5px}.lp small{font-size:11px;color:var(--ink-3)}
+.tk{display:block;text-align:right;font-size:11px;color:var(--ink-3);margin-top:2px}
+.sh.on .bub:nth-child(1){animation:popin .45s .2s var(--ease) forwards}
+.sh.on .bub:nth-child(2){animation:popin .45s 1s var(--ease) forwards}
+.sh.on .bub:nth-child(3){animation:popin .45s 2.2s var(--ease) forwards}
+/* qr scene */
+.qsc{position:relative;display:flex;align-items:center;gap:22px}
+.qsc .card{width:130px;padding:10px;border-radius:14px;background:#fff;box-shadow:0 12px 24px -14px rgba(14,11,26,.4);transform:rotate(-6deg)}
+.qsc .phone{--w:108px}
+.qcam{position:absolute;inset:0;z-index:2;background:#1F1A33;display:grid;place-items:center;transition:opacity .5s}
+.qcam .fr{width:64%;aspect-ratio:1;border:3px solid #fff;border-radius:12px;position:relative}
+.qcam .fr i{position:absolute;left:8%;right:8%;height:2px;background:var(--yellow);box-shadow:0 0 10px var(--yellow);top:10%}
+.sh.on .qcam .fr i{animation:scan 1s ease-in-out 2 alternate}
+.sh.on .qcam{animation:fadeout .5s 2.1s forwards}
+@keyframes fadeout{to{opacity:0}}
+/* nfc scene */
+.nsc{position:relative;width:260px;height:220px}
+.nsc .phone{--w:104px;position:absolute;right:10px;top:0}
+.nfcc{position:absolute;left:0;top:100px;width:150px;aspect-ratio:85.6/54;border-radius:10px;background:linear-gradient(135deg,#6B3FD8,#2A1670);color:#fff;padding:10px;box-shadow:0 14px 26px -14px rgba(14,11,26,.6);z-index:3;display:flex;flex-direction:column;justify-content:space-between}
+.nfcc b{font-size:15px;letter-spacing:-.04em}
+.nfcc .i{width:18px;height:18px;align-self:flex-end}
+.sh.on .nfcc{animation:tapcard 2.2s var(--ease) forwards}
+@keyframes tapcard{0%{transform:translate(0,0) rotate(-8deg)}45%,70%{transform:translate(70px,-60px) rotate(-14deg)}100%{transform:translate(0,0) rotate(-8deg)}}
+.wave{position:absolute;right:42px;top:46px;width:40px;height:40px;border-radius:50%;border:2.5px solid var(--purple);opacity:0;z-index:2}
+.sh.on .wave{animation:ring 1.2s .9s ease-out 2}
+.sh.on .wave.w2{animation-delay:1.3s}
+@keyframes ring{0%{transform:scale(.5);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+.ncam{position:absolute;inset:0;z-index:2;background:#F3F1F8;display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--ink-3);transition:opacity .4s}
+.sh.on .ncam{animation:fadeout .4s 1.6s forwards}
+
+/* price builder */
+.pb{margin-top:14px;border:1.5px solid var(--ink);border-radius:24px;padding:16px;display:grid;gap:12px}
+.pb-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px}
+.pb-row .nm{font-weight:700}
+.pb-row .nm small{display:block;font-weight:600;color:var(--ink-3);font-size:12.5px}
+.pb-row .v{font-weight:800;text-align:right;white-space:nowrap}
+.pb-row .v s{font-size:12.5px;color:var(--ink-3);font-weight:600;margin-right:6px}
+.tg2{border-top:1px solid var(--line);padding-top:12px}
+.tgl{display:flex;align-items:center;gap:12px;width:100%;text-align:left;min-height:48px}
+.tgl .sw2{position:relative;width:46px;height:28px;border-radius:99px;background:var(--line-2);flex:none;transition:background-color .2s}
+.tgl .sw2::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .25s var(--ease)}
+.tgl[aria-pressed="true"] .sw2{background:var(--purple)}
+.tgl[aria-pressed="true"] .sw2::after{transform:translateX(18px)}
+.tgl .tx{flex:1}
+.tgl .tx b{display:block;font-size:15px}
+.tgl .tx small{font-size:12.5px;color:var(--ink-3)}
+.tgl .v{font-weight:800}
+.more-info{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease)}
+.more-info > div{overflow:hidden}
+.tg2.open .more-info{grid-template-rows:1fr}
+.an-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.an-g div{background:var(--soft);border-radius:12px;padding:8px 4px;text-align:center;font-size:11px;font-weight:700;color:var(--ink-2);display:grid;justify-items:center;gap:4px}
+.an-g .i{width:18px;height:18px;color:var(--purple)}
+.an-c{position:relative;margin-top:8px;background:var(--soft);border-radius:12px;padding:8px 10px}
+.an-c small{font-size:11px;font-weight:700;color:var(--ink-3)}
+.an-c svg{width:100%;height:60px;display:block}
+.an-c path.ln{stroke-dasharray:600;stroke-dashoffset:600}
+.tg2.open .an-c path.ln{animation:draw 1.6s .2s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.nfc-i{display:flex;gap:12px;align-items:center;margin-top:10px;font-size:13px;color:var(--ink-2)}
+.nfc-i .nfcc{position:static;width:96px;flex:none}
+.pb-tot{border-top:1.5px dashed var(--line-2);padding-top:12px;display:flex;justify-content:space-between;align-items:flex-end}
+.pb-tot span{font-size:13px;font-weight:700;color:var(--ink-2)}
+.pb-tot b{font-size:32px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.pb-tot .save{display:block;color:var(--mint-ink);font-size:12.5px;font-weight:800;text-align:right;margin-top:4px}
+
+/* print */
+.mats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.mats button{min-height:72px;border-radius:16px;border:1.5px solid var(--line-2);background:#fff;display:grid;justify-items:center;align-content:center;gap:4px;padding:8px 4px;transition:border-color .2s,background-color .2s}
+.mats .swc{width:34px;height:22px;border-radius:5px;border:1px solid var(--line-2)}
+.mats b{font-size:14px}
+.mats small{font-size:11.5px;color:var(--ink-3)}
+.mats button[aria-pressed="true"]{border-color:var(--ink);background:var(--soft);box-shadow:inset 0 0 0 1px var(--ink)}
+.mstage{position:relative;margin-top:12px;border-radius:24px;background:var(--soft);padding:28px 28px 46px 48px;cursor:pointer}
+.mcard{position:relative;perspective:1000px}
+.mflip{position:relative;transform-style:preserve-3d;transition:transform .7s var(--ease)}
+.mflip.flipped{transform:rotateY(180deg)}
+.mflip .f,.mflip .b{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mflip .b{position:absolute;inset:0;transform:rotateY(180deg)}
+.dim-h{position:absolute;left:0;right:0;bottom:-24px;height:12px;border-left:1.5px solid var(--ink-3);border-right:1.5px solid var(--ink-3)}
+.dim-h::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1.5px solid var(--ink-3);transform:scaleX(0);transition:transform .9s var(--ease)}
+.dim-v{position:absolute;top:0;bottom:0;left:-26px;width:12px;border-top:1.5px solid var(--ink-3);border-bottom:1.5px solid var(--ink-3)}
+.dim-v::before{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:1.5px solid var(--ink-3);transform:scaleY(0);transition:transform .9s .2s var(--ease)}
+.mstage.in .dim-h::before{transform:none}.mstage.in .dim-v::before{transform:none}
+.dim-h span,.dim-v span{position:absolute;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--soft);padding:0 4px;color:var(--ink-2);white-space:nowrap}
+.dim-h span{left:50%;top:50%;transform:translate(-50%,-50%)}
+.dim-v span{top:50%;left:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+.flip-hint{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;align-items:center;font-size:12px;font-weight:700;background:#fff;border-radius:99px;padding:6px 10px;box-shadow:0 6px 14px -10px rgba(14,11,26,.4)}
+.flip-hint .i{width:14px;height:14px}
+.mstage .pc-gloss .pc-sheen{background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);background-size:260% 100%;mix-blend-mode:normal;opacity:.7;animation:sheen 3s ease-in-out infinite}
+@keyframes sheen{from{background-position:130% 0}to{background-position:-130% 0}}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.facts span{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:600;padding:6px 10px;border-radius:99px;background:var(--soft);animation:pin .4s var(--ease)}
+.facts .i{width:14px;height:14px;color:var(--purple)}
+.ptbl{margin-top:14px;border:1.5px solid var(--ink);border-radius:24px;padding:16px}
+.sides{display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
+.sides button{min-height:42px;border-radius:99px;font-weight:700;font-size:14px;color:var(--ink-2);transition:background-color .25s,color .25s}
+.sides button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.qrow{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:baseline;padding:12px 2px;border-bottom:1px solid var(--line)}
+.qrow:last-of-type{border-bottom:0}
+.qrow span{font-weight:700}
+.qrow b{font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.qrow s{color:var(--ink-3);font-size:13px}
+.qrow em{font-style:normal;color:var(--ink-3);font-size:14px;grid-column:2/-1;text-align:right}
+.tl{position:relative;margin-top:16px;padding-left:46px;display:grid;gap:22px}
+.tl::before,.tl-fill{content:"";position:absolute;left:19px;top:8px;width:3px;border-radius:2px}
+.tl::before{bottom:8px;background:var(--line)}
+.tl-fill{height:0;background:var(--purple);transition:height .6s var(--ease)}
+.tl-n{position:relative}
+.tl-n .ic{position:absolute;left:-46px;top:-4px;width:42px;height:42px;border-radius:50%;background:#fff;border:2px solid var(--line-2);display:grid;place-items:center;color:var(--ink-3);transition:all .4s var(--ease)}
+.tl-n .ic .i{width:20px;height:20px}
+.tl-n.lit .ic{border-color:var(--purple);background:var(--purple);color:#fff;transform:scale(1.06)}
+.tl-n b{display:block;font-size:16px}
+.tl-n p{font-size:14px;color:var(--ink-2)}
+
+/* faq */
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0;font-weight:700;font-size:16px;min-height:44px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .i{width:20px;height:20px;flex:none;color:var(--purple);transition:transform .3s var(--ease)}
+.faq details[open] summary .i{transform:rotate(45deg)}
+.faq details p{padding:0 0 16px;color:var(--ink-2);font-size:15px;animation:pin .35s var(--ease)}
+
+/* footer */
+.ft{background:var(--ink);color:#fff;padding:36px 0 28px;margin-top:20px}
+.ft h2{font-size:24px}
+.ft .lead{color:#CFC9E3}
+.ft-ctas{display:grid;gap:10px;margin-top:16px}
+.ft-ctas a{display:flex;align-items:center;gap:10px;min-height:52px;padding:0 16px;border-radius:16px;background:#221D36;font-weight:700}
+.ft-ctas a .i{width:20px;height:20px;color:var(--yellow)}
+.ft-ctas a.wa{background:#25D366;color:#06301A;justify-content:center}
+.ft-ctas a.wa .i{color:#06301A}
+.ft-links{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:22px;font-size:14px}
+.ft-links a{color:#E7E4F2;text-decoration:underline;text-underline-offset:3px}
+.ft-bot{margin-top:22px;padding-top:16px;border-top:1px solid #2C2742;font-size:13px;color:#BDB7D4;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.ft .wm{font-weight:800;letter-spacing:-.06em;font-size:72px;line-height:.8;color:var(--yellow);margin-top:24px}
+
+/* sticky bar */
+.sb{position:fixed;left:0;right:0;bottom:0;z-index:70;display:flex;align-items:center;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -10px 24px -14px rgba(14,11,26,.3);transform:translateY(110%);transition:transform .35s var(--ease)}
+.sb.show{transform:none}
+.sb .t{flex:1;min-width:0;line-height:1.2}
+.sb small{display:block;font-size:12px;font-weight:700;color:var(--purple)}
+.sb b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.sb a.go{min-height:46px;padding:0 18px;border-radius:99px;background:var(--purple);color:#fff;font-weight:800;display:flex;align-items:center;gap:6px;font-size:14.5px;white-space:nowrap}
+.sb a.go .i{width:16px;height:16px}
+.sb a.wa{width:46px;height:46px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;flex:none}
+.sb a.wa .i{width:24px;height:24px}
+body{padding-bottom:76px}
+
+@media (min-width:900px){
+  body{padding-bottom:0}
+  .sb{display:none}
+  .hd-links{display:flex}
+  .hero{padding:48px 0 40px}
+  .hero-g{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center}
+  .mg{height:440px;margin:0}
+  .mg-card{top:130px;width:52%}
+  .mg-phone{top:30px}
+  .mg-phone .phone{--w:180px}
+  .pick2{margin-top:24px;max-width:460px}
+  .dw{padding:18px 24px}
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  .dd > .blk + .blk{border-top:0}
+  .tpls{grid-auto-flow:row;grid-template-columns:repeat(4,1fr);overflow:visible;margin:14px 0 0;padding:6px 0 10px}
+  .tpl .phone{--w:150px}
+  .dots{display:none}
+  .story{height:440px}
+  .mats{max-width:520px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#shop">Skip to products</a>
+<!-- DIWALI STRIP -->
+<button class="strip" type="button" data-go="digital" data-to="templates"><span data-icon="sparkle"></span>Diwali offer: <b>50% off</b> every digital card</button>
+
+<!-- HEADER -->
+<header class="hd">
+  <div class="wrap hd-in">
+    <a class="logo" href="https://vueme.in/" aria-label="Vueme home"><img src="https://vueme.in/wp-content/uploads/2026/10/vueme-logo.png" alt="Vueme" width="100" height="22"></a>
+    <nav class="hd-links" aria-label="Primary"><a href="#shop" data-go="digital">Digital cards</a><a href="#shop" data-go="print">Printed cards</a><a href="#faq">Help</a></nav>
+    <a class="hd-wa" href="https://wa.me/919042018017?text=Hi%20Vueme" aria-label="Chat with Vueme on WhatsApp"><span data-icon="whatsapp"></span>Chat</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-g">
+    <div>
+      <h1>Your business card, digital or printed.</h1>
+      <p class="sub">A digital card is a link and QR code people open on their phone. A printed card is the classic one, made from your design.</p>
+      <div class="mg mobile-mg" id="mg-m" aria-hidden="true"></div>
+      <div class="pick2">
+        <button class="pk2 d" type="button" data-go="digital"><span class="ic" data-icon="phone"></span><span><b>Digital card</b><small>Link, QR code and NFC</small></span><span class="pr"><em>50% OFF</em><s id="hp-was">₹499</s><span id="hp-now">₹249.50</span></span></button>
+        <button class="pk2 p" type="button" data-go="print"><span class="ic" data-icon="print"></span><span><b>Printed cards</b><small>Matte, gloss or synthetic</small></span><span class="pr">from<br>₹625</span></button>
+      </div>
+      <div class="trust"><span data-icon="sparkle">Link &amp; QR right after payment</span><span data-icon="truck">Delivery across India</span></div>
+    </div>
+    <div class="mg desk-mg" id="mg-d" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="shop" aria-label="Products">
+  <div class="wrap">
+    <div class="dw rv">
+      <svg class="diya" viewBox="0 0 120 100" aria-hidden="true"><defs><radialGradient id="fgd" cx=".5" cy=".7"><stop offset="0" stop-color="#FFF4C2"/><stop offset=".5" stop-color="#FCC305"/><stop offset="1" stop-color="#FF8A00"/></radialGradient></defs><circle cx="60" cy="38" r="34" fill="#FCC305" opacity=".18"/><path class="flame" d="M60 12 C71 30 71 44 60 50 C49 44 49 30 60 12Z" fill="url(#fgd)"/><path d="M14 58 Q60 106 106 58 Z" fill="#C2410C"/><ellipse cx="60" cy="58" rx="46" ry="8" fill="#EA580C"/><ellipse cx="60" cy="57" rx="36" ry="5" fill="#7C2D12"/></svg>
+      <div><b>Diwali: <span>50% off</span> digital cards</b><small>Templates from ₹249.50</small></div>
+      <button type="button" data-go="digital" data-to="templates">See designs</button>
+      <i class="sp" style="left:30%;top:10px"></i><i class="sp" style="left:56%;bottom:8px;animation-delay:.7s"></i>
+    </div>
+  </div>
+  <div class="swbar">
+    <div class="wrap">
+      <div class="sw" role="tablist" aria-label="Product" data-on="digital">
+        <span class="sw-thumb" aria-hidden="true"></span>
+        <button role="tab" id="tab-digital" aria-controls="p-digital" aria-selected="true" data-go="digital"><span data-icon="phone"></span>Digital card</button>
+        <button role="tab" id="tab-print" aria-controls="p-print" aria-selected="false" tabindex="-1" data-go="print"><span data-icon="print"></span>Printed cards</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="pnl" id="p-digital" role="tabpanel" aria-labelledby="tab-digital">
+      <div class="dd">
+        <div class="blk">
+          <p class="kicker">How it works</p>
+          <h2>Ready in 4 steps</h2>
+          <div class="story" id="story" aria-roledescription="carousel" aria-label="How a digital card works">
+            <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div class="st" data-i="0" aria-label="Step 1 of 4"><div class="st-art"><div class="tg" id="st-tg"></div><span class="tap"></span></div><div class="st-txt"><span class="n">STEP 1</span><h3>Pick a template</h3><p>Choose the design you like.</p></div></div>
+            <div class="st" data-i="1" aria-label="Step 2 of 4"><div class="st-art"><div class="a2"><div class="fld">Your name<div id="st-type"></div></div><div id="st-phone"></div></div></div><div class="st-txt"><span class="n">STEP 2</span><h3>Add your photo and details</h3><p>The card updates as you type.</p></div></div>
+            <div class="st" data-i="2" aria-label="Step 3 of 4"><div class="st-art"><div class="pay"><div class="amt">Total<b id="st-amt">₹399.50</b></div><div class="ms"><span>UPI</span><span>Card</span><span>Net banking</span><span>Wallet</span></div><div class="pbtn"><i></i><span>Pay securely</span></div></div><div class="paid"><span class="c" data-icon="check"></span></div></div><div class="st-txt"><span class="n">STEP 3</span><h3>Pay online</h3><p>UPI, cards, net banking or wallets.</p></div></div>
+            <div class="st" data-i="3" aria-label="Step 4 of 4"><div class="st-art"><div class="a4"><div class="lk"><span data-icon="link"></span>vueme.in/meera-iyer<em>Copy</em></div><div class="qrb" id="st-qr"></div></div></div><div class="st-txt"><span class="n">STEP 4</span><h3>Your link and QR are ready</h3><p>Right after payment. Share them anywhere.</p></div></div>
+            <button class="st-nav prev" type="button" aria-label="Previous step"></button>
+            <button class="st-nav next" type="button" aria-label="Next step"></button>
+            <span class="st-hint" aria-hidden="true">Tap<span data-icon="arrow"></span></span>
+          </div>
+        </div>
+
+        <div class="blk">
+          <p class="kicker">Share it 3 ways</p>
+          <h2>How people get your card</h2>
+          <div class="tabs3 auto" role="tablist" aria-label="Ways to share" id="shtabs">
+            <button role="tab" aria-selected="true" data-s="0"><span data-icon="link"></span>Link<span class="pg"></span></button>
+            <button role="tab" aria-selected="false" data-s="1" tabindex="-1"><span data-icon="qr"></span>QR code<span class="pg"></span></button>
+            <button role="tab" aria-selected="false" data-s="2" tabindex="-1"><span data-icon="nfc"></span>NFC card<span class="pg"></span></button>
+          </div>
+          <div class="shst" aria-hidden="true">
+            <div class="sh" data-s="0"><div class="chat"><div class="bub">Hi! Here's my card.</div><div class="bub"><div class="lp"><span class="av">MI</span><span><b>Meera Iyer</b><small>vueme.in/meera-iyer</small></span></div>Tap to open<span class="tk">Delivered</span></div><div class="bub in2">Saved your number, thanks!</div></div></div>
+            <div class="sh" data-s="1"><div class="qsc"><div class="card" id="sh-qr"></div><div id="sh-qphone"></div></div></div>
+            <div class="sh" data-s="2"><div class="nsc"><div id="sh-nphone"></div><span class="wave"></span><span class="wave w2"></span><div class="nfcc"><b>vueme</b><span data-icon="nfc"></span></div></div></div>
+          </div>
+          <p class="shcap" id="shcap" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="blk" id="templates">
+        <p class="kicker">Diwali price · 50% off</p>
+        <h2>Choose your template</h2>
+        <div class="tpls" id="tpls" role="group" aria-label="Templates"></div>
+        <div class="dots" id="tdots" aria-hidden="true"></div>
+        <a class="more" href="https://vueme.in/index.php/product-category/digital-business-card/">See all digital designs</a>
+      </div>
+
+      <div class="blk">
+        <p class="kicker">Price check</p>
+        <h2>What you'll pay</h2>
+        <p class="lead">Turn on add-ons to see the total. You choose them on the next page.</p>
+        <div class="pb">
+          <div class="pb-row"><span class="nm" id="pb-name">Bento template<small>Diwali 50% off</small></span><span class="v" id="pb-tpl"></span></div>
+          <div class="tg2" id="tg-an">
+            <button class="tgl" type="button" aria-pressed="false" aria-controls="mi-an"><span class="sw2" aria-hidden="true"></span><span class="tx"><b>Analytics</b><small>See who viewed and saved your card</small></span><span class="v">+₹199</span></button>
+            <div class="more-info" id="mi-an"><div>
+              <div class="an-g"><div><span data-icon="eye"></span>Views</div><div><span data-icon="qr"></span>QR scans</div><div><span data-icon="tap"></span>Taps</div><div><span data-icon="save"></span>Saved</div></div>
+              <div class="an-c"><small>Your private dashboard (sample)</small><svg viewBox="0 0 300 60" preserveAspectRatio="none"><path d="M0 52 L30 46 L60 48 L90 38 L120 41 L150 30 L180 33 L210 20 L240 24 L270 10 L300 14 L300 60 L0 60Z" fill="#6B3FD8" opacity=".08"/><path class="ln" d="M0 52 L30 46 L60 48 L90 38 L120 41 L150 30 L180 33 L210 20 L240 24 L270 10 L300 14" fill="none" stroke="#6B3FD8" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg></div>
+            </div></div>
+          </div>
+          <div class="tg2" id="tg-nfc">
+            <button class="tgl" type="button" aria-pressed="false" aria-controls="mi-nfc"><span class="sw2" aria-hidden="true"></span><span class="tx"><b>NFC card</b><small>Tap it on a phone to open your card</small></span><span class="v">+₹399</span></button>
+            <div class="more-info" id="mi-nfc"><div><div class="nfc-i"><div class="nfcc"><b>vueme</b><span data-icon="nfc"></span></div><span>Sent by India Post in 3 to 5 working days. Delivery included.</span></div></div></div>
+          </div>
+          <div class="pb-tot"><span>Total today</span><div><b id="pb-total">₹399.50</b><span class="save" id="pb-save"></span></div></div>
+          <a class="cta" id="pb-cta" href="#">Choose Bento<span data-icon="arrow"></span></a>
+        </div>
+        <p class="note">Diwali 50% off is on the template price. Add-ons stay the same. Renews at ₹299 a year, starting a year after you buy.</p>
+      </div>
+    </div>
+
+    <div class="pnl" id="p-print" role="tabpanel" aria-labelledby="tab-print" hidden>
+      <div class="dd">
+        <div class="blk">
+          <p class="kicker">Step 1 · Material</p>
+          <h2>Pick how it feels</h2>
+          <div class="mats" id="mats" role="group" aria-label="Material"></div>
+          <div class="mstage" id="mstage" role="button" tabindex="0" aria-label="Card preview. Tap to see the back.">
+            <div class="mcard"><div class="mflip" id="mflip"><div class="f" id="mfront"></div><div class="b" id="mback"></div></div>
+              <div class="dim-h" aria-hidden="true"><span>90 mm</span></div><div class="dim-v" aria-hidden="true"><span>53 mm</span></div></div>
+            <span class="flip-hint"><span data-icon="flip"></span>Tap to flip</span>
+          </div>
+          <div class="facts" id="facts"></div>
+        </div>
+        <div class="blk">
+          <p class="kicker">Step 2 · Price</p>
+          <h2>Pick sides and quantity</h2>
+          <div class="ptbl">
+            <div class="sides" role="group" aria-label="Printing"><button type="button" aria-pressed="true" data-sd="single">Single side</button><button type="button" aria-pressed="false" data-sd="double">Front &amp; back</button></div>
+            <div id="qrows" aria-live="polite"></div>
+            <a class="cta" id="pr-cta" href="#">Continue<span data-icon="arrow"></span></a>
+            <p class="note">Next page: choose quantity, then pick a ready-made design or upload yours.</p>
+          </div>
+        </div>
+      </div>
+      <div class="blk">
+        <p class="kicker">From design to doorstep</p>
+        <h2>No design? No problem.</h2>
+        <div class="tl" id="tl">
+          <span class="tl-fill" id="tl-fill"></span>
+          <div class="tl-n"><span class="ic" data-icon="grid"></span><b>Choose material and quantity</b><p>Matte, gloss or synthetic. 500 or 1000 cards.</p></div>
+          <div class="tl-n"><span class="ic" data-icon="edit"></span><b>Design online or upload</b><p>Edit a ready-made design, or upload a JPG or PNG (300 DPI is best).</p></div>
+          <div class="tl-n"><span class="ic" data-icon="eye"></span><b>Check the print guides</b><p>See the cut line and safe area before you order.</p></div>
+          <div class="tl-n"><span class="ic" data-icon="truck"></span><b>Delivered by Speed Post</b><p>India Post with tracking, anywhere in India.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="blk faq" id="faq">
+  <div class="wrap">
+    <p class="kicker">Help</p>
+    <h2>Quick answers</h2>
+    <div style="margin-top:8px">
+      <details><summary>What is a digital card?<span data-icon="plus"></span></summary><p>A mobile-friendly web page with your photo, contact details and social links. It has its own link and QR code, so anyone can open it on their phone without an app.</p></details>
+      <details><summary>How fast do I get it?<span data-icon="plus"></span></summary><p>Instantly. Your link and QR code appear right after payment.</p></details>
+      <details><summary>Can I edit it later?<span data-icon="plus"></span></summary><p>Yes, any time from My Account. Your link and QR code stay the same.</p></details>
+      <details><summary>How long is it valid?<span data-icon="plus"></span></summary><p>It's billed yearly. Renewal is ₹299 a year, starting a year after you buy. We email you before it's due.</p></details>
+      <details><summary>I don't have a design for printed cards<span data-icon="plus"></span></summary><p>Pick a ready-made design and edit it online, or upload your own JPG or PNG (ideally 300 DPI).</p></details>
+      <details><summary>How are printed cards shipped?<span data-icon="plus"></span></summary><p>By India Post Speed Post with tracking, within India.</p></details>
+      <details><summary>How can I pay?<span data-icon="plus"></span></summary><p>UPI, debit and credit cards, net banking and wallets through PayU. No cash on delivery.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="ft">
+  <div class="wrap">
+    <h2>Still deciding?</h2>
+    <p class="lead">Message us. We usually reply within 1 working day, Mon to Sat, 10 AM to 6 PM.</p>
+    <div class="ft-ctas">
+      <a class="wa" href="https://wa.me/919042018017?text=Hi%20Vueme"><span data-icon="whatsapp"></span>Chat on WhatsApp</a>
+      <a href="tel:+919042018017"><span data-icon="phone"></span>+91 90420 18017</a>
+      <a href="mailto:support@vueme.in"><span data-icon="mail"></span>support@vueme.in</a>
+    </div>
+    <div class="ft-links"><a href="https://vueme.in/index.php/order-tracking/">Track order</a><a href="https://vueme.in/index.php/my-account/">My account</a><a href="https://vueme.in/index.php/refund-policy/">Refunds</a><a href="https://vueme.in/index.php/privacy-policy/">Privacy</a><a href="https://vueme.in/index.php/terms-and-conditions/">Terms</a></div>
+    <div class="wm" aria-hidden="true">vueme</div>
+    <div class="ft-bot"><span>© 2026 Vueme</span><span>Designed by brandme</span></div>
+  </div>
+</footer>
+
+<!-- STICKY BAR -->
+<div class="sb" id="sb" role="region" aria-label="Next step">
+  <div class="t"><small id="sb-k">Diwali · 50% off</small><b id="sb-t">Bento · ₹399.50</b></div>
+  <a class="go" id="sb-go" href="#">Choose<span data-icon="arrow"></span></a>
+  <a class="wa" href="https://wa.me/919042018017?text=Hi%20Vueme" aria-label="Chat on WhatsApp" data-icon="whatsapp"></a>
+</div>
+
+<script src="assets/vendor/qrcode.js"></script>
+<script src="assets/vueme.js"></script>
+<script>
+'use strict';
+(function () {
+  var V = window.Vueme;
+  var $ = function (s) { return document.querySelector(s); }, $$ = function (s) { return [].slice.call(document.querySelectorAll(s)); };
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SITE = 'https://vueme.in/index.php/';
+  var CAT = SITE + 'product-category/digital-business-card/';
+  // Only Bento's product page is confirmed; the others open the digital card category.
+  var TPL_LINK = { aria: CAT, bento: SITE + 'product/bento-digital-business-card-with-location/', spotlight: CAT, bauhaus: CAT };
+  var PRINT_LINK = { matte: { single: 'single-side-matte-business-cards', double: 'double-sided-matte-business-cards' }, gloss: { single: 'single-side-gloss-business-cards', double: 'double-sided-gloss-business-cards' }, synthetic: { single: 'single-side-synthetic-business-cards', double: 'double-sided-synthetic-business-cards' } };
+  var S = { panel: 'digital', tpl: 'bento', an: false, nfc: false, mat: 'matte', sides: 'single' };
+  var tpl = function (id) { return V.TEMPLATES.filter(function (t) { return t.id === id; })[0]; };
+  var cap = function (s) { return s[0].toUpperCase() + s.slice(1); };
+  var MAT = { matte: { bg: '#ECEAF1', f: ['300 GSM card', 'Soft, low-glare finish', 'Rounded corners +₹100'] }, gloss: { bg: 'linear-gradient(120deg,#E8E4F5,#fff 50%,#E8E4F5)', f: ['300 GSM card', 'Shiny finish', 'Rounded corners +₹100'] }, synthetic: { bg: 'linear-gradient(180deg,#F3F6FA,#DDE4EE)', f: ['180 micron sheet', 'Handles water and tearing better than paper', 'Front & back: 1000 cards only'] } };
+
+  // run fn while el is on screen
+  function onScreen(el, on, off, th) {
+    if (!('IntersectionObserver' in window)) { on(); return; }
+    new IntersectionObserver(function (es) { es.forEach(function (e) { e.isIntersecting ? on() : off && off(); }); }, { threshold: th || 0.25 }).observe(el);
+  }
+  function countTo(el, to) {
+    var from = parseFloat(el.dataset.v || to), t0 = performance.now(), d = still ? 0 : 450;
+    el.dataset.v = to;
+    (function f(now) { var k = d ? Math.min(1, (now - t0) / d) : 1, v = from + (to - from) * (1 - Math.pow(1 - k, 3));
+      el.textContent = V.inr(k < 1 ? Math.round(v) : to); if (k < 1) requestAnimationFrame(f); })(t0);
+  }
+
+  // ---------- hero motion graphic ----------
+  var CAPS = ['Your printed card', 'Put your QR on the back', 'They scan it', 'Your digital card opens'];
+  function buildMG(el) {
+    var qr = V.qrSvg('https://vueme.in/meera-iyer', { margin: 1, label: '' });
+    var card = { name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', tagline: 'Homes and offices in Chennai.', finish: 'gloss' };
+    el.innerHTML = '<div class="mg-cap"><span class="mg-dots"><i></i><i></i><i></i><i></i></span><span class="mg-t"></span></div>' +
+      '<div class="mg-card"><div class="mg-flip"><div class="f">' + V.printSide(card) + '</div><div class="b">' + V.printSide(card, 'back') + '</div></div></div>' +
+      '<div class="mg-phone">' + V.phone('<div class="mg-cam"><div class="q">' + qr + '</div><i class="ln"></i></div>' + V.digitalCard({ name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', template: 'aria' })) + '</div>' +
+      '<div class="mg-toast"><span class="ok">' + V.icon('check') + '</span>Contact saved</div>';
+    var step = -1, timer = null;
+    function go(n) { step = n; el.dataset.step = n; el.querySelector('.mg-t').textContent = CAPS[n];
+      [].forEach.call(el.querySelectorAll('.mg-dots i'), function (d, i) { d.classList.toggle('on', i === n); }); }
+    go(still ? 3 : 0);
+    if (!still) onScreen(el, function () { if (!timer) timer = setInterval(function () { go((step + 1) % 4); }, 2300); }, function () { clearInterval(timer); timer = null; });
+  }
+  var mgEl = matchMedia('(min-width: 900px)').matches ? $('#mg-d') : $('#mg-m');
+  (mgEl === $('#mg-d') ? $('#mg-m') : $('#mg-d')).remove();
+  buildMG(mgEl);
+  $('#hp-was').textContent = V.inr(499); $('#hp-now').textContent = V.inr(V.offerPrice(499));
+
+  // ---------- product switch ----------
+  function setPanel(p, focusTab) {
+    var prev = S.panel; S.panel = p;
+    $('.sw').dataset.on = p;
+    ['digital', 'print'].forEach(function (k) {
+      var tab = $('#tab-' + k), on = k === p;
+      tab.setAttribute('aria-selected', on); tab.tabIndex = on ? 0 : -1;
+      var pan = $('#p-' + k); pan.hidden = !on;
+      if (on && prev !== p) { pan.classList.remove('from-right'); void pan.offsetWidth; pan.classList.toggle('from-right', p === 'print'); pan.style.animation = 'none'; void pan.offsetWidth; pan.style.animation = ''; }
+    });
+    if (focusTab) $('#tab-' + p).focus();
+    if (p === 'print') { $('#mstage').classList.add('in'); tlUpdate(); }
+    bar();
+  }
+  $$('[data-go]').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      var p = b.dataset.go; if (b.tagName === 'A') e.preventDefault();
+      setPanel(p);
+      if (b.getAttribute('role') !== 'tab') {
+        var target = b.dataset.to ? document.getElementById(b.dataset.to) : $('#shop .swbar');
+        var y = target.getBoundingClientRect().top + scrollY - (b.dataset.to ? 130 : 58);
+        scrollTo({ top: y, behavior: still ? 'auto' : 'smooth' });
+      }
+    });
+  });
+  $('.sw').addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); setPanel(S.panel === 'digital' ? 'print' : 'digital', true); }
+  });
+
+  // ---------- story ----------
+  var story = $('#story'), slides = $$('#story .st'), bars = $$('#story .bars i'), si = 0, DUR = 3800, stT = null, typeT = null, inView = false;
+  $('#st-tg').innerHTML = V.TEMPLATES.map(function (t) { return '<div>' + V.phone(V.digitalCard({ template: t.id })) + '</div>'; }).join('');
+  $('#st-qr').innerHTML = V.qrSvg('https://vueme.in/meera-iyer', { margin: 1, label: '' });
+  function typeName() {
+    clearInterval(typeT); var full = 'Meera Iyer', i = still ? full.length : 0, box = $('#st-type');
+    var draw = function () { var s = full.slice(0, i);
+      box.innerHTML = V.esc(s) + '<span class="caret"></span>';
+      $('#st-phone').innerHTML = V.phone(V.digitalCard({ name: s || ' ', role: 'Architect', company: 'Iyer Studio', template: 'aria' }));
+      var av = $('#st-phone .dc-initials'); if (av) av.textContent = s ? V.initials(s) : '';
+      if (i++ >= full.length) clearInterval(typeT); };
+    draw(); if (!still) typeT = setInterval(draw, 120);
+  }
+  function show(n) {
+    si = (n + 4) % 4;
+    slides.forEach(function (s, k) { s.classList.toggle('on', k === si); s.setAttribute('aria-hidden', k !== si); });
+    bars.forEach(function (b, k) { b.className = k < si ? 'done' : ''; });
+    void bars[si].offsetWidth; bars[si].className = 'cur';
+    // restart this slide's CSS animations
+    var cur = slides[si]; cur.classList.remove('on'); void cur.offsetWidth; cur.classList.add('on');
+    if (si === 1) typeName();
+    if (si === 2) $('#st-amt').textContent = V.inr(V.offerPrice(tpl(S.tpl).price));
+    clearTimeout(stT);
+    if (!still && inView && !story.classList.contains('paused')) stT = setTimeout(function () { show(si + 1); }, DUR);
+  }
+  story.style.setProperty('--dur', DUR + 'ms');
+  story.querySelector('.prev').addEventListener('click', function () { show(si - 1); });
+  story.querySelector('.next').addEventListener('click', function () { show(si + 1); });
+  ['pointerdown'].forEach(function (ev) { story.addEventListener(ev, function () { story.classList.add('paused'); clearTimeout(stT); }); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { story.addEventListener(ev, function () { if (story.classList.contains('paused')) { story.classList.remove('paused'); if (!still && inView) stT = setTimeout(function () { show(si + 1); }, 1600); } }); });
+  if (still) story.classList.add('paused');
+  onScreen(story, function () { if (!inView) { inView = true; show(si); } }, function () { inView = false; clearTimeout(stT); }, 0.4);
+  show(0);
+
+  // ---------- share infographic ----------
+  var CAPS2 = ['<b>Link:</b> send it on WhatsApp, email or Instagram. It opens in their browser.', '<b>QR code:</b> they point their camera at it and your card opens.', '<b>NFC card (+₹399):</b> tap it on their phone and your card opens. Delivered in 3 to 5 working days.'];
+  $('#sh-qr').innerHTML = V.qrSvg('https://vueme.in/meera-iyer', { margin: 1, label: '' });
+  var dc = V.digitalCard({ name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', template: 'aria' });
+  $('#sh-qphone').innerHTML = V.phone('<div class="qcam"><div class="fr"><i></i></div></div>' + dc);
+  $('#sh-nphone').innerHTML = V.phone('<div class="ncam">Hold card near phone</div>' + dc);
+  var tabs = $$('#shtabs button'), scenes = $$('.sh'), shi = 0, shT = null, shAuto = !still;
+  function sh(n, user) {
+    shi = n;
+    tabs.forEach(function (t, k) { t.setAttribute('aria-selected', k === n); t.tabIndex = k === n ? 0 : -1; var pg = t.querySelector('.pg'); pg.style.animation = 'none'; void pg.offsetWidth; pg.style.animation = ''; });
+    scenes.forEach(function (s, k) { s.classList.remove('on'); if (k === n) { void s.offsetWidth; s.classList.add('on'); } });
+    $('#shcap').innerHTML = CAPS2[n];
+    if (user) { shAuto = false; $('#shtabs').classList.remove('auto'); }
+    clearTimeout(shT); if (shAuto) shT = setTimeout(function () { sh((shi + 1) % 3); }, 4600);
+  }
+  tabs.forEach(function (t, k) { t.addEventListener('click', function () { sh(k, true); }); });
+  $('#shtabs').addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); var n = (shi + (e.key === 'ArrowRight' ? 1 : 2)) % 3; sh(n, true); tabs[n].focus(); } });
+  if (still) $('#shtabs').classList.remove('auto');
+  onScreen($('.shst'), function () { sh(shi); }, function () { clearTimeout(shT); }, 0.4);
+
+  // ---------- templates ----------
+  var ACC = { aria: '#6B3FD8', bento: '#6B3FD8', spotlight: '#FCC305', bauhaus: '#E5484D' };
+  $('#tpls').innerHTML = V.TEMPLATES.map(function (t) {
+    return '<button class="tpl" type="button" data-t="' + t.id + '" aria-pressed="false"><span class="chk">' + V.icon('check') + '</span>' + V.phone(V.digitalCard({ template: t.id, accent: ACC[t.id] }), t.name + ' template') +
+      '<span class="meta"><b>' + t.name + '</b><span>' + (V.OFFER.active ? '<s>' + V.inr(t.price) + '</s>' : '') + V.inr(V.offerPrice(t.price)) + '</span></span><small>' + t.note + '</small></button>';
+  }).join('');
+  $('#tdots').innerHTML = V.TEMPLATES.map(function () { return '<i></i>'; }).join('');
+  $('#tpls').addEventListener('click', function (e) { var b = e.target.closest('[data-t]'); if (!b) return; S.tpl = b.dataset.t; price(); bar(); });
+  var dots = $$('#tdots i');
+  function dotsUpd() { var r = $('#tpls'), w = r.scrollWidth - r.clientWidth, k = w > 0 ? Math.round(r.scrollLeft / w * (dots.length - 1)) : 0; dots.forEach(function (d, i) { d.classList.toggle('on', i === k); }); }
+  $('#tpls').addEventListener('scroll', dotsUpd, { passive: true }); dotsUpd();
+
+  // ---------- price builder ----------
+  ['an', 'nfc'].forEach(function (k) {
+    var box = $('#tg-' + k), btn = box.querySelector('.tgl');
+    btn.addEventListener('click', function () { S[k] = !S[k]; btn.setAttribute('aria-pressed', S[k]); box.classList.toggle('open', S[k]); price(); });
+  });
+  function price() {
+    var t = tpl(S.tpl), now = V.offerPrice(t.price);
+    $$('#tpls .tpl').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.t === S.tpl); });
+    $('#pb-name').innerHTML = t.name + ' template<small>' + (V.OFFER.active ? 'Diwali 50% off' : t.note) + '</small>';
+    $('#pb-tpl').innerHTML = (V.OFFER.active ? '<s>' + V.inr(t.price) + '</s>' : '') + V.inr(now);
+    var total = now + (S.an ? 199 : 0) + (S.nfc ? 399 : 0);
+    countTo($('#pb-total'), total);
+    $('#pb-save').textContent = t.price > now ? 'You save ' + V.inr(t.price - now) : '';
+    var cta = $('#pb-cta'); cta.href = TPL_LINK[t.id]; cta.firstChild.textContent = 'Choose ' + t.name + ' · ' + V.inr(now) + ' ';
+  }
+
+  // ---------- printed ----------
+  $('#mats').innerHTML = ['matte', 'gloss', 'synthetic'].map(function (m) { return '<button type="button" data-m="' + m + '" aria-pressed="' + (m === S.mat) + '"><span class="swc" style="background:' + MAT[m].bg + '"></span><b>' + cap(m) + '</b><small>from ' + V.inr(V.PRINT_PRICES[m].single[500][0]) + '</small></button>'; }).join('');
+  var pcard = { name: 'Meera Iyer', role: 'Architect', company: 'Iyer Studio', tagline: 'Homes and offices in Chennai.', address: 'Adyar, Chennai', template: 'classic' };
+  function printUI() {
+    $$('#mats button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.m === S.mat); });
+    var c = Object.assign({}, pcard, { finish: S.mat });
+    $('#mfront').innerHTML = V.printSide(c); $('#mback').innerHTML = V.printSide(c, 'back');
+    $('#facts').innerHTML = MAT[S.mat].f.map(function (f, i) { return '<span style="animation-delay:' + i * 60 + 'ms">' + V.icon('check') + V.esc(f) + '</span>'; }).join('');
+    $$('.sides button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.sd === S.sides); });
+    var rows = V.PRINT_PRICES[S.mat][S.sides];
+    $('#qrows').innerHTML = ['500', '1000'].map(function (q) { return rows[q] ? '<div class="qrow"><span>' + q + ' cards</span><b data-v="' + rows[q][0] + '">' + V.inr(rows[q][0]) + '</b><s>' + V.inr(rows[q][1]) + '</s></div>' : '<div class="qrow"><span>' + q + ' cards</span><em>Not offered</em></div>'; }).join('');
+    var label = cap(S.mat) + ' · ' + (S.sides === 'double' ? 'front & back' : 'single side');
+    var cta = $('#pr-cta'); cta.href = SITE + 'product/' + PRINT_LINK[S.mat][S.sides] + '/'; cta.firstChild.textContent = 'Continue with ' + label + ' ';
+    bar();
+  }
+  $('#mats').addEventListener('click', function (e) { var b = e.target.closest('[data-m]'); if (b) { S.mat = b.dataset.m; printUI(); } });
+  $$('.sides button').forEach(function (b) { b.addEventListener('click', function () { S.sides = b.dataset.sd; printUI(); }); });
+  var flip = function () { $('#mflip').classList.toggle('flipped'); $('.flip-hint').lastChild.textContent = $('#mflip').classList.contains('flipped') ? 'Back · tap to flip' : 'Tap to flip'; };
+  $('#mstage').addEventListener('click', flip);
+  $('#mstage').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  // timeline fills as it scrolls into view
+  var tlNodes = $$('.tl-n');
+  function tlUpdate() {
+    var vh = innerHeight, tl = $('#tl').getBoundingClientRect(), lit = 0;
+    tlNodes.forEach(function (n, i) { var on = n.getBoundingClientRect().top < vh * 0.78; n.classList.toggle('lit', on); if (on) lit = i; });
+    var last = tlNodes[lit].getBoundingClientRect();
+    $('#tl-fill').style.height = (tlNodes[0].classList.contains('lit') ? Math.max(0, last.top - tl.top + 12) : 0) + 'px';
+  }
+  addEventListener('scroll', function () { if (S.panel === 'print') tlUpdate(); }, { passive: true });
+
+  // ---------- sticky bar ----------
+  function bar() {
+    var go = $('#sb-go');
+    if (S.panel === 'digital') { var t = tpl(S.tpl); $('#sb-k').textContent = V.OFFER.active ? 'Diwali · 50% off' : 'Digital card'; $('#sb-t').textContent = t.name + ' · ' + V.inr(V.offerPrice(t.price)); go.href = TPL_LINK[t.id]; go.firstChild.textContent = 'Choose '; }
+    else { var p = V.PRINT_PRICES[S.mat][S.sides]; var min = (p['500'] || p['1000'])[0]; $('#sb-k').textContent = 'Printed cards'; $('#sb-t').textContent = cap(S.mat) + ' · from ' + V.inr(min); go.href = SITE + 'product/' + PRINT_LINK[S.mat][S.sides] + '/'; go.firstChild.textContent = 'Continue '; }
+  }
+  onScreen($('.hero'), function () { $('#sb').classList.remove('show'); }, function () { $('#sb').classList.add('show'); }, 0);
+
+  // ---------- reveal ----------
+  if (still) $$('.rv').forEach(function (e) { e.classList.add('in'); });
+  else $$('.rv').forEach(function (e) { onScreen(e, function () { e.classList.add('in'); }, null, 0.1); });
+
+  V.hydrateIcons(); price(); printUI(); setPanel('digital');
+})();
+</script>
+</body>
+</html>
